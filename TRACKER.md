@@ -1,0 +1,94 @@
+# TRACKER.md — task board
+
+> **Edit after EVERY task.** Re-read right before editing · change only your own row (single-line edit) · never reformat or reorder.
+> Status: `TODO` · `DOING` · `BLOCKED` · `DONE` · `DROPPED` · Owner: `claude-code` · `antigravity` · `cloud-audit` · `human`
+> Updated = PKT `YYYY-MM-DD HH:mm` · Note ≤ 12 words · Specs: `docs/IMPLEMENTATION_PLAN.md` · Windows: `docs/PHASES.md`
+
+## Track A — claude-code
+| ID | Task | Depends | Status | Owner | Updated | Note |
+|---|---|---|---|---|---|---|
+| P0-01 | Restructure repo, retire v1 code | H-01 | TODO | | | |
+| P0-02 | Repo hygiene: .gitignore, .env.example, .gitattributes check | P0-01 | TODO | | | |
+| P0-03 | Fresh requirements.txt + pytest.ini | P0-01 | TODO | | | |
+| P0-04 | FastAPI skeleton + 13 contract stubs + fixtures | P0-02, P0-03 | TODO | | | |
+| P0-05 | Test harness + graphify baseline | P0-04 | TODO | | | |
+| P2-01 | Inspect source DB → SOURCE_DB.md | P0-05, H-02 | TODO | | | |
+| P2-02 | Universe files: KMI-30, ETFs, aliases | P2-01, H-03 | TODO | | | |
+| P2-03 | Target schema + build_db.py → data/openpsx.db | P2-01, P2-02 | TODO | | | |
+| P2-04 | Bonus/split price adjustment | P2-03 | TODO | | | |
+| P2-05 | Manual CSV/Excel import + templates | P2-03 | TODO | | | |
+| P2-06 | Period analytics + live market endpoints + fixture DB | P2-04 | TODO | | | |
+| P4-01 | Weekly feature panel (no look-ahead) | P2-06 | TODO | | | |
+| P4-02 | LightGBM walk-forward backtest + baselines | P4-01 | TODO | | | |
+| P4-03 | SHAP, volatility bucket, regime, predictions | P4-02 | TODO | | | |
+| P4-04 | Quant + model-card endpoints | P4-03 | TODO | | | |
+| P6-01 | LLM gateway: google-genai, key failover, JSON, kill switch | P0-05, H-04 | TODO | | | |
+| P6-02 | Validators: banned phrases, number grounding | P6-01 | TODO | | | |
+| P6-03 | Cache: cache.db, midnight PKT expiry, seeds | P6-01 | TODO | | | |
+| P6-04 | Fundamentals agent | P2-06, P6-02, P6-03 | TODO | | | |
+| P6-05 | News archive + Sentiment agent | P2-06, P6-02, P6-03 | TODO | | | |
+| P6-06 | Macro weekly agent + /api/macro | P2-06, P6-02, P6-03 | TODO | | | |
+| P6-07 | Verdict router + /api/verdict | P4-04, P6-04, P6-05, P6-06 | TODO | | | |
+| P8-01 | Precompute seed outputs + warm script | P6-07 | TODO | | | |
+| P8-02 | Deploy backend to Render | P8-01, H-07 | TODO | | | |
+| P8-03 | Deploy frontend to Vercel + CORS | P8-02, P3-04 | TODO | | | |
+| P8-04 | Local backup launcher (PowerShell) | P8-01 | TODO | | | |
+| P8-05 | Production smoke test | P8-03, P7-02 | TODO | | | |
+
+## Track B — antigravity
+| ID | Task | Depends | Status | Owner | Updated | Note |
+|---|---|---|---|---|---|---|
+| P1-01 | Verify Antigravity setup + scaffold Next.js | H-01 | TODO | | | |
+| P1-02 | App shell, design tokens, disclaimer | P1-01 | TODO | | | |
+| P1-03 | Typed API client + mock mode | P1-01, P0-04 | TODO | | | |
+| P1-04 | Route skeletons + loading/error/empty states | P1-02, P1-03 | TODO | | | |
+| P3-01 | Overview page: KMI-30 card, basis toggle, table | P1-04 | TODO | | | |
+| P3-02 | Price chart: line/candle, ranges | P1-04 | TODO | | | |
+| P3-03 | Return bars + vs-KMI-30 overlay | P1-04 | TODO | | | |
+| P3-04 | Wire dashboard to live API | P3-01, P3-02, P3-03, P2-06 | TODO | | | |
+| P5-01 | Quant panel on stock page | P1-04 | TODO | | | |
+| P5-02 | Model card page | P1-04 | TODO | | | |
+| P5-03 | Verdict card + agent rows | P1-04 | TODO | | | |
+| P5-04 | Macro card on overview | P3-01 | TODO | | | |
+| P7-01 | Chat router: aliases, intents, scope gate | P2-06, P4-04, P6-01 | TODO | | | |
+| P7-02 | /api/chat answer composer | P7-01, P6-02, P6-03 | TODO | | | |
+| P7-03 | /api/transcribe via Groq Whisper | P0-04 | TODO | | | |
+| P7-04 | Chat UI + mic | P1-04, P7-03 | TODO | | | |
+| P9-01 | UX hardening pass (live data) | P3-04, P5-01, P5-02, P5-03, P5-04, P7-04 | TODO | | | |
+| P9-02 | About page + README + architecture image | P1-04 | TODO | | | |
+| P9-03 | Demo rehearsal on deployed URL | P8-03, P9-01 | TODO | | | |
+
+## Gate — Thu 15 Oct 16:00–18:00 PKT
+| ID | Task | Depends | Status | Owner | Updated | Note |
+|---|---|---|---|---|---|---|
+| G-01 | Final cloud audit (`/phase-audit FINAL`) | P8-05, P9-03 | TODO | | | |
+| G-02 | Close CRITICAL bugs, final graphify, tag v1.0-demo | G-01 | TODO | | | |
+
+## Human — Haider
+| ID | Task | Depends | Status | Owner | Updated | Note |
+|---|---|---|---|---|---|---|
+| H-01 | Rename folder to OpenPSX, add docs, first push | — | TODO | human | | |
+| H-02 | Copy source SQLite into data/source/ | H-01 | TODO | human | | |
+| H-03 | Gemini research R-01, R-02, R-03 (universe) | — | TODO | human | | |
+| H-04 | Gemini research R-04 (model IDs + limits) | — | TODO | human | | |
+| H-05 | Create .env and frontend/.env.local | P0-02, P1-03 | TODO | human | | |
+| H-06 | Add submitted AIEF proposal; reconcile PRD | — | TODO | human | | |
+| H-07 | Render + Vercel accounts linked to the repo | — | TODO | human | | |
+| H-08 | Start a cloud audit after each phase | — | TODO | human | | |
+| H-09 | Rehearse the pitch on the deployed app | P9-03 | TODO | human | | |
+
+## Cloud audits — started by Haider in Claude Code on the web
+> `cloud-audit` never edits this file. Once `docs/audits/AUDIT-<P>.md` is on `main`, Haider (or the next local agent) sets the row to `DONE`, with the verdict in Note.
+
+| ID | Task | Depends | Status | Owner | Updated | Note |
+|---|---|---|---|---|---|---|
+| A-P0 | `/phase-audit P0` | P0-05 | TODO | cloud-audit | | |
+| A-P1 | `/phase-audit P1` | P1-04 | TODO | cloud-audit | | |
+| A-P2 | `/phase-audit P2` | P2-06 | TODO | cloud-audit | | |
+| A-P3 | `/phase-audit P3` | P3-04 | TODO | cloud-audit | | |
+| A-P4 | `/phase-audit P4` | P4-04 | TODO | cloud-audit | | |
+| A-P5 | `/phase-audit P5` | P5-04 | TODO | cloud-audit | | |
+| A-P6 | `/phase-audit P6` | P6-07 | TODO | cloud-audit | | |
+| A-P7 | `/phase-audit P7` | P7-04 | TODO | cloud-audit | | |
+| A-P8 | `/phase-audit P8` | P8-05 | TODO | cloud-audit | | |
+| A-P9 | `/phase-audit P9` | P9-03 | TODO | cloud-audit | | |

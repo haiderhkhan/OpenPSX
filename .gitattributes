@@ -1,0 +1,7 @@
+# Append-only shared logs: when two sides both add lines, keep both instead of conflicting.
+BUGS.md merge=union
+docs/MEMORY.md merge=union
+
+# Binary data
+*.db binary
+*.sqlite binary
