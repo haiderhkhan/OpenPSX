@@ -1,0 +1,14 @@
+{
+  "data_source": "mock",
+  "as_of": "2026-07-15",
+  "note": "Demo-only placeholder snapshot; refresh with verified live data before relying on it.",
+  "sbp_policy_rate": 11.0,
+  "policy_rate_direction": "easing",
+  "cpi_yoy": 7.2,
+  "cpi_trend": "disinflating",
+  "pkr_usd": 281.5,
+  "pkr_trend": "broadly stable with mild depreciation pressure",
+  "imf_program_status": "Placeholder: program review assumed on track; current status requires live verification.",
+  "kse100_level": 144000,
+  "kse100_trend": "rising over the recent period"
+}
