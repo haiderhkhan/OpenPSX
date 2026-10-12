@@ -569,6 +569,8 @@ Track B owns these backend files from now on (R-03). Use the `.venv` at the repo
   4. runs `npm run build` then `npm run start` on 3000;
   5. opens the browser.
 
+  Paths must work with a space in the repo path (D-22).
+
   Test it only while Track B's dev server is stopped (ask Haider).
 - **Done when:** a fresh run on Haider's laptop shows the full app, and with Wi-Fi off, pages still load (templates and the seed).
 

@@ -3,7 +3,7 @@
 # Claude Code — extra instructions
 
 ## Which Claude are you?
-- **Working directory is a Windows path** (`C:\Users\haide\...\OpenPSX`):
+- **Working directory is a Windows path** (`C:\Users\haide\Downloads\OPEN PSX`):
   - You are **`claude-code`, Track A**.
   - You own phases P0, P2, P4, P6, P8 and gate task G-02.
 - **Working directory is a Linux path** (Claude Code on the web):

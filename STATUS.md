@@ -13,7 +13,7 @@
 - Phase: P0 Foundation — DONE (exit criteria met; awaiting A-P0 cloud audit)
 - Last done: P0-05 · contracts frozen at P0-04 (13 stubs + fixtures, pytest 37 green)
 - Next: P2-01 (inspect source DB) → P2-02 (needs H-03) → P2-03
-- Blockers: P2-01 needs H-02 (source SQLite in `data/source/`); H-01 rename still TODO
+- Blockers: P2-01 needs H-02 (source SQLite in `data/source/`)
 - Updated: 2026-10-12 22:09 PKT
 
 ## Track B — antigravity
