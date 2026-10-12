@@ -1,0 +1,66 @@
+{
+  "as_of_date": "2026-10-09",
+  "kmi30_list_date": "2026-08-01",
+  "symbols": [
+    {
+      "symbol": "KMI30",
+      "name": "KMI-30 Index",
+      "type": "INDEX",
+      "sector": null,
+      "aliases": [
+        "kmi 30",
+        "kmi30",
+        "kmi"
+      ]
+    },
+    {
+      "symbol": "OGDC",
+      "name": "Oil & Gas Development Company Ltd",
+      "type": "STOCK",
+      "sector": "Oil & Gas Exploration Companies",
+      "aliases": [
+        "ogdcl",
+        "oil and gas development"
+      ]
+    },
+    {
+      "symbol": "LUCK",
+      "name": "Lucky Cement Ltd",
+      "type": "STOCK",
+      "sector": "Cement",
+      "aliases": [
+        "lucky cement",
+        "lucky"
+      ]
+    },
+    {
+      "symbol": "MEBL",
+      "name": "Meezan Bank Ltd",
+      "type": "STOCK",
+      "sector": "Commercial Banks",
+      "aliases": [
+        "meezan bank",
+        "meezan"
+      ]
+    },
+    {
+      "symbol": "HUBC",
+      "name": "The Hub Power Company Ltd",
+      "type": "STOCK",
+      "sector": "Power Generation & Distribution",
+      "aliases": [
+        "hub power",
+        "hubco"
+      ]
+    },
+    {
+      "symbol": "MZNPETF",
+      "name": "Meezan Pakistan ETF",
+      "type": "ETF",
+      "sector": null,
+      "aliases": [
+        "meezan pakistan etf"
+      ]
+    }
+  ]
+}

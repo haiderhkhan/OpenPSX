@@ -1,0 +1,49 @@
+{
+  "symbol": "OGDC",
+  "as_of_date": "2026-10-09",
+  "horizon": "1W",
+  "p_up": 0.58,
+  "stance": "POSITIVE",
+  "confidence": 0.16,
+  "volatility": {
+    "annualized_pct": 25.31,
+    "bucket": "MEDIUM"
+  },
+  "regime": {
+    "label": "UPTREND",
+    "scope": "KMI30"
+  },
+  "top_contributors": [
+    {
+      "feature": "ret_4w",
+      "label": "4-week return",
+      "value": 3.85,
+      "shap": 0.071
+    },
+    {
+      "feature": "kmi30_ret_4w",
+      "label": "KMI-30 4-week return",
+      "value": 2.1,
+      "shap": 0.044
+    },
+    {
+      "feature": "vol_20d",
+      "label": "20-day volatility",
+      "value": 27.9,
+      "shap": -0.031
+    },
+    {
+      "feature": "rsi_14",
+      "label": "RSI (14 days)",
+      "value": 61.2,
+      "shap": 0.022
+    },
+    {
+      "feature": "dist_ma_50",
+      "label": "Distance from 50-day average",
+      "value": 4.3,
+      "shap": -0.015
+    }
+  ],
+  "model_version": "quant-demo-0"
+}

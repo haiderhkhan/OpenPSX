@@ -1,0 +1,29 @@
+{
+  "symbol": "OGDC",
+  "basis": "calendar",
+  "as_of_date": "2026-10-09",
+  "mom": {
+    "pct": 11.22,
+    "base_date": "2026-09-09",
+    "base_value": 261.61,
+    "end_value": 290.97
+  },
+  "qoq": {
+    "pct": 11.93,
+    "base_date": "2026-07-09",
+    "base_value": 259.96,
+    "end_value": 290.97
+  },
+  "ytd": {
+    "pct": 11.3,
+    "base_date": "2025-12-31",
+    "base_value": 261.43,
+    "end_value": 290.97
+  },
+  "yoy": {
+    "pct": 22.55,
+    "base_date": "2025-10-09",
+    "base_value": 237.42,
+    "end_value": 290.97
+  }
+}

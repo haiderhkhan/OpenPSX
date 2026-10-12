@@ -1,0 +1,12 @@
+{
+  "status": "ok",
+  "as_of_date": "2026-10-09",
+  "version": "0.1.0-demo",
+  "llm_enabled": true,
+  "features": {
+    "etfs": true,
+    "macro_llm": true,
+    "fiscal_toggle": true,
+    "voice": true
+  }
+}

@@ -40,7 +40,7 @@
 |---|---|---|---|---|---|---|
 | P1-01 | Verify Antigravity setup + scaffold Next.js | H-01 | DONE | antigravity | 2026-10-12 22:05 | Next.js 16 App Router scaffolded, shadcn/ui, lightweight-charts, recharts |
 | P1-02 | App shell, design tokens, disclaimer | P1-01 | DONE | antigravity | 2026-10-12 22:13 | Shell, responsive Header/Nav/Footer, calm tokens, verbatim disclaimer |
-| P1-03 | Typed API client + mock mode | P1-01, P0-04 | DOING | antigravity | 2026-10-12 22:16 | |
+| P1-03 | Typed API client + mock mode | P1-01, P0-04 | DONE | antigravity | 2026-10-12 22:31 | Typed client for all 13 endpoints; sync-mocks copies fixtures |
 | P1-04 | Route skeletons + loading/error/empty states | P1-02, P1-03 | TODO | | | |
 | P3-01 | Overview page: KMI-30 card, basis toggle, table | P1-04 | TODO | | | |
 | P3-02 | Price chart: line/candle, ranges | P1-04 | TODO | | | |

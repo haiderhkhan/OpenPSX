@@ -1,0 +1,95 @@
+{
+  "as_of_date": "2026-10-09",
+  "basis": "calendar",
+  "index": {
+    "symbol": "KMI30",
+    "basis": "calendar",
+    "as_of_date": "2026-10-09",
+    "mom": {
+      "pct": 1.26,
+      "base_date": "2026-09-09",
+      "base_value": 181110.58,
+      "end_value": 183393.42
+    },
+    "qoq": {
+      "pct": -7.33,
+      "base_date": "2026-07-09",
+      "base_value": 197896.37,
+      "end_value": 183393.42
+    },
+    "ytd": {
+      "pct": 3.31,
+      "base_date": "2025-12-31",
+      "base_value": 177516.99,
+      "end_value": 183393.42
+    },
+    "yoy": {
+      "pct": -2.15,
+      "base_date": "2025-10-09",
+      "base_value": 187430.06,
+      "end_value": 183393.42
+    }
+  },
+  "rows": [
+    {
+      "symbol": "OGDC",
+      "name": "Oil & Gas Development Company Ltd",
+      "type": "STOCK",
+      "sector": "Oil & Gas Exploration Companies",
+      "last_close": 290.97,
+      "mom": 11.22,
+      "qoq": 11.93,
+      "ytd": 11.3,
+      "yoy": 22.55,
+      "quant_stance": "POSITIVE"
+    },
+    {
+      "symbol": "LUCK",
+      "name": "Lucky Cement Ltd",
+      "type": "STOCK",
+      "sector": "Cement",
+      "last_close": 1184.35,
+      "mom": -2.41,
+      "qoq": 4.87,
+      "ytd": 11.62,
+      "yoy": 18.05,
+      "quant_stance": "NEUTRAL"
+    },
+    {
+      "symbol": "MEBL",
+      "name": "Meezan Bank Ltd",
+      "type": "STOCK",
+      "sector": "Commercial Banks",
+      "last_close": 412.8,
+      "mom": 1.95,
+      "qoq": 7.3,
+      "ytd": 22.48,
+      "yoy": 31.9,
+      "quant_stance": "POSITIVE"
+    },
+    {
+      "symbol": "HUBC",
+      "name": "The Hub Power Company Ltd",
+      "type": "STOCK",
+      "sector": "Power Generation & Distribution",
+      "last_close": 151.27,
+      "mom": -4.12,
+      "qoq": -6.55,
+      "ytd": -3.08,
+      "yoy": 2.44,
+      "quant_stance": "NEGATIVE"
+    },
+    {
+      "symbol": "MZNPETF",
+      "name": "Meezan Pakistan ETF",
+      "type": "ETF",
+      "sector": null,
+      "last_close": 24.66,
+      "mom": 0.82,
+      "qoq": 5.1,
+      "ytd": null,
+      "yoy": null,
+      "quant_stance": null
+    }
+  ]
+}
