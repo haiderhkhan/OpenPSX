@@ -11,3 +11,4 @@ data/cache.db
 *.log
 graphify-out/*
 !graphify-out/GRAPH_REPORT.md
+*.stackdump
