@@ -15,7 +15,7 @@
 | P2-01 | Inspect source DB → SOURCE_DB.md | P0-05, H-02 | DONE | claude-code | 2026-10-12 22:50 | Raw prices to 09-23; ETFs to 08-04; macro thin (R-05) |
 | P2-02 | Universe files: KMI-30, ETFs, aliases | P2-01 | DONE | claude-code | 2026-10-12 23:06 | 30 + KMI30 + 9 ETFs from source; ETF names drafted (R-02) |
 | P2-03 | Target schema + build_db.py → data/openpsx.db | P2-01, P2-02 | DONE | claude-code | 2026-10-12 23:14 | AS_OF 2026-09-23; DB 10.0 MB; KMI30 back-filled before 2026-04-27 |
-| P2-04 | Bonus/split price adjustment | P2-03 | TODO | | | |
+| P2-04 | Bonus/split price adjustment | P2-03 | DONE | claude-code | 2026-10-12 23:19 | 9 breaks inferred (D-33); 0 violators; 23 drops to verify |
 | P2-05 | Manual CSV/Excel import + templates | P2-03 | TODO | | | |
 | P2-06 | Period analytics + live market endpoints + fixture DB | P2-04 | TODO | | | |
 | P4-01 | Weekly feature panel (no look-ahead) | P2-06 | TODO | | | |

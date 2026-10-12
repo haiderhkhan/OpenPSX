@@ -23,6 +23,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))  # run as a script: make `backend` importable
 
 from backend.config import DB_PATH, TZ  # noqa: E402
+from backend.db import adjust  # noqa: E402
 from backend.db.connection import SCHEMA_SQL, connect_rw  # noqa: E402
 
 SOURCE_DIR = ROOT / "data" / "source"
@@ -216,7 +217,10 @@ def build(source_dir: Path = SOURCE_DIR, universe_dir: Path = UNIVERSE_DIR, out:
         stats = {"STOCK": load_prices(conn, "psx.prices_daily", "symbol", "STOCK"),
                  "ETF": load_prices(conn, "etfp.etf_prices", "ticker", "ETF")}
         index_rows = load_index(conn)
-        # P2-04 adjusts bonus/split here: the back-fill below must use adjusted constituent returns.
+        # P2-04: adjust bonus/split before the back-fill, which needs adjusted constituent returns.
+        inferred = adjust.infer_breaks(conn)
+        adjust.apply_adjustments(conn)
+        violations, suspects = adjust.ex_date_violations(conn), adjust.suspect_drops(conn)
         first_real, backfilled = backfill_index(conn)
         fundamentals = load_fundamentals(conn)
         macro = load_macro(conn)
@@ -243,6 +247,7 @@ def build(source_dir: Path = SOURCE_DIR, universe_dir: Path = UNIVERSE_DIR, out:
         raise SystemExit(f"cannot replace {out}: stop the backend server, then rerun build_db") from exc
     return {"as_of": as_of, "covered": covered, "total": total, "list_date": list_date, "prices": stats,
             "index_rows": index_rows, "first_real": first_real, "backfilled": backfilled,
+            "inferred": inferred, "violations": violations, "suspects": suspects,
             "fundamentals": fundamentals, "macro": macro, "gaps": gaps, "size_mb": out.stat().st_size / 1e6}
 
 
@@ -260,6 +265,14 @@ def report(summary: dict, out: Path, seconds: float) -> None:
                 """SELECT p.symbol, MIN(p.date), MAX(p.date), COUNT(*) FROM prices_daily p
                    JOIN symbols s ON s.symbol = p.symbol WHERE s.type = 'ETF' GROUP BY 1 ORDER BY 1"""):
             print(f"  ETF {symbol:8} {first} → {last} ({n} rows)")
+    print(f"Share events inferred from breaks beyond ±{adjust.BREAK_MOVE:.0%} (stored as SPLIT, prev/close):")
+    for symbol, day, ratio in summary["inferred"]:
+        print(f"  {symbol:8} {day} ratio {ratio:.4f}")
+    print(f"Ex-date adj moves ≥ {adjust.BREAK_MOVE:.0%} (violators): {summary['violations'] or 'none'}")
+    print(f"Unadjusted stock drops {adjust.SUSPECT_MOVE:.0%}–{adjust.BREAK_MOVE:.0%} (> Rs 1) to verify "
+          f"(bonus / rights / dividend?): {len(summary['suspects'])}")
+    for symbol, day, prev, close, move in summary["suspects"]:
+        print(f"  {symbol:8} {day} {prev} → {close} ({move:+.1%})")
     gaps = summary["gaps"]
     print(f"Gaps > {GAP_DAYS} trading days: {len(gaps)}")
     for symbol, prev, day, n in sorted(gaps, key=lambda g: -g[3])[:15]:
