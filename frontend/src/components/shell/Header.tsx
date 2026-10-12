@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { Nav } from "./Nav";
 import { ThemeToggle } from "./ThemeToggle";
@@ -38,7 +38,9 @@ export function Header({ asOfDate }: HeaderProps) {
 
         {/* Desktop Nav */}
         <div className="hidden items-center gap-4 md:flex">
-          <Nav />
+          <Suspense fallback={<div className="h-6 w-32" />}>
+            <Nav />
+          </Suspense>
           <div className="h-4 w-px bg-border" aria-hidden="true" />
           <ThemeToggle />
         </div>
@@ -65,7 +67,9 @@ export function Header({ asOfDate }: HeaderProps) {
           <div className="mb-2 text-xs text-muted-foreground">
             Data as of <span className="font-mono font-medium text-foreground">{displayDate}</span>
           </div>
-          <Nav className="flex-col items-start gap-1" onItemClick={() => setMobileMenuOpen(false)} />
+          <Suspense fallback={<div className="h-16 w-32" />}>
+            <Nav className="flex-col items-start gap-1" onItemClick={() => setMobileMenuOpen(false)} />
+          </Suspense>
         </div>
       )}
     </header>

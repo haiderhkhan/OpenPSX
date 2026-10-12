@@ -77,3 +77,4 @@
 <!-- Append here: what worked, what broke, commands that turned out to be the right ones. -->
 - 2026-10-12 · antigravity · L-01 Next.js 16 + Tailwind 4 + shadcn initialized cleanly with default flags; fixed create-next-app undefined LayoutProps in layout.tsx using React.ReactNode.
 - 2026-10-12 · antigravity · L-02 Next.js 16 with Cache Components flags new Date() in static components during prerender; use static constant or client boundary. ThemeToggle uses useSyncExternalStore to avoid React 19 setState-in-effect lint error.
+- 2026-10-12 · antigravity · L-03 Next.js 16 Partial Prerender requires usePathname() in Header Nav to be wrapped in Suspense. Dynamic route /stock/[symbol] uses generateStaticParams and loading.tsx for clean static prerender.

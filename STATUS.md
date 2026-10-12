@@ -17,11 +17,11 @@
 - Updated: 2026-10-12 22:09 PKT
 
 ## Track B — antigravity
-- Phase: P1 Frontend shell — in progress
-- Last done: P1-03
-- Next: P1-04
+- Phase: P1 Frontend shell — DONE (exit criteria met; awaiting A-P1 cloud audit)
+- Last done: P1-04 · 4 routes render on mocks; npm run build green; typed client for 13 endpoints
+- Next: P3-01 (Overview page) after A-P1 audit
 - Blockers: none
-- Updated: 2026-10-12 22:31 PKT
+- Updated: 2026-10-12 22:44 PKT
 
 ## Human — Haider
 - Now: H-01 (rename + add docs + push) → open both tools
