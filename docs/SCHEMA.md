@@ -7,7 +7,8 @@
 - **Dates:** ISO `YYYY-MM-DD`. Timestamps: ISO 8601 with offset, PKT (`2026-10-14T09:30:00+05:00`). Timezone: `Asia/Karachi`.
 - **Symbols:** PSX tickers in uppercase (`OGDC`). The KMI-30 index is the pseudo-symbol **`KMI30`**, with `type = INDEX`.
 - **Percentages:** in API JSON they are **percent numbers**, rounded to 2 dp (`12.34` means 12.34%). Probabilities and confidences are **0–1**, 2 dp.
-- **`AS_OF_DATE`:** `meta.as_of_date`, set by `build_db.py`. It is the last date on which ≥ 90% of universe symbols have a close. **No output may use data after it.**
+- **`AS_OF_DATE`:** `meta.as_of_date`, set by `build_db.py`. It is the last date on which ≥ 90% of universe **STOCK + INDEX** symbols have a close (D-24). **No output may use data after it.**
+  - ETFs keep their own last date. Every per-symbol output carries the symbol's **effective date** = `min(AS_OF_DATE, the symbol's last close)`: `OverviewRow.last_date`, and the `as_of_date` of that symbol's `ChangeSet`.
 - **Field names:** JSON keys are `snake_case`, in both Pydantic and TypeScript.
 
 ## 2. Database — `data/openpsx.db` (SQLite, committed)
@@ -15,7 +16,7 @@ Built from scratch by `scripts/build_db.py` (P2-03). The source-to-target mappin
 
 ```sql
 CREATE TABLE meta (
-  key   TEXT PRIMARY KEY,   -- as_of_date, built_at, kmi30_list_date, schema_version, source_note
+  key   TEXT PRIMARY KEY,   -- as_of_date, built_at, kmi30_list_date, kmi30_backfilled_before, schema_version, source_note
   value TEXT NOT NULL
 );
 
@@ -38,9 +39,10 @@ CREATE TABLE prices_daily (
   close      REAL NOT NULL,                      -- raw close as traded
   volume     INTEGER,
   adj_close  REAL NOT NULL,                      -- bonus/split adjusted (P2-04); = close until adjusted
-  source     TEXT NOT NULL,                      -- 'source_db' | 'manual'
+  source     TEXT NOT NULL,                      -- 'source_db' | 'manual' | 'backfill' (precedence manual > source_db > backfill, D-25)
   PRIMARY KEY (symbol, date)
 );                                               -- KMI30 index rows live here too (OHLC may be NULL)
+                                                 -- KMI30 before meta.kmi30_backfilled_before = equal-weight constituent back-fill (D-25)
 
 CREATE TABLE corporate_actions (
   symbol       TEXT NOT NULL REFERENCES symbols(symbol),
@@ -54,11 +56,12 @@ CREATE TABLE corporate_actions (
 CREATE TABLE fundamentals (
   symbol        TEXT NOT NULL REFERENCES symbols(symbol),
   period_end    TEXT NOT NULL,
-  period_type   TEXT NOT NULL CHECK (period_type IN ('Q1','H1','9M','FY')),  -- cumulative, PSX style
-  fiscal_year   INTEGER NOT NULL,                -- company FY label (FY ends Jun → FY2026 = Jul25–Jun26)
-  eps           REAL,
+  period_type   TEXT NOT NULL CHECK (period_type IN ('Q1','H1','9M','FY','TTM')),  -- cumulative, PSX style; TTM = snapshot (D-26)
+  fiscal_year   INTEGER NOT NULL,                -- company FY label (FY ends Jun → FY2026 = Jul25–Jun26); TTM: last FY ended ≤ period_end
+  eps           REAL,                            -- TTM row: snapshot close / snapshot P/E (D-29)
   revenue       REAL,                            -- PKR millions
   net_income    REAL,                            -- PKR millions
+  dps           REAL,                            -- TTM cash dividend per share, PKR: yield % × snapshot close / 100 (D-29)
   source        TEXT NOT NULL,
   PRIMARY KEY (symbol, period_end, period_type)
 );
@@ -171,6 +174,7 @@ interface Change { pct: number | null; base_date: string | null; base_value: num
 interface ChangeSet { symbol: string; basis: Basis; as_of_date: string; mom: Change; qoq: Change; ytd: Change; yoy: Change }
 
 interface OverviewRow { symbol: string; name: string; type: SymbolType; sector: string | null; last_close: number;
+  last_date: string;                                     // effective date = min(AS_OF_DATE, last close) (§1, D-24)
   mom: number | null; qoq: number | null; ytd: number | null; yoy: number | null; quant_stance: Stance | null }
 interface Overview { as_of_date: string; basis: Basis; index: ChangeSet; rows: OverviewRow[] }
 
@@ -342,7 +346,7 @@ CREATE INDEX idx_cache_expires ON llm_cache(expires_at);
 | Agent | Input payload (Python-computed) | LLM output | Cap | Template rule (fallback) |
 |---|---|---|---|---|
 | quant | — (no LLM) | — | — | from §6 stance; reasons = top 3 contributors in words |
-| fundamentals | latest EPS and YoY EPS growth %, TTM P/E, KMI-30 median P/E, revenue YoY %, dividend yield % (TTM cash dividends / price) | stance + 1–3 reasons | 220 | EPS growth > 0 and P/E ≤ 1.2 × median → POSITIVE; EPS growth < 0 → NEGATIVE; else NEUTRAL |
+| fundamentals | TTM EPS, P/E (close at AS_OF / TTM EPS) vs KMI-30 median P/E, dividend yield % (TTM DPS / close); EPS growth % and revenue YoY % only when period rows exist (D-26) | stance + 1–3 reasons | 220 | EPS > 0 and P/E ≤ 1.2 × median → POSITIVE; EPS < 0 → NEGATIVE; else NEUTRAL |
 | sentiment | ≤ 10 matched headlines (id, date, title) from the last 30 days ≤ AS_OF | stance + reasons citing `[#id]` | 220 | lexicon score (`backend/agents/lexicon.py`): sum > 0 → POSITIVE, < 0 → NEGATIVE; no headlines → NEUTRAL "no recent coverage" |
 | macro | policy rate + 12w change, CPI YoY, PKR/USD + 4w change | stance + brief (≤ 2 sentences) | 260 | rate falling and CPI falling → POSITIVE; rate rising or PKR down > 2% in 4w → NEGATIVE; else NEUTRAL |
 | verdict_summary | label, confidence, agent stances + first reason each | 2 sentences | 120 | "Overall outlook: {label} ({confidence}% confidence). {n_agree} of {n_active} signals agree." |

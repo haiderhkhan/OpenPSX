@@ -13,7 +13,7 @@
 | P0-04 | FastAPI skeleton + 13 contract stubs + fixtures | P0-02, P0-03 | DONE | claude-code | 2026-10-12 15:16 | Contracts frozen; 13 fixtures in contracts/fixtures; Track B may start P1-03 |
 | P0-05 | Test harness + graphify baseline | P0-04 | DONE | claude-code | 2026-10-12 22:09 | Network-blocked conftest; graphify command in MEMORY G-14 |
 | P2-01 | Inspect source DB → SOURCE_DB.md | P0-05, H-02 | DONE | claude-code | 2026-10-12 22:50 | Raw prices to 09-23; ETFs to 08-04; macro thin (R-05) |
-| P2-02 | Universe files: KMI-30, ETFs, aliases | P2-01, H-03 | TODO | | | |
+| P2-02 | Universe files: KMI-30, ETFs, aliases | P2-01 | TODO | | | |
 | P2-03 | Target schema + build_db.py → data/openpsx.db | P2-01, P2-02 | TODO | | | |
 | P2-04 | Bonus/split price adjustment | P2-03 | TODO | | | |
 | P2-05 | Manual CSV/Excel import + templates | P2-03 | TODO | | | |

@@ -44,6 +44,7 @@ class OverviewRow(ApiModel):
     type: SymbolType
     sector: str | None
     last_close: float
+    last_date: dt.date  # effective date = min(AS_OF_DATE, last close) (D-24)
     mom: float | None
     qoq: float | None
     ytd: float | None

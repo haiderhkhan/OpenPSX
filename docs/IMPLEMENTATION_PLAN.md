@@ -10,7 +10,7 @@
 |---|---|---|
 | H-01 | **Before opening either tool:** <br>1. Rename `C:\Users\haide\Downloads\psx-war-room-main\OPEN PSX` → `...\OpenPSX`. <br>2. Copy this docs package into the folder root. <br>3. `git add -- AGENTS.md CLAUDE.md TRACKER.md STATUS.md BUGS.md .gitattributes docs .claude .agents` <br>4. `git commit -m "[H-01] add project operating docs" -- AGENTS.md CLAUDE.md TRACKER.md STATUS.md BUGS.md .gitattributes docs .claude .agents` <br>5. `git push origin main` | Mon, now |
 | H-02 | Copy the source SQLite into `data/source/` (gitignored by P0-02; don't commit it) | P2-01 (Tue AM) |
-| H-03 | Run research **R-01, R-02, R-03** in Gemini; save each answer as `docs/research/R-0x-<topic>.md`; commit `[H-03] research universe` | P2-02 (Tue 09:00) |
+| H-03 | **Verification pass, not a blocker:** run research **R-01, R-02, R-03** in Gemini; save each answer as `docs/research/R-0x-<topic>.md`; compare R-01/R-03 with the source-derived `data/universe/*.csv` (P2-02) and log any differences in `BUGS.md`; commit `[H-03] research universe` | before P7-01 |
 | H-04 | Run research **R-04**; save as `docs/research/R-04-api-limits.md`; commit | P6-01 (Wed 09:00) |
 | H-05 | Create `.env` from `.env.example` (all keys) and `frontend/.env.local` from `frontend/.env.example` | after P0-02 / P1-03 |
 | H-06 | Paste the submitted proposal into `docs/research/AIEF_PROPOSAL.md`; ask Claude (chat) to reconcile `docs/PRD.md` | any time before Thu |
@@ -27,7 +27,9 @@ Ask for sources in every prompt. Each saved file must include the date and the s
 | R-02 | "List every exchange-traded fund (ETF) currently listed on the Pakistan Stock Exchange. For each: PSX ticker, full name, asset manager, benchmark index, listing date, Shariah-compliant (yes/no). Link official sources. Output as CSV with header `symbol,name,manager,benchmark,listed_since,shariah`." | `R-02-etfs.md` |
 | R-03 | "For each PSX ticker below, list the common names and abbreviations used for the company in Pakistani English-language business news (Dawn, Business Recorder), e.g. 'Lucky Cement', 'Lucky'. Output CSV `symbol,aliases` with aliases separated by `|`. Tickers: <paste R-01 + R-02 symbols>" | `R-03-aliases.md` |
 | R-04 | "As of October 2026, from official Google AI and Groq documentation: (1) the exact Gemini API model ID of the current Flash-Lite model; (2) its free-tier limits (RPM, TPM, RPD) and whether limits are per project or per API key; (3) whether the google-genai Python SDK supports `response_schema` JSON output and disabling thinking (`thinking_budget=0`) for that model, with a code example; (4) the current Groq Whisper model IDs, free-tier limits, max audio file size, and the transcription endpoint URL. Cite every source." | `R-04-api-limits.md` |
-| R-05 | *(only if P2-01 finds macro gaps)* "Monthly data for Pakistan from Jan 2016 to the latest available: SBP policy rate with each decision date; CPI YoY inflation with each release date; PKR/USD month-end interbank rate. Official SBP/PBS sources. Output CSV `series,date,value,release_date,source` with series in {POLICY_RATE, CPI_YOY, PKR_USD}." | `R-05-macro.md` |
+| R-05 | *(P2-01 found macro gaps; links only, D-27)* "Give me only the official download pages (State Bank of Pakistan, Pakistan Bureau of Statistics) where I can download, as CSV/Excel, Pakistan's (1) SBP policy rate history with decision dates, (2) monthly CPI YoY inflation with release dates, (3) daily or month-end PKR/USD interbank rate, Jan 2016 to today. For each: the exact URL, the file format and which column holds the date and the value. Do not give any numbers." | `R-05-macro.md` (Haider downloads the files → P2-05 import) |
+| R-06 | *(links only, D-27)* "Where can I download daily closing values of the KMI-30 index (Pakistan Stock Exchange) from August 2016 to 26 April 2026? List official or public sources (PSX, data vendors, broker portals) with the exact URL, file format and any sign-in needed. Do not give any numbers." | `R-06-kmi30-history.md` (Haider downloads → P2-05 `kmi30_history` import) |
+| R-07 | *(curated headlines, D-28)* "List English-language news headlines from Dawn (dawn.com) and Business Recorder (brecorder.com) published 24 Aug – 23 Sep 2026 about these KMI-30 companies: <paste kmi30.csv symbols + names>. Output CSV `published_at,source,title,url` with `source` in {DAWN, BR}, `published_at` as `YYYY-MM-DD`, the exact headline and its article URL. Every row must have a working URL; omit any headline you cannot link." | `R-07-news.csv` (→ P2-05 `news` import; P6-05 verifies each URL) |
 
 ---
 
@@ -194,10 +196,10 @@ Ask for sources in every prompt. Each saved file must include the date and the s
   - `MEMORY.md` has the source size and the candidate last clean price date (answers Q-02, part of Q-01).
 
 ### P2-02 · Universe files
-- **Depends:** P2-01, H-03 · **Est:** 30 min
+- **Depends:** P2-01 (H-03 verifies afterwards) · **Est:** 30 min
 - **Files:** `data/universe/kmi30.csv`, `data/universe/etfs.csv`
 - **Do:**
-  - Build both files from R-01/R-02/R-03 in the §3 formats, with `list_date` and source in the KMI-30 header comment.
+  - Build both files **from the source** (D-27): `psx.db` `in_kmi30` symbols + sectors, the 9 ETFs from `psx_etfs.db`, in the §3 formats, with `list_date` and source in the KMI-30 header comment. Aliases are drafted from company names (header comment: "aliases drafted; R-03 verification pending"). If the source has no list date: "unverified — R-01 pending".
   - Add a `KMI30` index row to `kmi30.csv`, marked type INDEX by `build_db`, with aliases `kmi 30|kmi30|kmi`.
   - Cross-check every symbol against the source DB tickers and list mismatches in `SOURCE_DB.md`. Fix ticker spelling differences in the mapping, never by renaming in the CSV.
 - **Done when:**
@@ -236,7 +238,8 @@ Ask for sources in every prompt. Each saved file must include the date and the s
 
 ### P2-05 · Manual CSV/Excel import + templates
 - **Depends:** P2-03 · **Est:** 40 min
-- **Files:** `scripts/import_manual.py`, `data/manual/templates/{prices,fundamentals,macro,corporate_actions,news}.csv`, `backend/tests/test_import_manual.py`
+- **Files:** `scripts/import_manual.py`, `data/manual/templates/{prices,kmi30_history,fundamentals,macro,corporate_actions,news}.csv`, `backend/tests/test_import_manual.py`
+- **Note:** this is the only way macro (R-05), KMI-30 history (R-06), news (R-07, with a `url` column) and any ETF top-up arrive (D-27, D-28). `kmi30_history` = the prices template with symbol `KMI30`; imported rows replace back-fill rows (D-25).
 - **Do:**
   - `.csv` / `.xlsx` → validated upsert into `openpsx.db`.
   - A `--dry-run` flag.

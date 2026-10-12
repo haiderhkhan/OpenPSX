@@ -35,6 +35,12 @@
 - 2026-10-12 · claude-code · D-21 D-19 (query defaults) and D-20 (bad input → 400 `BAD_REQUEST` as `ApiError`) are now part of the contract in `docs/SCHEMA.md` §4.2; behaviour unchanged since P0-04.
 - 2026-10-12 · haider · D-22 Supersedes D-16: the local folder stays `OPEN PSX` (renaming mid-sprint costs more than it saves). All scripts must survive a space in the path: pathlib in Python; $PSScriptRoot and quoted paths in PowerShell (applies to scripts/run_local.ps1 in P8-04).
 - 2026-10-12 · haider · D-23 Survivorship bias accepted: the backtest uses today's frozen KMI-30 list for all past years. P4-04 must state this in `ModelCard.limitations`.
+- 2026-10-12 · haider · D-24 `AS_OF_DATE` = the 90% rule over STOCK + INDEX only (→ 2026-09-23). ETFs keep their own last date; every per-symbol output carries the effective date `min(AS_OF_DATE, the symbol's last close)` (`OverviewRow.last_date`, SCHEMA §1).
+- 2026-10-12 · haider · D-25 KMI30 history before the first real row is back-filled with the equal-weighted mean daily adj return of the 30 frozen constituents, chain-linked and scaled to equal the real close on the first real date. `meta.kmi30_backfilled_before` = that first real date. Precedence for any (symbol, date): manual > source DB > back-fill. Disclose in `ModelCard.limitations`, the About page and the compare-chart footnote.
+- 2026-10-12 · haider · D-26 The 2026-07-31 fundamentals snapshot is valid as current fundamentals (it predates `AS_OF_DATE`). Load it as `period_type = 'TTM'`. Never copy it backwards.
+- 2026-10-12 · haider · D-27 Numbers never come from LLM research. Research may supply lists, names and links only. Macro, index history and prices come only from official downloads via manual import (P2-05).
+- 2026-10-12 · haider · D-28 News comes from curated manual headlines (24 Aug – 23 Sep 2026), each with a URL that P6-05 verifies (resolves + title match). Sentiment abstains below 3 headlines.
+- 2026-10-12 · claude-code · D-29 Applies D-26: SCHEMA §2 `fundamentals` gains a nullable `dps` column. The TTM row stores `eps = snapshot close / snapshot P/E` and `dps = dividend_yield % × snapshot close / 100` (both computed in Python, at the 2026-07-31 close); §9 recomputes P/E and yield with the close at AS_OF. Back-filled KMI30 rows use `prices_daily.source = 'backfill'`.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
