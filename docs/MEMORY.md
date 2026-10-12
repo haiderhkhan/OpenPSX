@@ -34,6 +34,7 @@
 - 2026-10-12 · claude-code · D-20 Errors: raise `backend.api.ApiException(status, code, message)`; `main.py` renders it as `ApiError`. Request validation errors → 400 `BAD_REQUEST` (not FastAPI's 422). Fixtures: as_of `2026-10-09`, synthetic seed-42 OGDC/KMI30 series.
 - 2026-10-12 · claude-code · D-21 D-19 (query defaults) and D-20 (bad input → 400 `BAD_REQUEST` as `ApiError`) are now part of the contract in `docs/SCHEMA.md` §4.2; behaviour unchanged since P0-04.
 - 2026-10-12 · haider · D-22 Supersedes D-16: the local folder stays `OPEN PSX` (renaming mid-sprint costs more than it saves). All scripts must survive a space in the path: pathlib in Python; $PSScriptRoot and quoted paths in PowerShell (applies to scripts/run_local.ps1 in P8-04).
+- 2026-10-12 · haider · D-23 Survivorship bias accepted: the backtest uses today's frozen KMI-30 list for all past years. P4-04 must state this in `ModelCard.limitations`.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
@@ -66,12 +67,21 @@
   - **Don't use `graphify update .`**: it ignores the code-only filter and pulls root/`.claude`/`.agents` markdown and `requirements.txt` into the graph. If that happens, delete `graphify-out/` and rerun the two lines (`--force --code-only` keeps stale non-code nodes).
   - In Git Bash, single-quote `'!frontend/src/'` (history expansion). Commit only `graphify-out/GRAPH_REPORT.md`.
 - 2026-10-12 · claude-code · G-15 Supersedes the G-11 one-liner (missing f-string): `.venv\Scripts\python -c "from datetime import datetime; from zoneinfo import ZoneInfo; print(f'{datetime.now(ZoneInfo(\"Asia/Karachi\")):%Y-%m-%d %H:%M}')"`, or PowerShell `Get-Date -Format "yyyy-MM-dd HH:mm"` (machine clock is PKT).
+- 2026-10-12 · claude-code · G-16 Source traps (P2-01, details in `docs/research/SOURCE_DB.md`):
+  - `psx.db.prices_daily` closes are **raw**; bonus/split breaks are flagged in `daily_snapshot.is_price_break` (7 in KMI-30). P2-04 must adjust them.
+  - `daily_snapshot` P/E, market cap and dividend yield are a 2026-07-31 snapshot copied back to 2016 (look-ahead). Never use them as features.
+  - `is_anomaly = 1` mostly means OHLC-inconsistent (open/close outside [low, high]); the close is usable.
+- 2026-10-12 · claude-code · G-17 The source ends 2026-09-23: from 2026-09-25 PSX DPS refused the old scraper (`vendor_blocked`, PSXAuthError). Later prices come only through P2-05 manual import.
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.
 - 2026-10-12 · claude · Q-02 Size of the source and target DB (commit only if < 50 MB) → P2-01 / P2-03.
 - 2026-10-12 · claude · Q-03 Exact Gemini Flash-Lite model ID, free-tier limits, JSON-schema + thinking-off support; Groq Whisper model ID + limits → R-04 (H-04).
 - 2026-10-12 · claude · Q-04 Does the submitted AIEF proposal promise anything not in the PRD? → H-06.
+- 2026-10-12 · claude-code · Q-02 answered (source part): `data/source/` = psx.db 753.7 MB + etf.db 13.1 MB + macro.db 3.2 MB + psx_etfs.db 0.7 MB (770.7 MB, gitignored). Target size → P2-03.
+- 2026-10-12 · claude-code · Q-01 candidate (P2-01): **2026-09-23** (30/30 KMI-30 + KMI30 have a close). Under SCHEMA §1 with the 9 ETFs in the universe it is **2026-08-04**, because ETF prices end there (31/40 = 77.5% after). Final value in P2-03.
+- 2026-10-12 · claude-code · Q-05 KMI-30 index history in the source starts 2026-04-27 (100 rows): no SMA200 regime, NaN index features, null KMI-30 YoY. Get 2016 → 2026-04-24 closes via P2-05, or reconstruct a proxy? → Haider.
+- 2026-10-12 · claude-code · Q-06 Macro has 1 observation each for POLICY_RATE / CPI_YOY / PKR_USD and no release dates → R-05. Period fundamentals (EPS / revenue / net income) are absent → manual import or research? → Haider.
 
 ## Learnings
 <!-- Append here: what worked, what broke, commands that turned out to be the right ones. -->

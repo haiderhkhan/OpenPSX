@@ -10,11 +10,11 @@
 **Deployed URLs:** frontend _tbd_ · backend _tbd_
 
 ## Track A — claude-code
-- Phase: P0 Foundation — DONE (exit criteria met; awaiting A-P0 cloud audit)
-- Last done: P0-05 · contracts frozen at P0-04 (13 stubs + fixtures, pytest 37 green)
-- Next: P2-01 (inspect source DB) → P2-02 (needs H-03) → P2-03
-- Blockers: P2-01 needs H-02 (source SQLite in `data/source/`)
-- Updated: 2026-10-12 22:09 PKT
+- Phase: P2 Data layer — in progress (P0 DONE, awaiting A-P0 audit)
+- Last done: P2-01 · `docs/research/SOURCE_DB.md` (stocks to 2026-09-23, ETFs to 08-04)
+- Next: P2-02 → P2-03 → P2-04 → P2-06 → P2-05
+- Blockers: P2-02 needs H-03 (R-01/02/03); asks R-05 (macro), Q-05 (KMI-30 history)
+- Updated: 2026-10-12 22:50 PKT
 
 ## Track B — antigravity
 - Phase: P1 Frontend shell — DONE (exit criteria met; awaiting A-P1 cloud audit)
