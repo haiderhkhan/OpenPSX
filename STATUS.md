@@ -4,7 +4,7 @@
 > Task-level truth is in `TRACKER.md`; this file is the 30-second summary.
 
 **Deadline:** Thu 15 Oct 2026, 18:00 PKT — deployed + demo-ready
-**AS_OF_DATE (last clean price date):** _unknown — set by P2-03_
+**AS_OF_DATE (last clean price date):** 2026-09-23 (D-24: STOCK + INDEX; ETFs end 2026-08-04)
 **Drop-order state:** nothing dropped · order if behind: ① ETF coverage → ② Macro LLM (template) → ③ fiscal toggle → ④ Whisper
 **Next checkpoint:** C1 — Tue 13 Oct 23:00 PKT (`docs/PHASES.md` §4)
 **Deployed URLs:** frontend _tbd_ · backend _tbd_

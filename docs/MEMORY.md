@@ -42,6 +42,8 @@
 - 2026-10-12 · haider · D-28 News comes from curated manual headlines (24 Aug – 23 Sep 2026), each with a URL that P6-05 verifies (resolves + title match). Sentiment abstains below 3 headlines.
 - 2026-10-12 · claude-code · D-29 Applies D-26: SCHEMA §2 `fundamentals` gains a nullable `dps` column. The TTM row stores `eps = snapshot close / snapshot P/E` and `dps = dividend_yield % × snapshot close / 100` (both computed in Python, at the 2026-07-31 close); §9 recomputes P/E and yield with the close at AS_OF. Back-filled KMI30 rows use `prices_daily.source = 'backfill'`.
 - 2026-10-12 · claude-code · D-30 P2-02 universe from the source: `kmi30_list_date` = 2026-07-28, the first `index_membership` snapshot with these exact 30 (the API needs a date; the recomposition date is unverified until R-01). ETF names and managers are not in any source DB, so they were drafted from the tickers/benchmarks and await R-02; `listed_since` is blank.
+- 2026-10-12 · haider · D-31 Macro release dates (rule A; the source has no publication dates): POLICY_RATE = the decision date; CPI_YOY = the 5th of the month after the observation month; PKR_USD = the observation day; never before the observation date. Applied in `build_db.release_date` (P2-03).
+- 2026-10-12 · haider · D-32 Applies D-24 in P2-03: `AS_OF_DATE` = **2026-09-23** (31 / 31 STOCK + INDEX); written to `meta` and the STATUS.md AS_OF line. Answers Q-01.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
@@ -89,6 +91,7 @@
 - 2026-10-12 · claude-code · Q-01 candidate (P2-01): **2026-09-23** (30/30 KMI-30 + KMI30 have a close). Under SCHEMA §1 with the 9 ETFs in the universe it is **2026-08-04**, because ETF prices end there (31/40 = 77.5% after). Final value in P2-03.
 - 2026-10-12 · claude-code · Q-05 KMI-30 index history in the source starts 2026-04-27 (100 rows): no SMA200 regime, NaN index features, null KMI-30 YoY. Get 2016 → 2026-04-24 closes via P2-05, or reconstruct a proxy? → Haider.
 - 2026-10-12 · claude-code · Q-06 Macro has 1 observation each for POLICY_RATE / CPI_YOY / PKR_USD and no release dates → R-05. Period fundamentals (EPS / revenue / net income) are absent → manual import or research? → Haider.
+- 2026-10-12 · claude-code · Q-02 answered (target): `data/openpsx.db` = 10.0 MB (< 50 MB, committed). Build ~2 s.
 
 ## Learnings
 <!-- Append here: what worked, what broke, commands that turned out to be the right ones. -->

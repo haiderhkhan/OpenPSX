@@ -128,6 +128,23 @@ From 2026-08-05 on, only 31 / 40 (77.5%) have a close, because ETF data stops. *
 | `news` | none | P6-05 |
 | `quant_predictions` | none | P4 (ignore `model_rank_ledger`) |
 
+## 5a. Universe cross-check (P2-02) and build result (P2-03)
+- `data/universe/*.csv` are built from the source itself (D-27, D-30): the 30 `in_kmi30` symbols and names match `psx.db.symbols` exactly; the 9 ETFs match `psx_etfs.db` tickers. **No ticker mismatches.** R-01/R-02/R-03 verify them later (H-03).
+- `scripts/build_db.py` (D-24, D-25, D-26, D-29, rule A for macro release dates), first run 2026-10-12:
+
+| Item | Result |
+|---|---|
+| `data/openpsx.db` | **10.0 MB**, built in ~2 s |
+| `AS_OF_DATE` | **2026-09-23** (31 / 31 STOCK + INDEX have a close) |
+| Stock rows | 72,711 (73 with O/H/L set NULL; 0 dropped) |
+| ETF rows | 7,189 (353 with O/H/L set NULL); every ETF ends 2026-08-04 |
+| KMI30 | 100 real rows from **2026-04-27**; 2,410 back-filled rows 2016-08-04 → 2026-04-24 (`kmi30_backfilled_before = 2026-04-27`) |
+| Fundamentals | 30 TTM rows (period_end 2026-07-31, FY2026) |
+| Macro | 3 rows: POLICY_RATE 11.5 (2026-07-27), CPI_YOY 9.2 (2026-07-31, released 2026-08-05), PKR_USD 277.55 (2026-08-24) |
+| Gaps > 5 trading days | 96, all ETFs (illiquid); none for stocks |
+
+- Until P2-04 adjusts bonus/split breaks, the back-fill inherits them (e.g. −5.7% on 2025-04-28 from LUCK's split); `build_db` runs the adjustment before the back-fill.
+
 ## 6. Open issues for Haider
 1. **Macro is thin → run R-05** (§3.4).
 2. **ETF prices end 2026-08-04** → AS_OF is 2026-08-04 under the strict rule. Fill 2026-08-05 → AS_OF for the ETFs via P2-05, or scope the 90% rule to stocks + index.
