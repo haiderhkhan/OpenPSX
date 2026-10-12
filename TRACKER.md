@@ -41,7 +41,7 @@
 | P1-01 | Verify Antigravity setup + scaffold Next.js | H-01 | DONE | antigravity | 2026-10-12 22:05 | Next.js 16 App Router scaffolded, shadcn/ui, lightweight-charts, recharts |
 | P1-02 | App shell, design tokens, disclaimer | P1-01 | DONE | antigravity | 2026-10-12 22:13 | Shell, responsive Header/Nav/Footer, calm tokens, verbatim disclaimer |
 | P1-03 | Typed API client + mock mode | P1-01, P0-04 | DONE | antigravity | 2026-10-12 22:31 | Typed client for all 13 endpoints; sync-mocks copies fixtures |
-| P1-04 | Route skeletons + loading/error/empty states | P1-02, P1-03 | TODO | | | |
+| P1-04 | Route skeletons + loading/error/empty states | P1-02, P1-03 | DOING | antigravity | 2026-10-12 22:36 | |
 | P3-01 | Overview page: KMI-30 card, basis toggle, table | P1-04 | TODO | | | |
 | P3-02 | Price chart: line/candle, ranges | P1-04 | TODO | | | |
 | P3-03 | Return bars + vs-KMI-30 overlay | P1-04 | TODO | | | |
@@ -68,7 +68,7 @@
 | ID | Task | Depends | Status | Owner | Updated | Note |
 |---|---|---|---|---|---|---|
 | H-01 | Rename folder to OpenPSX, add docs, first push | — | DONE | human | 2026-10-12 22:23 | docs added; rename dropped (D-22) |
-| H-02 | Copy source SQLite into data/source/ | H-01 | TODO | human | | |
+| H-02 | Copy source SQLite into data/source/ | H-01 | DONE | human | 2026-10-12 22:39 | 4 DBs from etf_d19_worktree |
 | H-03 | Gemini research R-01, R-02, R-03 (universe) | — | TODO | human | | |
 | H-04 | Gemini research R-04 (model IDs + limits) | — | TODO | human | | |
 | H-05 | Create .env and frontend/.env.local | P0-02, P1-03 | TODO | human | | |
