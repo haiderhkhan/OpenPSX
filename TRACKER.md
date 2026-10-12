@@ -8,7 +8,7 @@
 | ID | Task | Depends | Status | Owner | Updated | Note |
 |---|---|---|---|---|---|---|
 | P0-01 | Restructure repo, retire v1 code | H-01 | DONE | claude-code | 2026-10-12 09:40 | v1 code in _legacy_reference/v1_backend; empty package layout created |
-| P0-02 | Repo hygiene: .gitignore, .env.example, .gitattributes check | P0-01 | TODO | | | |
+| P0-02 | Repo hygiene: .gitignore, .env.example, .gitattributes check | P0-01 | DONE | claude-code | 2026-10-12 09:41 | .gitignore per spec; .env.example lists 14 backend vars |
 | P0-03 | Fresh requirements.txt + pytest.ini | P0-01 | TODO | | | |
 | P0-04 | FastAPI skeleton + 13 contract stubs + fixtures | P0-02, P0-03 | TODO | | | |
 | P0-05 | Test harness + graphify baseline | P0-04 | TODO | | | |
