@@ -32,6 +32,7 @@
   - Feature flags implement the drop order.
 - 2026-10-12 · claude-code · D-19 P0-04 query defaults where SCHEMA §4.2 gives none: `basis=calendar` (overview, returns), `range=1Y` (compare), `freq=M` (returns). Contract models extend `ApiModel` (`extra="forbid"`).
 - 2026-10-12 · claude-code · D-20 Errors: raise `backend.api.ApiException(status, code, message)`; `main.py` renders it as `ApiError`. Request validation errors → 400 `BAD_REQUEST` (not FastAPI's 422). Fixtures: as_of `2026-10-09`, synthetic seed-42 OGDC/KMI30 series.
+- 2026-10-12 · claude-code · D-21 D-19 (query defaults) and D-20 (bad input → 400 `BAD_REQUEST` as `ApiError`) are now part of the contract in `docs/SCHEMA.md` §4.2; behaviour unchanged since P0-04.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.

@@ -141,11 +141,11 @@ interface ApiError { error: { code: "NOT_IN_SCOPE" | "NOT_FOUND" | "BAD_REQUEST"
 |---|---|---|---|---|---|
 | 1 | `GET /api/health` | — | `Health` | `health.json` | A |
 | 2 | `GET /api/universe` | — | `Universe` | `universe.json` | A |
-| 3 | `GET /api/overview` | `basis` | `Overview` | `overview.json` | A |
+| 3 | `GET /api/overview` | `basis` (default `calendar`) | `Overview` | `overview.json` | A |
 | 4 | `GET /api/prices/{symbol}` | `range` (default `1Y`) | `Prices` | `prices.json` | A |
 | 5 | `GET /api/changes/{symbol}` | `basis` (default `calendar`) | `ChangeSet` | `changes.json` | A |
-| 6 | `GET /api/returns/{symbol}` | `freq`, `basis` | `Returns` | `returns.json` | A |
-| 7 | `GET /api/compare/{symbol}` | `range` | `Compare` | `compare.json` | A |
+| 6 | `GET /api/returns/{symbol}` | `freq` (default `M`), `basis` (default `calendar`) | `Returns` | `returns.json` | A |
+| 7 | `GET /api/compare/{symbol}` | `range` (default `1Y`) | `Compare` | `compare.json` | A |
 | 8 | `GET /api/quant/{symbol}` | — | `QuantOutput` | `quant.json` | A |
 | 9 | `GET /api/model/card` | — | `ModelCard` | `model_card.json` | A |
 | 10 | `GET /api/macro` | — | `MacroOutput` | `macro.json` | A |
@@ -154,6 +154,10 @@ interface ApiError { error: { code: "NOT_IN_SCOPE" | "NOT_FOUND" | "BAD_REQUEST"
 | 13 | `POST /api/transcribe` | multipart `audio` | `Transcription` | `transcribe.json` | B |
 
 `{symbol}` accepts any universe symbol. Endpoints 4–7 also accept `KMI30`. Endpoint 11 accepts `STOCK` only; ETFs and the index get `NOT_IN_SCOPE`.
+
+**Query defaults (D-19).** Every query parameter is optional; the defaults are shown in the table (`basis=calendar`, `range=1Y`, `freq=M`, `refresh=false`).
+
+**Bad input (D-20).** An invalid query value or request body (e.g. `basis=weekly`, `range=2Y`, an empty or > 300-char chat question) returns **400** with an `ApiError` body, code `BAD_REQUEST` — never FastAPI's default 422. Endpoints raise `backend.api.ApiException(status, code, message)` for every other error code; `backend/main.py` renders both as `ApiError`.
 
 ### 4.3 Models
 ```ts
