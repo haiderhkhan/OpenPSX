@@ -41,6 +41,7 @@
 - 2026-10-12 · haider · D-27 Numbers never come from LLM research. Research may supply lists, names and links only. Macro, index history and prices come only from official downloads via manual import (P2-05).
 - 2026-10-12 · haider · D-28 News comes from curated manual headlines (24 Aug – 23 Sep 2026), each with a URL that P6-05 verifies (resolves + title match). Sentiment abstains below 3 headlines.
 - 2026-10-12 · claude-code · D-29 Applies D-26: SCHEMA §2 `fundamentals` gains a nullable `dps` column. The TTM row stores `eps = snapshot close / snapshot P/E` and `dps = dividend_yield % × snapshot close / 100` (both computed in Python, at the 2026-07-31 close); §9 recomputes P/E and yield with the close at AS_OF. Back-filled KMI30 rows use `prices_daily.source = 'backfill'`.
+- 2026-10-12 · claude-code · D-30 P2-02 universe from the source: `kmi30_list_date` = 2026-07-28, the first `index_membership` snapshot with these exact 30 (the API needs a date; the recomposition date is unverified until R-01). ETF names and managers are not in any source DB, so they were drafted from the tickers/benchmarks and await R-02; `listed_since` is blank.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.

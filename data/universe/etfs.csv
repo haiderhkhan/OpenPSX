@@ -1,0 +1,11 @@
+# source: tickers from psx_etfs.db etf_prices, benchmarks from etf.db etf_symbols; names and managers drafted (not in source) — R-02 verification pending; listed_since blank (not in source); aliases drafted; R-03 verification pending
+symbol,name,manager,benchmark,listed_since,aliases
+ACIETF,Alfalah Consumer Index Exchange Traded Fund,Alfalah Asset Management,ACI,,Alfalah Consumer Index Exchange Traded Fund|Alfalah Consumer Index ETF|Alfalah ETF
+HBLTETF,HBL Total Treasury Exchange Traded Fund,HBL Asset Management,HBLTTI,,HBL Total Treasury Exchange Traded Fund|HBL Total Treasury ETF|HBL Treasury ETF
+JSGBETF,JS Global Banking Sector Exchange Traded Fund,JS Investments,JSGBKTI,,JS Global Banking Sector Exchange Traded Fund|JS Global Banking ETF|JS Banking ETF
+JSMFETF,JS Momentum Factor Exchange Traded Fund,JS Investments,JSMFI,,JS Momentum Factor Exchange Traded Fund|JS Momentum Factor ETF|JS Momentum ETF
+MIIETF,Mahaana Islamic Index Exchange Traded Fund,Mahaana Wealth,MII30,,Mahaana Islamic Index Exchange Traded Fund|Mahaana Islamic Index ETF|Mahaana ETF
+MZNPETF,Meezan Pakistan Exchange Traded Fund,Al Meezan Investment Management,MZNPI,,Meezan Pakistan Exchange Traded Fund|Meezan Pakistan ETF|Meezan ETF
+NBPGETF,NBP Pakistan Growth Exchange Traded Fund,NBP Fund Management,NBPPGI,,NBP Pakistan Growth Exchange Traded Fund|NBP Pakistan Growth ETF|NBP ETF
+NITGETF,NIT Pakistan Gateway Exchange Traded Fund,National Investment Trust,NITPGI,,NIT Pakistan Gateway Exchange Traded Fund|NIT Pakistan Gateway ETF|NIT ETF
+UBLPETF,UBL Pakistan Enterprise Exchange Traded Fund,UBL Fund Managers,UPP9,,UBL Pakistan Enterprise Exchange Traded Fund|UBL Pakistan Enterprise ETF|UBL ETF

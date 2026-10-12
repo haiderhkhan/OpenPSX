@@ -1,0 +1,33 @@
+# list_date: 2026-07-28; source: psx.db index_membership KMI30 (same 30 symbols on 27 snapshots 2026-07-28..2026-09-23) + symbols.in_kmi30; recomposition date unverified — R-01 pending; aliases drafted; R-03 verification pending
+symbol,name,sector,aliases
+AIRLINK,Air Link Communication Limited,Technology & Communication,Air Link Communication Limited|Air Link Communication|Airlink
+ATRL,Attock Refinery Limited,Refinery,Attock Refinery Limited|Attock Refinery
+CPHL,Citi Pharma Ltd.,Pharmaceuticals,Citi Pharma Ltd.|Citi Pharma
+DGKC,D.G. Khan Cement Company Limited,Cement,D.G. Khan Cement Company Limited|D.G. Khan Cement|DG Khan Cement
+EFERT,Engro Fertilizers Limited,Fertilizer,Engro Fertilizers Limited|Engro Fertilizers|Engro Fert
+ENGROH,Engro Holdings Limited,Inv. Banks / Inv. Cos. / Securities Cos.,Engro Holdings Limited|Engro Holdings|Engro Corporation|Engro
+FCCL,Fauji Cement Company Limited,Cement,Fauji Cement Company Limited|Fauji Cement
+FFC,Fauji Fertilizer Company Limited,Fertilizer,Fauji Fertilizer Company Limited|Fauji Fertilizer|Fauji Fert
+FFL,Fauji Foods Limited,Food & Personal Care Products,Fauji Foods Limited|Fauji Foods
+GAL,Ghandhara Automobiles Limited,Automobile Assembler,Ghandhara Automobiles Limited|Ghandhara Automobiles
+GHNI,Ghandhara Industries Limited,Automobile Assembler,Ghandhara Industries Limited|Ghandhara Industries
+HCAR,Honda Atlas Cars (Pakistan) Limited,Automobile Assembler,Honda Atlas Cars (Pakistan) Limited|Honda Atlas Cars|Honda Atlas
+HUBC,The Hub Power Company Limited,Power Generation & Distribution,The Hub Power Company Limited|Hub Power Company|Hub Power|Hubco
+LUCK,Lucky Cement Limited,Cement,Lucky Cement Limited|Lucky Cement|Lucky
+MARI,Mari Energies Limited,Oil & Gas Exploration Companies,Mari Energies Limited|Mari Energies|Mari Petroleum|Mari
+MEBL,Meezan Bank Limited,Commercial Banks,Meezan Bank Limited|Meezan Bank|Meezan
+MLCF,Maple Leaf Cement Factory Limited,Cement,Maple Leaf Cement Factory Limited|Maple Leaf Cement|Maple Leaf
+NML,Nishat Mills Limited,Textile Composite,Nishat Mills Limited|Nishat Mills|Nishat
+NRL,National Refinery Limited,Refinery,National Refinery Limited|National Refinery
+OGDC,Oil & Gas Development Company Limited,Oil & Gas Exploration Companies,Oil & Gas Development Company Limited|Oil & Gas Development Company|Oil and Gas Development Company|OGDCL
+PAEL,Pak Elektron Limited,Cable & Electrical Goods,Pak Elektron Limited|Pak Elektron|PEL
+PPL,Pakistan Petroleum Limited,Oil & Gas Exploration Companies,Pakistan Petroleum Limited|Pakistan Petroleum
+PRL,Pakistan Refinery Limited,Refinery,Pakistan Refinery Limited|Pakistan Refinery
+PSO,Pakistan State Oil Company Limited,Oil & Gas Marketing Companies,Pakistan State Oil Company Limited|Pakistan State Oil
+SAZEW,Sazgar Engineering Works Limited,Automobile Assembler,Sazgar Engineering Works Limited|Sazgar Engineering Works|Sazgar
+SEARL,The Searle Company Limited,Pharmaceuticals,The Searle Company Limited|Searle Company|Searle
+SNGP,Sui Northern Gas Pipelines Limited,Oil & Gas Marketing Companies,Sui Northern Gas Pipelines Limited|Sui Northern Gas Pipelines|Sui Northern|SNGPL
+SSGC,Sui Southern Gas Company Limited,Oil & Gas Marketing Companies,Sui Southern Gas Company Limited|Sui Southern Gas Company|Sui Southern|SSGCL
+SYS,Systems Limited,Technology & Communication,Systems Limited|Systems Ltd
+TREET,Treet Corporation Limited,Food & Personal Care Products,Treet Corporation Limited|Treet Corporation|Treet
+KMI30,KMI-30 Index,,kmi 30|kmi30|kmi|kmi-30
