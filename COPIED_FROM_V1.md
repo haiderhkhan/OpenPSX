@@ -1,3 +1,5 @@
+Superseded by docs/IMPLEMENTATION_PLAN.md — v1 code is reference only.
+
 # Files copied from PSX War Room v1
 
 Source: `psx-war-room-main/` (Streamlit + Agents SDK build). Originals untouched.

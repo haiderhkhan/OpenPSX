@@ -19,3 +19,4 @@
 
 | ID | Type | Sev | Phase | Found by | File(s) | Description | Owner | Status | Fix |
 |---|---|---|---|---|---|---|---|---|---|
+| B-001 | BUG | LOW | P0 | claude-code | ARCHITECTURE.md, IMPLEMENTATION_PLAN.md, architecture.svg (root) | Stray root copies of docs/ files (svg differs from docs/architecture.svg); not in ARCHITECTURE.md §11 layout. Delete root copies if docs/ is canonical. | H | OPEN | |
