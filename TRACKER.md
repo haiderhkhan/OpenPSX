@@ -9,7 +9,7 @@
 |---|---|---|---|---|---|---|
 | P0-01 | Restructure repo, retire v1 code | H-01 | DONE | claude-code | 2026-10-12 09:40 | v1 code in _legacy_reference/v1_backend; empty package layout created |
 | P0-02 | Repo hygiene: .gitignore, .env.example, .gitattributes check | P0-01 | DONE | claude-code | 2026-10-12 09:41 | .gitignore per spec; .env.example lists 14 backend vars |
-| P0-03 | Fresh requirements.txt + pytest.ini | P0-01 | TODO | | | |
+| P0-03 | Fresh requirements.txt + pytest.ini | P0-01 | DONE | claude-code | 2026-10-12 10:04 | 15 exact pins, py3.11 verified Windows + Linux wheels |
 | P0-04 | FastAPI skeleton + 13 contract stubs + fixtures | P0-02, P0-03 | TODO | | | |
 | P0-05 | Test harness + graphify baseline | P0-04 | TODO | | | |
 | P2-01 | Inspect source DB → SOURCE_DB.md | P0-05, H-02 | TODO | | | |
@@ -38,7 +38,7 @@
 ## Track B — antigravity
 | ID | Task | Depends | Status | Owner | Updated | Note |
 |---|---|---|---|---|---|---|
-| P1-01 | Verify Antigravity setup + scaffold Next.js | H-01 | TODO | | | |
+| P1-01 | Verify Antigravity setup + scaffold Next.js | H-01 | DOING | antigravity | 2026-10-12 14:43 | |
 | P1-02 | App shell, design tokens, disclaimer | P1-01 | TODO | | | |
 | P1-03 | Typed API client + mock mode | P1-01, P0-04 | TODO | | | |
 | P1-04 | Route skeletons + loading/error/empty states | P1-02, P1-03 | TODO | | | |

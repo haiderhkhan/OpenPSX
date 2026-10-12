@@ -51,6 +51,7 @@
   Don't repeat any of these.
 - 2026-10-12 · claude · G-08 Don't run `graphify claude install`: it edits `CLAUDE.md` and adds a hook. Run the scan manually; the exact command gets recorded here in P0-05.
 - 2026-10-12 · claude · G-09 Antigravity reads `AGENTS.md` as workspace rules (12,000-character limit per file). Workflows ship in `.agents/workflows/`; if `/start-task` doesn't appear in Antigravity, copy them to `.agent/workflows/` (older path) and record which path worked here (P1-01).
+- 2026-10-12 · claude-code · G-10 Only Python 3.12 is installed system-wide on Haider's PC. `.venv` (3.11) is created with `uv venv --python 3.11 --seed .venv`, then `.venv\Scripts\python -m pip install -r requirements.txt`. Linux wheels verified with `uv pip install --python-platform x86_64-manylinux_2_28 --python-version 3.11 --target <tmp> -r requirements.txt`.
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.
