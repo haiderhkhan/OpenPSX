@@ -17,11 +17,11 @@
 - Updated: 2026-10-12 (docs created)
 
 ## Track B — antigravity
-- Phase: P1 Frontend shell — not started
-- Last done: —
-- Next: P1-01 → P1-02 → P1-03 (after P0-04) → P1-04
-- Blockers: waiting on H-01
-- Updated: 2026-10-12 (docs created)
+- Phase: P1 Frontend shell — in progress
+- Last done: P1-01
+- Next: P1-02 → P1-03 → P1-04
+- Blockers: none
+- Updated: 2026-10-12 22:05 PKT
 
 ## Human — Haider
 - Now: H-01 (rename + add docs + push) → open both tools

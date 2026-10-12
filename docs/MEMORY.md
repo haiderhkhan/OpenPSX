@@ -56,6 +56,7 @@
 - 2026-10-12 · claude-code · G-10 Only Python 3.12 is installed system-wide on Haider's PC. `.venv` (3.11) is created with `uv venv --python 3.11 --seed .venv`, then `.venv\Scripts\python -m pip install -r requirements.txt`. Linux wheels verified with `uv pip install --python-platform x86_64-manylinux_2_28 --python-version 3.11 --target <tmp> -r requirements.txt`.
 - 2026-10-12 · claude-code · G-11 Git Bash `TZ=Asia/Karachi date` silently prints UTC. Get PKT time with `.venv\Scripts\python -c "from datetime import datetime; from zoneinfo import ZoneInfo; print(datetime.now(ZoneInfo('Asia/Karachi')):%Y-%m-%d %H:%M)"` (PowerShell `Get-Date` is local PKT too).
 - 2026-10-12 · claude-code · G-12 starlette 2026 TestClient warns `StarletteDeprecationWarning: install httpx2` with httpx 0.28. Harmless; tests pass. Don't run pytest with `-W error::UserWarning`.
+- 2026-10-12 · antigravity · G-13 Workflows copied from .agents/workflows/ to .agent/workflows/ for compatibility with older Antigravity versions.
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.
@@ -65,3 +66,4 @@
 
 ## Learnings
 <!-- Append here: what worked, what broke, commands that turned out to be the right ones. -->
+- 2026-10-12 · antigravity · L-01 Next.js 16 + Tailwind 4 + shadcn initialized cleanly with default flags; fixed create-next-app undefined LayoutProps in layout.tsx using React.ReactNode.
