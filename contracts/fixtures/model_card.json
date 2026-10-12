@@ -1,0 +1,158 @@
+{
+  "model_version": "quant-demo-0",
+  "as_of_date": "2026-10-09",
+  "trained_through": "2026-10-02",
+  "scheme": "Walk-forward, expanding window, refit yearly; target = next-week direction",
+  "n_predictions": 8630,
+  "metrics": {
+    "accuracy": 0.54,
+    "balanced_accuracy": 0.53,
+    "auc": 0.55
+  },
+  "baselines": {
+    "majority_class": 0.51,
+    "persistence": 0.5
+  },
+  "by_year": [
+    {
+      "year": 2021,
+      "accuracy": 0.53,
+      "n": 1440
+    },
+    {
+      "year": 2022,
+      "accuracy": 0.55,
+      "n": 1480
+    },
+    {
+      "year": 2023,
+      "accuracy": 0.52,
+      "n": 1500
+    },
+    {
+      "year": 2024,
+      "accuracy": 0.56,
+      "n": 1510
+    },
+    {
+      "year": 2025,
+      "accuracy": 0.54,
+      "n": 1530
+    },
+    {
+      "year": 2026,
+      "accuracy": 0.53,
+      "n": 1170
+    }
+  ],
+  "shap_global": [
+    {
+      "feature": "ret_4w",
+      "label": "4-week return",
+      "mean_abs_shap": 0.068
+    },
+    {
+      "feature": "kmi30_ret_4w",
+      "label": "KMI-30 4-week return",
+      "mean_abs_shap": 0.061
+    },
+    {
+      "feature": "vol_20d",
+      "label": "20-day volatility",
+      "mean_abs_shap": 0.047
+    },
+    {
+      "feature": "rel_strength_12w",
+      "label": "12-week return vs KMI-30",
+      "mean_abs_shap": 0.041
+    },
+    {
+      "feature": "rsi_14",
+      "label": "RSI (14 days)",
+      "mean_abs_shap": 0.035
+    },
+    {
+      "feature": "dist_ma_50",
+      "label": "Distance from 50-day average",
+      "mean_abs_shap": 0.029
+    },
+    {
+      "feature": "ret_12w",
+      "label": "12-week return",
+      "mean_abs_shap": 0.024
+    },
+    {
+      "feature": "volume_ratio",
+      "label": "Volume ratio",
+      "mean_abs_shap": 0.019
+    },
+    {
+      "feature": "ret_1w",
+      "label": "1-week return",
+      "mean_abs_shap": 0.014
+    },
+    {
+      "feature": "policy_rate_chg_12w",
+      "label": "Policy rate change (12 weeks)",
+      "mean_abs_shap": 0.009
+    }
+  ],
+  "features": [
+    {
+      "feature": "ret_1w",
+      "label": "1-week return",
+      "description": "Percent change in adjusted close over the last week."
+    },
+    {
+      "feature": "ret_4w",
+      "label": "4-week return",
+      "description": "Percent change in adjusted close over the last 4 weeks."
+    },
+    {
+      "feature": "ret_12w",
+      "label": "12-week return",
+      "description": "Percent change in adjusted close over the last 12 weeks."
+    },
+    {
+      "feature": "vol_20d",
+      "label": "20-day volatility",
+      "description": "Annualised standard deviation of daily returns over 20 trading days."
+    },
+    {
+      "feature": "rsi_14",
+      "label": "RSI (14 days)",
+      "description": "Relative strength index over 14 trading days."
+    },
+    {
+      "feature": "dist_ma_50",
+      "label": "Distance from 50-day average",
+      "description": "Percent gap between close and its 50-day moving average."
+    },
+    {
+      "feature": "volume_ratio",
+      "label": "Volume ratio",
+      "description": "Last week's average volume divided by the 12-week average."
+    },
+    {
+      "feature": "kmi30_ret_4w",
+      "label": "KMI-30 4-week return",
+      "description": "Index return over the last 4 weeks."
+    },
+    {
+      "feature": "rel_strength_12w",
+      "label": "12-week return vs KMI-30",
+      "description": "Symbol 12-week return minus the index 12-week return."
+    },
+    {
+      "feature": "policy_rate_chg_12w",
+      "label": "Policy rate change (12 weeks)",
+      "description": "Change in the SBP policy rate over 12 weeks, by release date."
+    }
+  ],
+  "limitations": [
+    "DEMO fixture: every number on this card is synthetic.",
+    "Accuracy is only a few points above the baselines; treat the output as one signal among several.",
+    "Prices are bonus/split-adjusted; cash dividends are not included.",
+    "Trained on KMI-30 history only; results may not carry over to other stocks."
+  ]
+}

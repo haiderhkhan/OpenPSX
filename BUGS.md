@@ -20,3 +20,4 @@
 | ID | Type | Sev | Phase | Found by | File(s) | Description | Owner | Status | Fix |
 |---|---|---|---|---|---|---|---|---|---|
 | B-001 | BUG | LOW | P0 | claude-code | ARCHITECTURE.md, IMPLEMENTATION_PLAN.md, architecture.svg (root) | Stray root copies of docs/ files (svg differs from docs/architecture.svg); not in ARCHITECTURE.md §11 layout. Delete root copies if docs/ is canonical. | H | OPEN | |
+| B-002 | BUG | LOW | P0 | claude-code | docs/SCHEMA.md §7, backend/agents/validators.py (P6-02) | The verbatim disclaimer contains "recommendation", which the §7 banned regex `\brecommend(s|ed|ation)?\b` matches. P6-02 validators must strip the disclaimer before matching. | A | OPEN | |

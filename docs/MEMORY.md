@@ -30,6 +30,8 @@
   - SHAP comes from LightGBM `pred_contrib`, so there is no `shap` dependency.
   - A precomputed verdict seed for all KMI-30 is committed.
   - Feature flags implement the drop order.
+- 2026-10-12 · claude-code · D-19 P0-04 query defaults where SCHEMA §4.2 gives none: `basis=calendar` (overview, returns), `range=1Y` (compare), `freq=M` (returns). Contract models extend `ApiModel` (`extra="forbid"`).
+- 2026-10-12 · claude-code · D-20 Errors: raise `backend.api.ApiException(status, code, message)`; `main.py` renders it as `ApiError`. Request validation errors → 400 `BAD_REQUEST` (not FastAPI's 422). Fixtures: as_of `2026-10-09`, synthetic seed-42 OGDC/KMI30 series.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
@@ -52,6 +54,8 @@
 - 2026-10-12 · claude · G-08 Don't run `graphify claude install`: it edits `CLAUDE.md` and adds a hook. Run the scan manually; the exact command gets recorded here in P0-05.
 - 2026-10-12 · claude · G-09 Antigravity reads `AGENTS.md` as workspace rules (12,000-character limit per file). Workflows ship in `.agents/workflows/`; if `/start-task` doesn't appear in Antigravity, copy them to `.agent/workflows/` (older path) and record which path worked here (P1-01).
 - 2026-10-12 · claude-code · G-10 Only Python 3.12 is installed system-wide on Haider's PC. `.venv` (3.11) is created with `uv venv --python 3.11 --seed .venv`, then `.venv\Scripts\python -m pip install -r requirements.txt`. Linux wheels verified with `uv pip install --python-platform x86_64-manylinux_2_28 --python-version 3.11 --target <tmp> -r requirements.txt`.
+- 2026-10-12 · claude-code · G-11 Git Bash `TZ=Asia/Karachi date` silently prints UTC. Get PKT time with `.venv\Scripts\python -c "from datetime import datetime; from zoneinfo import ZoneInfo; print(datetime.now(ZoneInfo('Asia/Karachi')):%Y-%m-%d %H:%M)"` (PowerShell `Get-Date` is local PKT too).
+- 2026-10-12 · claude-code · G-12 starlette 2026 TestClient warns `StarletteDeprecationWarning: install httpx2` with httpx 0.28. Harmless; tests pass. Don't run pytest with `-W error::UserWarning`.
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.

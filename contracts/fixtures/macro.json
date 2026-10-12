@@ -1,0 +1,14 @@
+{
+  "week": "2026-W41",
+  "as_of_date": "2026-10-09",
+  "stance": "NEUTRAL",
+  "indicators": {
+    "policy_rate_pct": 11.0,
+    "cpi_yoy_pct": 5.6,
+    "pkr_usd": 281.9,
+    "pkr_usd_4w_change_pct": 0.3
+  },
+  "brief": "DEMO brief: the policy rate is 11.0% and CPI inflation is 5.6% year on year. The rupee moved 0.3% against the dollar over 4 weeks, so the macro backdrop is steady.",
+  "status": "CACHED",
+  "generated_at": "2026-10-12T00:05:00+05:00"
+}
