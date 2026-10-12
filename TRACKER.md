@@ -11,7 +11,7 @@
 | P0-02 | Repo hygiene: .gitignore, .env.example, .gitattributes check | P0-01 | DONE | claude-code | 2026-10-12 14:41 | .gitignore per spec; .env.example lists 14 backend vars |
 | P0-03 | Fresh requirements.txt + pytest.ini | P0-01 | DONE | claude-code | 2026-10-12 15:04 | 15 exact pins, py3.11 verified Windows + Linux wheels |
 | P0-04 | FastAPI skeleton + 13 contract stubs + fixtures | P0-02, P0-03 | DONE | claude-code | 2026-10-12 15:16 | Contracts frozen; 13 fixtures in contracts/fixtures; Track B may start P1-03 |
-| P0-05 | Test harness + graphify baseline | P0-04 | DOING | claude-code | 2026-10-12 22:04 | |
+| P0-05 | Test harness + graphify baseline | P0-04 | DONE | claude-code | 2026-10-12 22:09 | Network-blocked conftest; graphify command in MEMORY G-14 |
 | P2-01 | Inspect source DB → SOURCE_DB.md | P0-05, H-02 | TODO | | | |
 | P2-02 | Universe files: KMI-30, ETFs, aliases | P2-01, H-03 | TODO | | | |
 | P2-03 | Target schema + build_db.py → data/openpsx.db | P2-01, P2-02 | TODO | | | |
@@ -39,7 +39,7 @@
 | ID | Task | Depends | Status | Owner | Updated | Note |
 |---|---|---|---|---|---|---|
 | P1-01 | Verify Antigravity setup + scaffold Next.js | H-01 | DONE | antigravity | 2026-10-12 22:05 | Next.js 16 App Router scaffolded, shadcn/ui, lightweight-charts, recharts |
-| P1-02 | App shell, design tokens, disclaimer | P1-01 | TODO | | | |
+| P1-02 | App shell, design tokens, disclaimer | P1-01 | DOING | antigravity | 2026-10-12 22:07 | |
 | P1-03 | Typed API client + mock mode | P1-01, P0-04 | TODO | | | |
 | P1-04 | Route skeletons + loading/error/empty states | P1-02, P1-03 | TODO | | | |
 | P3-01 | Overview page: KMI-30 card, basis toggle, table | P1-04 | TODO | | | |

@@ -57,6 +57,13 @@
 - 2026-10-12 · claude-code · G-11 Git Bash `TZ=Asia/Karachi date` silently prints UTC. Get PKT time with `.venv\Scripts\python -c "from datetime import datetime; from zoneinfo import ZoneInfo; print(datetime.now(ZoneInfo('Asia/Karachi')):%Y-%m-%d %H:%M)"` (PowerShell `Get-Date` is local PKT too).
 - 2026-10-12 · claude-code · G-12 starlette 2026 TestClient warns `StarletteDeprecationWarning: install httpx2` with httpx 0.28. Harmless; tests pass. Don't run pytest with `-W error::UserWarning`.
 - 2026-10-12 · antigravity · G-13 Workflows copied from .agents/workflows/ to .agent/workflows/ for compatibility with older Antigravity versions.
+- 2026-10-12 · claude-code · G-14 Graphify baseline (P0-05), code-only, 0 LLM tokens. Run from the repo root at each Track A phase end and at G-02, one line each in PowerShell:
+  - `graphify extract . --code-only --exclude "docs/" --exclude "_legacy_reference/" --exclude "contracts/" --exclude "frontend/*" --exclude "!frontend/src/"`
+  - `graphify cluster-only . --no-label --no-viz` (writes `GRAPH_REPORT.md`; `--no-label` prevents an LLM / claude-cli call to name communities)
+  - Scope = `backend/`, `scripts/`, `frontend/src/`. `--code-only` skips all markdown/images; the excludes drop legacy code, fixture JSON and frontend config files.
+  - **Don't use `graphify update .`**: it ignores the code-only filter and pulls root/`.claude`/`.agents` markdown and `requirements.txt` into the graph. If that happens, delete `graphify-out/` and rerun the two lines (`--force --code-only` keeps stale non-code nodes).
+  - In Git Bash, single-quote `'!frontend/src/'` (history expansion). Commit only `graphify-out/GRAPH_REPORT.md`.
+- 2026-10-12 · claude-code · G-15 Supersedes the G-11 one-liner (missing f-string): `.venv\Scripts\python -c "from datetime import datetime; from zoneinfo import ZoneInfo; print(f'{datetime.now(ZoneInfo(\"Asia/Karachi\")):%Y-%m-%d %H:%M}')"`, or PowerShell `Get-Date -Format "yyyy-MM-dd HH:mm"` (machine clock is PKT).
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.

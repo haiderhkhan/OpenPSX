@@ -10,11 +10,11 @@
 **Deployed URLs:** frontend _tbd_ · backend _tbd_
 
 ## Track A — claude-code
-- Phase: P0 Foundation — not started
-- Last done: —
-- Next: P0-01 → P0-02 → P0-03 → P0-04 (Track B's P1-03 waits on P0-04)
-- Blockers: waiting on H-01
-- Updated: 2026-10-12 (docs created)
+- Phase: P0 Foundation — DONE (exit criteria met; awaiting A-P0 cloud audit)
+- Last done: P0-05 · contracts frozen at P0-04 (13 stubs + fixtures, pytest 37 green)
+- Next: P2-01 (inspect source DB) → P2-02 (needs H-03) → P2-03
+- Blockers: P2-01 needs H-02 (source SQLite in `data/source/`); H-01 rename still TODO
+- Updated: 2026-10-12 22:09 PKT
 
 ## Track B — antigravity
 - Phase: P1 Frontend shell — in progress
