@@ -17,7 +17,7 @@
 | P2-03 | Target schema + build_db.py → data/openpsx.db | P2-01, P2-02 | DONE | claude-code | 2026-10-12 23:14 | AS_OF 2026-09-23; DB 10.0 MB; KMI30 back-filled before 2026-04-27 |
 | P2-04 | Bonus/split price adjustment | P2-03 | DONE | claude-code | 2026-10-12 23:19 | 9 breaks inferred (D-33); 0 violators; 23 drops to verify |
 | P2-05 | Manual CSV/Excel import + templates | P2-03 | TODO | | | |
-| P2-06 | Period analytics + live market endpoints + fixture DB | P2-04 | DOING | claude-code | 2026-10-12 23:19 | |
+| P2-06 | Period analytics + live market endpoints + fixture DB | P2-04 | DONE | claude-code | 2026-10-13 01:28 | Endpoints 1–7 live; P3-04 can start; errors per D-34 |
 | P4-01 | Weekly feature panel (no look-ahead) | P2-06 | TODO | | | |
 | P4-02 | LightGBM walk-forward backtest + baselines | P4-01 | TODO | | | |
 | P4-03 | SHAP, volatility bucket, regime, predictions | P4-02 | TODO | | | |
