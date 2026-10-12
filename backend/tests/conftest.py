@@ -3,11 +3,14 @@ from __future__ import annotations
 
 import socket
 from collections.abc import Iterator
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
+from backend import config
 from backend.main import app
+from scripts import make_fixture_db
 
 # Loopback stays open: on Windows, asyncio builds its self-pipe with socketpair(), which
 # connects a local socket. Anything else is the internet, and tests must never touch it.
@@ -34,6 +37,15 @@ def block_network() -> Iterator[None]:
         mp.setattr(socket.socket, "connect", _guard(socket.socket.connect))
         mp.setattr(socket.socket, "connect_ex", _guard(socket.socket.connect_ex))
         yield
+
+
+@pytest.fixture(autouse=True, scope="session")
+def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Iterator[Path]:
+    """Every test reads the synthetic seed-42 DB (P2-06), never the real data/openpsx.db."""
+    path = make_fixture_db.build(tmp_path_factory.mktemp("db") / "openpsx.db")
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(config, "DB_PATH", path)
+        yield path
 
 
 @pytest.fixture

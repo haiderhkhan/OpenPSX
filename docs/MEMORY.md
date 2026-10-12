@@ -45,6 +45,11 @@
 - 2026-10-12 · haider · D-31 Macro release dates (rule A; the source has no publication dates): POLICY_RATE = the decision date; CPI_YOY = the 5th of the month after the observation month; PKR_USD = the observation day; never before the observation date. Applied in `build_db.release_date` (P2-03).
 - 2026-10-12 · haider · D-32 Applies D-24 in P2-03: `AS_OF_DATE` = **2026-09-23** (31 / 31 STOCK + INDEX); written to `meta` and the STATUS.md AS_OF line. Answers Q-01.
 - 2026-10-12 · claude-code · D-33 P2-04 has no corporate-action source, and D-27 bars LLM numbers. So a STOCK/ETF one-day close move beyond ±25% (impossible under PSX circuit breakers) is stored as `SPLIT`, ratio = prev close / close, `source = 'inferred_price_break'`: 9 events (FFL, GHNI, SAZEW, SYS ×2, MARI, LUCK, HBLTETF ×10 consolidation, JSMFETF). The adjusted ex-date move is 0% by construction. Drops of 11–25% (23 in KMI-30 names) are **not** adjusted (they may be cash dividends, D-18); `build_db` lists them for official verification. Official BONUS/SPLIT rows (P2-05) are applied by the same `adjust.apply_adjustments`.
+- 2026-10-13 · claude-code · D-34 P2-06 live endpoints 1–7 (where SCHEMA was silent):
+  - A symbol's MoM/QoQ/YTD/YoY, returns, prices and compare windows are measured from its effective date (D-24). So an ETF ending 2026-08-04 gets MoM to 08-04, not a flat 0% to AS_OF.
+  - Range windows are exclusive (`date > end − range`, as in the P0-04 fixtures). A bucket is `partial` when it contains the effective date. Buckets that end before the first bar are omitted.
+  - Errors: unknown symbol → 404 `NOT_IN_SCOPE`; ETF with `FEATURE_ETFS=false` or fiscal basis with `FEATURE_FISCAL_TOGGLE=false` → 403 `FEATURE_OFF`; DB not built → 503 `UPSTREAM`.
+  - Tests run on `scripts/make_fixture_db.py` (seed 42, as_of 2026-10-09), built per session by conftest; real-DB timings: every endpoint ≤ 115 ms.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
