@@ -17,11 +17,11 @@
 - Updated: 2026-10-12 22:50 PKT
 
 ## Track B — antigravity
-- Phase: P1 Frontend shell — DONE (exit criteria met; awaiting A-P1 cloud audit)
-- Last done: P1-04 · 4 routes render on mocks; npm run build green; typed client for 13 endpoints
-- Next: P3-01 (Overview page) after A-P1 audit
+- Phase: P1 Frontend shell — DONE; audit fixes B-005…B-009 FIXED by claude-code (antigravity quota swap, D-35)
+- Last done: `[P1-fix-1…6]` · live build green with backend up or down; disclaimer always shown (no date if API down)
+- Next: P3-01 (Overview page) after A-P1 re-audit · open: B-004 (OverviewRow.last_date badge + sync-mocks)
 - Blockers: none
-- Updated: 2026-10-12 22:44 PKT
+- Updated: 2026-10-14 01:56 PKT
 
 ## Human — Haider
 - Now: H-01 (rename + add docs + push) → open both tools
