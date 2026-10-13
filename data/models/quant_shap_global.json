@@ -1,0 +1,55 @@
+{
+  "model_version": "lgbm-2026-09-23-724c1f16",
+  "shap_global": [
+    {
+      "feature": "idx_ret_12w",
+      "label": "KMI-30 return 12w",
+      "mean_abs_shap": 0.1951
+    },
+    {
+      "feature": "idx_ret_4w",
+      "label": "KMI-30 return 4w",
+      "mean_abs_shap": 0.1754
+    },
+    {
+      "feature": "vol_12w",
+      "label": "Volatility 12w",
+      "mean_abs_shap": 0.0575
+    },
+    {
+      "feature": "drawdown_52w",
+      "label": "Drawdown from 52-week high",
+      "mean_abs_shap": 0.0537
+    },
+    {
+      "feature": "ret_26w",
+      "label": "Return 26w",
+      "mean_abs_shap": 0.0408
+    },
+    {
+      "feature": "rsi_14",
+      "label": "RSI (14)",
+      "mean_abs_shap": 0.0345
+    },
+    {
+      "feature": "ret_1w",
+      "label": "Return 1w",
+      "mean_abs_shap": 0.0316
+    },
+    {
+      "feature": "dist_ma50",
+      "label": "Distance from 50-day average",
+      "mean_abs_shap": 0.0312
+    },
+    {
+      "feature": "vol_4w",
+      "label": "Volatility 4w",
+      "mean_abs_shap": 0.0312
+    },
+    {
+      "feature": "is_etf",
+      "label": "Is ETF",
+      "mean_abs_shap": 0.0291
+    }
+  ]
+}
