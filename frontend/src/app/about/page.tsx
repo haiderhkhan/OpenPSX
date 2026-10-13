@@ -37,6 +37,10 @@ export default async function AboutPage() {
               bonus shares and stock splits. Cash dividends are <em>not</em> adjusted; all returns represent price returns.
             </li>
             <li>
+              <strong>KMI-30 Index History:</strong> Index closes before 27 Apr 2026 are back-filled from the 30 constituents
+              (equal-weighted mean daily adjusted return, chain-linked to the first real index close).
+            </li>
+            <li>
               <strong>Fiscal Basis:</strong> In addition to standard calendar-year analytics, OPEN PSX features a native
               toggle for Pakistan&apos;s July–June fiscal year (FY).
             </li>
@@ -64,7 +68,10 @@ export default async function AboutPage() {
             </div>
             <div className="rounded-md border border-border/80 bg-muted/30 p-3">
               <span className="font-semibold text-foreground">2. Fundamentals Agent</span>
-              <p className="mt-1 text-muted-foreground">Earnings quality, balance-sheet leverage, and profitability ratios.</p>
+              <p className="mt-1 text-muted-foreground">
+                TTM snapshot metrics: EPS (snapshot close ÷ P/E), P/E at the as-of close against the KMI-30 median,
+                dividend per share and dividend yield. It does not read full financial statements.
+              </p>
             </div>
             <div className="rounded-md border border-border/80 bg-muted/30 p-3">
               <span className="font-semibold text-foreground">3. Sentiment Agent</span>
