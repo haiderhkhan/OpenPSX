@@ -70,8 +70,13 @@ def build(path: Path) -> Path:
         conn.execute("INSERT INTO corporate_actions VALUES (?, ?, 'BONUS', ?, 'fixture')",
                      (BONUS[0], BONUS[1].isoformat(), BONUS[2]))
         adjust.apply_adjustments(conn)
+        contributors = [{"feature": f, "label": label, "value": 1.0, "shap": 0.05 - i / 100}  # QuantOutput needs 5
+                        for i, (f, label) in enumerate([("ret_4w", "Return 4w"), ("idx_ret_4w", "KMI-30 return 4w"),
+                                                        ("vol_4w", "Volatility 4w"), ("rsi_14", "RSI (14)"),
+                                                        ("ret_1w", "Return 1w")])]
         conn.execute("INSERT INTO quant_predictions VALUES ('OGDC', ?, 'fixture', 0.61, 'POSITIVE', 28.4, 'MEDIUM', "
-                     "'UPTREND', '[]', ?)", (AS_OF.isoformat(), f"{AS_OF.isoformat()}T18:00:00+05:00"))
+                     "'UPTREND', ?, ?)",
+                     (AS_OF.isoformat(), json.dumps(contributors), f"{AS_OF.isoformat()}T18:00:00+05:00"))
         conn.executemany("INSERT INTO meta VALUES (?, ?)", [
             ("as_of_date", AS_OF.isoformat()), ("built_at", f"{AS_OF.isoformat()}T18:00:00+05:00"),
             ("kmi30_list_date", "2026-08-01"), ("schema_version", "1"), ("source_note", "synthetic fixture (seed 42)")])
