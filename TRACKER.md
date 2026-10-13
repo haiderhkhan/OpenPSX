@@ -19,7 +19,7 @@
 | P2-05 | Manual CSV/Excel import + templates | P2-03 | TODO | | | |
 | P2-06 | Period analytics + live market endpoints + fixture DB | P2-04 | DONE | claude-code | 2026-10-13 01:28 | Endpoints 1–7 live; P3-04 can start; errors per D-34 |
 | P4-01 | Weekly feature panel (no look-ahead) | P2-06 | DONE | claude-code | 2026-10-14 01:51 | build_panel + FEATURES labels; 1.7 s real DB; macro features near-empty (Q-06) |
-| P4-02 | LightGBM walk-forward backtest + baselines | P4-01 | DOING | claude-code | 2026-10-14 01:53 | |
+| P4-02 | LightGBM walk-forward backtest + baselines | P4-01 | DONE | claude-code | 2026-10-14 02:00 | acc 0.518 vs persistence 0.515; macro dropped by fill rule (D-38) |
 | P4-03 | SHAP, volatility bucket, regime, predictions | P4-02 | TODO | | | |
 | P4-04 | Quant + model-card endpoints | P4-03 | TODO | | | |
 | P6-01 | LLM gateway: google-genai, key failover, JSON, kill switch | P0-05, H-04 | TODO | | | |
