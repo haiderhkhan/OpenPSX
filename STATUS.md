@@ -17,11 +17,11 @@
 - Updated: 2026-10-12 22:50 PKT
 
 ## Track B — antigravity
-- Phase: P1 Frontend shell — DONE; audit fixes B-005…B-009 FIXED by claude-code (antigravity quota swap, D-35)
-- Last done: `[P1-fix-1…6]` · live build green with backend up or down; disclaimer always shown (no date if API down)
-- Next: P3-01 (Overview page) after A-P1 re-audit · open: B-004 (OverviewRow.last_date badge + sync-mocks)
+- Phase: P1 Frontend shell — DONE; audit fixes B-005…B-011, B-014, B-015 FIXED by claude-code (antigravity quota swap, D-35)
+- Last done: `[B-010]` stock panels fail independently · `[B-011]` Geist font · `[B-014]` README · `[B-015]` About copy + back-fill note
+- Next: P3-01 (Overview page) · open: B-004 (last_date badge + sync-mocks); B-012, B-013 (P9-01, details missing)
 - Blockers: none
-- Updated: 2026-10-14 01:56 PKT
+- Updated: 2026-10-14 02:26 PKT
 
 ## Human — Haider
 - Now: H-01 (rename + add docs + push) → open both tools
