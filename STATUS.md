@@ -10,11 +10,11 @@
 **Deployed URLs:** frontend _tbd_ · backend _tbd_
 
 ## Track A — claude-code
-- Phase: P2 Data layer — in progress (P0 DONE, awaiting A-P0 audit)
-- Last done: P2-01 · `docs/research/SOURCE_DB.md` (stocks to 2026-09-23, ETFs to 08-04)
-- Next: P2-02 → P2-03 → P2-04 → P2-06 → P2-05
-- Blockers: P2-02 needs H-03 (R-01/02/03); asks R-05 (macro), Q-05 (KMI-30 history)
-- Updated: 2026-10-12 22:50 PKT
+- Phase: P4 ML Quant — DONE (exit criteria hold) → A-P4 audit can start; P2-05 still TODO
+- Last done: P4-04 · endpoints 8–9 live; model acc 51.7% vs 51.5% persistence (no edge, said on card)
+- Next: P6 Agents + verdict (P6-01…) → P2-05 macro/manual import → retrain `scripts/train_quant.py`
+- Blockers: none · open: Q-06 macro history (4 macro features dropped, D-38)
+- Updated: 2026-10-14 02:35 PKT
 
 ## Track B — antigravity
 - Phase: P1 Frontend shell — DONE; audit fixes B-005…B-011, B-014, B-015 FIXED by claude-code (antigravity quota swap, D-35)
