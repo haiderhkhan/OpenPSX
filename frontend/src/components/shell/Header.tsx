@@ -11,7 +11,7 @@ interface HeaderProps {
 
 export function Header({ asOfDate }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const displayDate = asOfDate && asOfDate.trim() ? asOfDate : "2026-10-09";
+  const displayDate = asOfDate || "—";
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur-sm">

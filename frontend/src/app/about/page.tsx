@@ -1,6 +1,9 @@
 import { Disclaimer } from "@/components/Disclaimer";
+import { getAsOfDate } from "@/lib/api";
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const asOfDate = await getAsOfDate();
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
       <div>
@@ -76,7 +79,7 @@ export default function AboutPage() {
         <section className="rounded-xl border border-border bg-card p-6 shadow-xs">
           <h2 className="text-base font-bold text-foreground">Mandatory Educational Disclaimer</h2>
           <div className="mt-4">
-            <Disclaimer />
+            <Disclaimer asOfDate={asOfDate} />
           </div>
         </section>
       </div>

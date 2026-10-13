@@ -108,6 +108,11 @@ export async function getHealth(): Promise<Health> {
   return request<Health>("/api/health");
 }
 
+// Header and disclaimer date; undefined when the API is down (never a made-up date).
+export async function getAsOfDate(): Promise<string | undefined> {
+  return getHealth().then((health) => health.as_of_date, () => undefined);
+}
+
 // 2. GET /api/universe
 export async function getUniverse(): Promise<Universe> {
   if (USE_MOCKS) return universeMock as Universe;

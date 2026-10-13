@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 import { Header, Footer } from "@/components/shell";
+import { getAsOfDate } from "@/lib/api";
 
 // Every route reads the live API per request; never prerender build-time data.
 export const dynamic = "force-dynamic";
@@ -23,11 +24,13 @@ export const metadata: Metadata = {
     "Education-first market-intelligence web app for KMI-30 stocks and PSX-listed ETFs.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const asOfDate = await getAsOfDate();
+
   return (
     <html
       lang="en"
@@ -35,9 +38,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
-        <Header />
+        <Header asOfDate={asOfDate} />
         <main className="flex-1 w-full">{children}</main>
-        <Footer />
+        <Footer asOfDate={asOfDate} />
       </body>
     </html>
   );
