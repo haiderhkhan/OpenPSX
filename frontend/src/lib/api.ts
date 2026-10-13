@@ -49,50 +49,9 @@ export class ApiClientError extends Error implements ApiError {
 const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === "true";
 const API_BASE = (process.env.NEXT_PUBLIC_API_BASE ?? "http://127.0.0.1:8000").replace(/\/+$/, "");
 
-const KNOWN_SYMBOLS = new Set([
-  "KMI30",
-  "OGDC",
-  "LUCK",
-  "MEBL",
-  "HUBC",
-  "MZNPETF",
-  "UBL",
-  "ENGRO",
-  "FFC",
-  "PPL",
-  "HBL",
-  "MCB",
-  "EFERT",
-  "SYS",
-  "POL",
-  "MARI",
-  "PSO",
-  "DGKC",
-  "SEARL",
-  "TRG",
-  "ILP",
-  "CHCC",
-  "ATRL",
-  "NML",
-  "BAHL",
-  "PIOC",
-  "UNITY",
-  "PAEL",
-  "FCCL",
-  "AVN",
-  "SNGP",
-  "PRL",
-]);
-
-function checkSymbolScope(symbol: string): string {
-  const clean = symbol.trim().toUpperCase();
-  if (!KNOWN_SYMBOLS.has(clean)) {
-    throw new ApiClientError(404, {
-      code: "NOT_IN_SCOPE",
-      message: `Symbol '${symbol}' is outside the KMI-30 and PSX ETF scope.`,
-    });
-  }
-  return clean;
+// Scope is the server's call (404 NOT_IN_SCOPE); the client only normalises.
+function normalizeSymbol(symbol: string): string {
+  return symbol.trim().toUpperCase();
 }
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
@@ -167,7 +126,7 @@ export async function getOverview(basis: Basis = "calendar"): Promise<Overview> 
 
 // 4. GET /api/prices/{symbol}
 export async function getPrices(symbol: string, range: Range = "1Y"): Promise<Prices> {
-  const clean = checkSymbolScope(symbol);
+  const clean = normalizeSymbol(symbol);
   if (USE_MOCKS) {
     return {
       ...(pricesMock as Prices),
@@ -180,7 +139,7 @@ export async function getPrices(symbol: string, range: Range = "1Y"): Promise<Pr
 
 // 5. GET /api/changes/{symbol}
 export async function getChanges(symbol: string, basis: Basis = "calendar"): Promise<ChangeSet> {
-  const clean = checkSymbolScope(symbol);
+  const clean = normalizeSymbol(symbol);
   if (USE_MOCKS) {
     return {
       ...(changesMock as ChangeSet),
@@ -199,7 +158,7 @@ export async function getReturns(
   freq: Freq = "M",
   basis: Basis = "calendar"
 ): Promise<Returns> {
-  const clean = checkSymbolScope(symbol);
+  const clean = normalizeSymbol(symbol);
   if (USE_MOCKS) {
     return {
       ...(returnsMock as Returns),
@@ -215,7 +174,7 @@ export async function getReturns(
 
 // 7. GET /api/compare/{symbol}
 export async function getCompare(symbol: string, range: Range = "1Y"): Promise<Compare> {
-  const clean = checkSymbolScope(symbol);
+  const clean = normalizeSymbol(symbol);
   if (USE_MOCKS) {
     return {
       ...(compareMock as Compare),
@@ -230,7 +189,7 @@ export async function getCompare(symbol: string, range: Range = "1Y"): Promise<C
 
 // 8. GET /api/quant/{symbol}
 export async function getQuant(symbol: string): Promise<QuantOutput> {
-  const clean = checkSymbolScope(symbol);
+  const clean = normalizeSymbol(symbol);
   if (USE_MOCKS) {
     return {
       ...(quantMock as unknown as QuantOutput),
@@ -254,15 +213,8 @@ export async function getMacro(): Promise<MacroOutput> {
 
 // 11. GET /api/verdict/{symbol}
 export async function getVerdict(symbol: string, refresh = false): Promise<Verdict> {
-  const clean = checkSymbolScope(symbol);
-  // SCHEMA §4.2: Endpoint 11 accepts STOCK only; ETFs and the index get NOT_IN_SCOPE.
-  if (clean === "KMI30" || clean.endsWith("ETF")) {
-    throw new ApiClientError(404, {
-      code: "NOT_IN_SCOPE",
-      message: `Verdict is available for KMI-30 stocks only; '${clean}' is not an individual stock.`,
-    });
-  }
-
+  // SCHEMA §4.2: STOCK only. Callers check SymbolInfo.type; the server answers NOT_IN_SCOPE otherwise.
+  const clean = normalizeSymbol(symbol);
   if (USE_MOCKS) {
     return {
       ...(verdictMock as unknown as Verdict),

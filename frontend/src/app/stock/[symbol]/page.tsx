@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getPrices, getChanges, getQuant, getVerdict, ApiClientError } from "@/lib/api";
+import { getUniverse, getPrices, getChanges, getQuant, getVerdict, ApiClientError } from "@/lib/api";
+import type { SymbolType } from "@/lib/types";
 import { ErrorState } from "@/components/states";
 import { Disclaimer } from "@/components/Disclaimer";
 
@@ -15,22 +16,24 @@ export default async function StockPage({ params }: StockPageProps) {
   let changes;
   let quant;
   let verdict;
+  let symbolType: SymbolType = "STOCK";
   let errorStatus: { code: string; message: string } | null = null;
 
   try {
-    const isEtfOrIndex = upper === "KMI30" || upper.endsWith("ETF");
-
-    const [pricesRes, changesRes, quantRes, verdictRes] = await Promise.all([
+    const [universe, pricesRes, changesRes, quantRes] = await Promise.all([
+      getUniverse(),
       getPrices(upper, "1Y"),
       getChanges(upper, "calendar"),
       getQuant(upper),
-      isEtfOrIndex ? Promise.resolve(null) : getVerdict(upper),
     ]);
 
+    // Scope is decided by the server (NOT_IN_SCOPE above); `type` only picks the panels.
+    // Only mock mode can miss a symbol here (small fixture universe), so it falls back to STOCK.
+    symbolType = universe.symbols.find((s) => s.symbol === upper)?.type ?? "STOCK";
     prices = pricesRes;
     changes = changesRes;
     quant = quantRes;
-    verdict = verdictRes;
+    verdict = symbolType === "STOCK" ? await getVerdict(upper) : null;
   } catch (err) {
     if (err instanceof ApiClientError) {
       errorStatus = {
@@ -83,7 +86,7 @@ export default async function StockPage({ params }: StockPageProps) {
               {upper}
             </h1>
             <span className="rounded-md bg-muted px-2 py-0.5 text-xs font-semibold text-muted-foreground uppercase">
-              {upper.endsWith("ETF") ? "PSX ETF" : upper === "KMI30" ? "Index" : "KMI-30 Stock"}
+              {symbolType === "ETF" ? "PSX ETF" : symbolType === "INDEX" ? "Index" : "KMI-30 Stock"}
             </span>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
