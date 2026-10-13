@@ -63,6 +63,16 @@ flowchart LR
 
 ---
 
+## Codebase knowledge graph
+
+An auto-generated map of the codebase (modules, key functions, and how they connect), built with Graphify.
+
+- [Graph report](graphify-out/GRAPH_REPORT.md)
+
+> Generated from `backend/`, `scripts/` and `frontend/src/`. Refreshed at the final release tag.
+
+---
+
 ## Features
 
 **Dashboard**
