@@ -50,6 +50,7 @@
   - Range windows are exclusive (`date > end − range`, as in the P0-04 fixtures). A bucket is `partial` when it contains the effective date. Buckets that end before the first bar are omitted.
   - Errors: unknown symbol → 404 `NOT_IN_SCOPE`; ETF with `FEATURE_ETFS=false` or fiscal basis with `FEATURE_FISCAL_TOGGLE=false` → 403 `FEATURE_OFF`; DB not built → 503 `UPSTREAM`.
   - Tests run on `scripts/make_fixture_db.py` (seed 42, as_of 2026-10-09), built per session by conftest; real-DB timings: every endpoint ≤ 115 ms.
+- 2026-10-14 · claude-code · D-35 P1 fixes done by claude-code (antigravity quota). P3+ remains Track B. Audit defects B-005…B-009, commits `[P1-fix-N]`; the P1 TRACKER rows stay DONE.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
