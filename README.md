@@ -67,6 +67,7 @@ flowchart LR
 
 An auto-generated map of the codebase (modules, key functions, and how they connect), built with Graphify.
 
+- [View live graph](https://haiderhkhan.github.io/OpenPSX/) (interactive, opens in browser)
 - [Graph report](graphify-out/GRAPH_REPORT.md)
 
 > Generated from `backend/`, `scripts/` and `frontend/src/`. Refreshed at the final release tag.
