@@ -15,6 +15,7 @@ import type {
   QuantOutput,
   Range,
   Returns,
+  SymbolInfo,
   Transcription,
   Universe,
   Verdict,
@@ -117,6 +118,19 @@ export async function getAsOfDate(): Promise<string | undefined> {
 export async function getUniverse(): Promise<Universe> {
   if (USE_MOCKS) return universeMock as Universe;
   return request<Universe>("/api/universe");
+}
+
+// Universe lookup: the server's universe decides scope (NOT_IN_SCOPE) and SymbolInfo.type.
+// The mock fixture universe is a small sample, so mock mode treats unknown symbols as STOCK.
+export async function getSymbolInfo(symbol: string): Promise<SymbolInfo> {
+  const clean = normalizeSymbol(symbol);
+  const info = (await getUniverse()).symbols.find((s) => s.symbol === clean);
+  if (info) return info;
+  if (USE_MOCKS) return { symbol: clean, name: clean, type: "STOCK", sector: null, aliases: [] };
+  throw new ApiClientError(404, {
+    code: "NOT_IN_SCOPE",
+    message: `${clean} is not a KMI-30 stock, PSX ETF or the KMI-30 index.`,
+  });
 }
 
 // 3. GET /api/overview

@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { getUniverse, getPrices, getChanges, getQuant, getVerdict, ApiClientError } from "@/lib/api";
-import type { SymbolType } from "@/lib/types";
+import { getSymbolInfo, getPrices, getChanges, getQuant, getVerdict, ApiClientError } from "@/lib/api";
+import type { ApiError } from "@/lib/types";
 import { ErrorState } from "@/components/states";
 import { Disclaimer } from "@/components/Disclaimer";
 
@@ -8,61 +8,49 @@ interface StockPageProps {
   params: Promise<{ symbol: string }>;
 }
 
+type Loaded<T> = { data: T; error: null } | { data: null; error: ApiError["error"] };
+
+// Each request settles on its own, so one failure only blanks its own panel.
+async function load<T>(request: Promise<T>): Promise<Loaded<T>> {
+  try {
+    return { data: await request, error: null };
+  } catch (err) {
+    if (err instanceof ApiClientError) return { data: null, error: err.error };
+    return { data: null, error: { code: "UPSTREAM", message: err instanceof Error ? err.message : "Request failed" } };
+  }
+}
+
 export default async function StockPage({ params }: StockPageProps) {
   const { symbol } = await params;
   const upper = symbol.toUpperCase();
 
-  let prices;
-  let changes;
-  let quant;
-  let verdict;
-  let symbolType: SymbolType = "STOCK";
-  let errorStatus: { code: string; message: string } | null = null;
-
-  try {
-    const [universe, pricesRes, changesRes, quantRes] = await Promise.all([
-      getUniverse(),
-      getPrices(upper, "1Y"),
-      getChanges(upper, "calendar"),
-      getQuant(upper),
-    ]);
-
-    // Scope is decided by the server (NOT_IN_SCOPE above); `type` only picks the panels.
-    // Only mock mode can miss a symbol here (small fixture universe), so it falls back to STOCK.
-    symbolType = universe.symbols.find((s) => s.symbol === upper)?.type ?? "STOCK";
-    prices = pricesRes;
-    changes = changesRes;
-    quant = quantRes;
-    verdict = symbolType === "STOCK" ? await getVerdict(upper) : null;
-  } catch (err) {
-    if (err instanceof ApiClientError) {
-      errorStatus = {
-        code: err.error.code,
-        message: err.error.message,
-      };
-    } else {
-      errorStatus = {
-        code: "UPSTREAM",
-        message: err instanceof Error ? err.message : "Error loading symbol data",
-      };
-    }
-  }
-
-  if (errorStatus) {
+  // The universe lookup decides scope and type; it is the only request that can fail the whole page.
+  const lookup = await load(getSymbolInfo(upper));
+  if (lookup.error) {
+    const isOutOfScope = lookup.error.code === "NOT_IN_SCOPE";
     return (
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
         <ErrorState
-          title={
-            errorStatus.code === "NOT_IN_SCOPE"
-              ? `Symbol '${upper}' is outside universe scope`
-              : "Unable to load symbol"
-          }
-          message={errorStatus.message}
-          code={errorStatus.code}
+          title={isOutOfScope ? `Symbol '${upper}' is outside universe scope` : "Unable to load symbol"}
+          message={lookup.error.message}
+          code={lookup.error.code}
         />
       </div>
     );
   }
+  const symbolType = lookup.data.type;
+
+  // SCHEMA §4.2: quant (endpoint 8) excludes the index; verdict (endpoint 11) is STOCK only.
+  const [pricesRes, changesRes, quantRes, verdictRes] = await Promise.all([
+    load(getPrices(upper, "1Y")),
+    load(getChanges(upper, "calendar")),
+    symbolType === "INDEX" ? null : load(getQuant(upper)),
+    symbolType === "STOCK" ? load(getVerdict(upper)) : null,
+  ]);
+  const prices = pricesRes.data;
+  const changes = changesRes.data;
+  const quant = quantRes?.data;
+  const verdict = verdictRes?.data;
 
   const lastBar = prices?.bars[prices.bars.length - 1];
 
@@ -90,7 +78,7 @@ export default async function StockPage({ params }: StockPageProps) {
             </span>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
-            Price data as of {prices?.bars[prices.bars.length - 1]?.date ?? "—"}
+            Price data as of {lastBar?.date ?? "—"}
           </p>
         </div>
 
@@ -104,7 +92,10 @@ export default async function StockPage({ params }: StockPageProps) {
         )}
       </div>
 
+      {pricesRes.error && <ErrorState title="Prices unavailable" message={pricesRes.error.message} />}
+
       {/* Performance Period Cards */}
+      {changesRes.error && <ErrorState title="Period changes unavailable" message={changesRes.error.message} />}
       {changes && (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           <div className="rounded-lg border border-border bg-card p-4">
@@ -165,6 +156,7 @@ export default async function StockPage({ params }: StockPageProps) {
       {/* Grid: Quant Insights & Verdict */}
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         {/* Quant Panel Skeleton */}
+        {quantRes?.error && <ErrorState title="Quant model unavailable" message={quantRes.error.message} />}
         {quant && (
           <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
             <div className="flex items-center justify-between pb-4 border-b border-border/60">
@@ -235,7 +227,9 @@ export default async function StockPage({ params }: StockPageProps) {
         )}
 
         {/* Verdict / Agent Synthesis Card */}
-        {verdict ? (
+        {verdictRes?.error ? (
+          <ErrorState title="Agent verdict unavailable" message={verdictRes.error.message} />
+        ) : verdict ? (
           <div className="rounded-xl border border-border bg-card p-6 shadow-xs flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between pb-4 border-b border-border/60">
@@ -303,7 +297,7 @@ export default async function StockPage({ params }: StockPageProps) {
               Comprehensive 4-agent verdict is scoped to KMI-30 constituents.
             </p>
             <div className="mt-6">
-              <Disclaimer asOfDate={prices?.bars[prices.bars.length - 1]?.date} />
+              <Disclaimer asOfDate={lastBar?.date} />
             </div>
           </div>
         )}
