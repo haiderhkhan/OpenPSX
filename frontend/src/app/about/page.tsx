@@ -45,8 +45,9 @@ export default async function AboutPage() {
               walk-forward backtests with TreeSHAP explainability. All models are benchmarked against majority-class and persistence baselines.
             </li>
             <li>
-              <strong>Zero Advice Policy:</strong> Out-of-box verdicts are strictly categorized into POSITIVE, NEGATIVE, or NEUTRAL stances.
-              No buy/sell ratings, target prices, or financial advisory language is ever generated.
+              <strong>Zero Advice Policy:</strong> Outlooks are educational and use only three labels: POSITIVE, NEGATIVE or NEUTRAL.
+              They are not trading instructions: OPEN PSX never tells anyone what to trade, never names a price level to aim for,
+              and never uses advisory language.
             </li>
           </ul>
         </section>
