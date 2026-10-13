@@ -51,6 +51,7 @@
   - Errors: unknown symbol → 404 `NOT_IN_SCOPE`; ETF with `FEATURE_ETFS=false` or fiscal basis with `FEATURE_FISCAL_TOGGLE=false` → 403 `FEATURE_OFF`; DB not built → 503 `UPSTREAM`.
   - Tests run on `scripts/make_fixture_db.py` (seed 42, as_of 2026-10-09), built per session by conftest; real-DB timings: every endpoint ≤ 115 ms.
 - 2026-10-14 · claude-code · D-35 P1 fixes done by claude-code (antigravity quota). P3+ remains Track B. Audit defects B-005…B-009, commits `[P1-fix-N]`; the P1 TRACKER rows stay DONE.
+- 2026-10-14 · claude-code · D-36 B-005: `cacheComponents` (+ `partialPrefetching`, which requires it) dropped from `frontend/next.config.ts`; nothing used `"use cache"`. The root layout exports `dynamic = "force-dynamic"`, so every route renders per request and `next build` never calls the API (it passes with the backend up or down). Re-enabling Cache Components means wrapping every API read in `<Suspense>` and removing that export.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.

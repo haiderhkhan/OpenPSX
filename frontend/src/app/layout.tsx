@@ -14,6 +14,9 @@ const geistMono = Geist_Mono({
 
 import { Header, Footer } from "@/components/shell";
 
+// Every route reads the live API per request; never prerender build-time data.
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "OPEN PSX — Shariah Market Intelligence",
   description:

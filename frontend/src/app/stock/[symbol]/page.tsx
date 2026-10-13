@@ -7,16 +7,6 @@ interface StockPageProps {
   params: Promise<{ symbol: string }>;
 }
 
-export function generateStaticParams() {
-  return [
-    { symbol: "OGDC" },
-    { symbol: "LUCK" },
-    { symbol: "MEBL" },
-    { symbol: "HUBC" },
-    { symbol: "MZNPETF" },
-  ];
-}
-
 export default async function StockPage({ params }: StockPageProps) {
   const { symbol } = await params;
   const upper = symbol.toUpperCase();
