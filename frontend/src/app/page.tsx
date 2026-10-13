@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getOverview } from "@/lib/api";
-import { Loading } from "@/components/states";
+import { EmptyState, ErrorState, Loading } from "@/components/states";
 
 export default async function OverviewPage() {
   let overview;
@@ -36,9 +36,7 @@ export default async function OverviewPage() {
       </div>
 
       {loadError ? (
-        <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-6 text-center text-sm text-destructive">
-          {loadError}
-        </div>
+        <ErrorState title="Unable to load market overview" message={loadError} />
       ) : !overview ? (
         <Loading label="Loading market overview..." />
       ) : (
@@ -96,6 +94,12 @@ export default async function OverviewPage() {
           </div>
 
           {/* Universe Table Skeleton & Preview */}
+          {overview.rows.length === 0 ? (
+            <EmptyState
+              title="No symbols to show"
+              message={`The API returned no KMI-30 or ETF rows for ${overview.as_of_date}.`}
+            />
+          ) : (
           <div className="overflow-hidden rounded-xl border border-border bg-card shadow-xs">
             <div className="border-b border-border bg-muted/20 px-6 py-4">
               <h3 className="font-semibold text-foreground">
@@ -201,6 +205,7 @@ export default async function OverviewPage() {
               </table>
             </div>
           </div>
+          )}
         </div>
       )}
     </div>

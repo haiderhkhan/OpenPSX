@@ -1,6 +1,8 @@
 "use client";
 
+import { useTransition } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface ErrorStateProps {
   title?: string;
@@ -18,6 +20,10 @@ export function ErrorState({
   className = "",
 }: ErrorStateProps) {
   const isOutOfScope = code === "NOT_IN_SCOPE";
+  const router = useRouter();
+  const [isRetrying, startRetry] = useTransition();
+  // Server pages can't pass functions, so the default re-renders the route: every route fetches per request.
+  const retry = onRetry ?? (() => router.refresh());
 
   const displayTitle =
     title ??
@@ -58,15 +64,14 @@ export function ErrorState({
       ) : null}
 
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        {onRetry && (
-          <button
-            type="button"
-            onClick={onRetry}
-            className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-          >
-            Retry
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={() => startRetry(retry)}
+          disabled={isRetrying}
+          className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        >
+          {isRetrying ? "Retrying…" : "Retry"}
+        </button>
 
         <Link
           href="/"

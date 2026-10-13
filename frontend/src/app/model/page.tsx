@@ -1,5 +1,5 @@
 import { getModelCard } from "@/lib/api";
-import { Loading } from "@/components/states";
+import { EmptyState, ErrorState, Loading } from "@/components/states";
 import { Disclaimer } from "@/components/Disclaimer";
 
 export default async function ModelPage() {
@@ -25,9 +25,7 @@ export default async function ModelPage() {
       </div>
 
       {errorMsg ? (
-        <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-6 text-center text-sm text-destructive">
-          {errorMsg}
-        </div>
+        <ErrorState title="Unable to load the model card" message={errorMsg} />
       ) : !modelCard ? (
         <Loading label="Loading model card..." />
       ) : (
@@ -89,6 +87,13 @@ export default async function ModelPage() {
               Top 10 drivers across universe ranked by mean |SHAP| contribution
             </p>
 
+            {modelCard.shap_global.length === 0 && (
+              <EmptyState
+                className="mt-6"
+                title="No feature importance yet"
+                message="The model card has no global SHAP values for this model version."
+              />
+            )}
             <div className="mt-6 divide-y divide-border/60">
               {modelCard.shap_global.map((item, idx) => (
                 <div
