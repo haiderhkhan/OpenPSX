@@ -275,6 +275,7 @@ interface Transcription { text: string; duration_s: number | null }
 | `is_etf` | Is ETF | 0/1 |
 
 - **Model:** LightGBM binary classifier. `n_estimators=300, learning_rate=0.03, num_leaves=15, min_child_samples=50, subsample=0.8, subsample_freq=1, colsample_bytree=0.8, random_state=42`. NaNs are left to LightGBM.
+- **Feature fill rule** (D-38): a feature is trained on only if it is non-null in ≥ `config.FEATURE_MIN_FILL` (0.20) of labelled rows. The dropped features and their fill shares are written to `quant_metrics.json` (`dropped_features`); they return automatically once their history is imported and the model is retrained.
 - **Walk-forward:**
   - The training window expands; the first test fold starts after 156 weeks (104 if history is shorter).
   - Retrain every 13 weeks and predict the next 13.

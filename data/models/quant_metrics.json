@@ -1,0 +1,82 @@
+{
+  "model_version": "lgbm-2026-09-23-724c1f16",
+  "as_of_date": "2026-09-23",
+  "trained_through": "2026-09-18",
+  "scheme": "Walk-forward, expanding window, retrain every 13 weeks; target = next-week direction",
+  "n_predictions": 12799,
+  "metrics": {
+    "accuracy": 0.5175,
+    "balanced_accuracy": 0.5196,
+    "auc": 0.5217
+  },
+  "baselines": {
+    "majority_class": 0.4883,
+    "persistence": 0.5146
+  },
+  "by_year": [
+    {
+      "year": 2019,
+      "accuracy": 0.4464,
+      "n": 616
+    },
+    {
+      "year": 2020,
+      "accuracy": 0.5062,
+      "n": 1456
+    },
+    {
+      "year": 2021,
+      "accuracy": 0.5101,
+      "n": 1580
+    },
+    {
+      "year": 2022,
+      "accuracy": 0.5394,
+      "n": 1841
+    },
+    {
+      "year": 2023,
+      "accuracy": 0.5099,
+      "n": 1861
+    },
+    {
+      "year": 2024,
+      "accuracy": 0.5388,
+      "n": 1999
+    },
+    {
+      "year": 2025,
+      "accuracy": 0.5353,
+      "n": 2027
+    },
+    {
+      "year": 2026,
+      "accuracy": 0.494,
+      "n": 1419
+    }
+  ],
+  "features": [
+    "ret_1w",
+    "ret_4w",
+    "ret_12w",
+    "ret_26w",
+    "vol_4w",
+    "vol_12w",
+    "dist_ma50",
+    "dist_ma200",
+    "rsi_14",
+    "drawdown_52w",
+    "volume_z",
+    "idx_ret_4w",
+    "idx_ret_12w",
+    "rel_strength_12w",
+    "is_etf"
+  ],
+  "dropped_features": {
+    "policy_rate": 0.0145,
+    "policy_rate_chg_12w": 0.0,
+    "cpi_yoy": 0.0122,
+    "pkr_usd_chg_4w": 0.0
+  },
+  "feature_min_fill": 0.2
+}

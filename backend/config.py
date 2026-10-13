@@ -73,6 +73,9 @@ CONF_CAP_FEW_AGENTS = 0.50        # fewer than MIN_ACTIVE_AGENTS active
 MIN_ACTIVE_AGENTS = 3
 CONF_MAX = 0.95
 
+# --- ML Quant (SCHEMA.md §6) ---
+FEATURE_MIN_FILL = 0.20           # train only on features non-null in >= this share of labelled rows
+
 
 def get_as_of_date() -> str:
     """`meta.as_of_date` from the DB; the fixture date while no DB exists."""
