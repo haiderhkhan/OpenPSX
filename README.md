@@ -2,7 +2,7 @@
 
 **AI-powered market education for Pakistan's Shariah-compliant equities.**
 
-OPEN PSX helps retail investors understand the KMI-30 stocks and PSX-listed ETFs. It combines a machine-learning quant model with three AI analyst agents, and each stock gets a plain-language **Positive / Negative outlook** with a confidence score and the reasoning behind it. There are no buy or sell calls. The goal is to teach users *why* a stock looks the way it does.
+OPEN PSX helps retail investors understand the KMI-30 stocks and PSX-listed ETFs. It combines a machine-learning quant model with three AI analyst agents, and each stock gets a plain-language **Positive / Negative outlook** with a confidence score and the reasoning behind it. Outlooks are educational, not trading instructions. The goal is to teach users *why* a stock looks the way it does.
 
 > 🏆 Entry for the **4th International AI Championship (AI Showdown)** by AIEF, held at FAST-NUCES Lahore. Category: **AI in Fintech**.
 
@@ -159,7 +159,7 @@ OPEN PSX builds on **PSX War Room**, an earlier prototype of mine that covered t
 
 ## Disclaimer
 
-OPEN PSX is an **educational tool**. Its outlooks are not investment advice, recommendations, or price predictions. Market data may be delayed or incomplete. Always do your own research or consult a licensed financial advisor before making investment decisions.
+OPEN PSX is an **educational tool**. Its outlooks are educational, not trading instructions or investment advice, and they make no price predictions. Market data may be delayed or incomplete. Always do your own research or consult a licensed financial advisor before making investment decisions.
 
 ---
 
