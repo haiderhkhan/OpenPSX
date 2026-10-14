@@ -1,0 +1,40 @@
+# P8-02: Render Blueprint for the OPEN PSX backend (FastAPI, free web service).
+# Python comes from .python-version (3.11 -> latest 3.11 patch). Secrets are entered in the Render
+# dashboard when the Blueprint is created (sync: false), never committed. The disk is ephemeral:
+# data/openpsx.db, data/models, data/macro and the verdict seed ship in the repo; data/cache.db is rebuilt
+# and the seed reloads on every start (P8-01).
+services:
+  - type: web
+    name: openpsx-api
+    runtime: python
+    plan: free
+    region: singapore  # nearest Render region to Pakistan
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: GEMINI_API_KEYS
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false  # the Vercel URL (P8-03); comma-separated, no trailing slash
+      - key: GEMINI_MODEL
+        value: gemini-3.1-flash-lite
+      - key: GROQ_WHISPER_MODEL
+        value: whisper-large-v3-turbo
+      - key: LLM_ENABLED
+        value: "true"
+      - key: LLM_DAILY_CALL_LIMIT
+        value: "200"
+      - key: APP_TZ
+        value: Asia/Karachi
+      - key: FEATURE_ETFS
+        value: "true"
+      - key: FEATURE_MACRO_LLM
+        value: "true"
+      - key: FEATURE_FISCAL_TOGGLE
+        value: "true"
+      - key: FEATURE_VOICE
+        value: "true"

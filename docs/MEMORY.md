@@ -152,6 +152,12 @@
 - 2026-10-14 · claude-code · G-21 RSS can't back-fill sentiment. Each feed holds only ~30 items (≈ 3 days): the first archive run (2026-10-14 ~11:35 PKT) stored 76 headlines dated 2026-10-11 … 10-14, none naming a KMI-30 company and all after AS_OF 2026-09-23. So all 30 stocks abstain until manual headlines for 24 Aug – 23 Sep (R-07, D-28) arrive via P2-05 (then run `archive_news.py --verify-manual`), or until AS_OF moves forward and the archive has been run daily.
 - 2026-10-14 · claude-code · G-22 `scripts/build_db.py` rebuilds from `data/source/` and drops every manual import: keep the import files in `data/manual/` and re-run them after any rebuild. The KMI30 back-fill only covers dates before the earliest KMI30 row, so `kmi30_history` must be one contiguous run up to the source start (2026-04-27); check the importer's 'back-fill N rows before …' line.
 - 2026-10-15 · claude-code · G-23 (closes G-18) First live calls, 2026-10-15 00:2x PKT, one key: model `gemini-3.1-flash-lite` accepted `ThinkingConfig(thinking_level="minimal")` on the first try (INFO `thinking config for gemini-3.1-flash-lite: … thinking_level=MINIMAL`), so no fallback request is spent. The tiny-schema smoke call returned `{"ok": true}` in 1 request. Live verdicts for OGDC, LUCK and PSO used 6 calls; 2 of them got **HTTP 503 UNAVAILABLE** (server overload), and the gateway maps 503 → `LLMUnavailable`, so each went straight to its template with no retry. No validator retry fired. A repeat run used 0 calls (LIVE parts → CACHED). But a verdict holding any TEMPLATE part is cached for only 15 min, so a 503 costs those calls again later. The daily counter is per process (resets on restart): 7 calls today across the 2 smoke processes.
+- 2026-10-15 · claude-code · G-24 Render facts (docs read 2026-10-15) behind `render.yaml`:
+  - New Python services default to **3.14.3**, so the `.python-version` pin (`3.11`, latest 3.11 patch) is essential. `PYTHON_VERSION` overrides it and needs a full patch (e.g. `3.11.16`).
+  - Free web services spin down after 15 min idle and take about 1 min to wake; the disk is wiped on every restart, so `cache.db` is rebuilt and the seed reloads.
+  - The health check (`healthCheckPath`) must answer 2xx/3xx within 5 s. 60 s of failures → restart.
+  - `sync: false` env vars are asked for only when the Blueprint is first created; later secrets go in the dashboard by hand.
+  - `autoDeploy` is deprecated; use `autoDeployTrigger: commit`.
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.

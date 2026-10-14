@@ -12,9 +12,10 @@
 ## Track A — claude-code
 - Phase: P6 Agents + verdict DONE (exit criteria hold) → A-P6 audit can start · P2 DONE → A-P2 can run
 - Last done: P6-06 macro (D-50, reassigned) + P6-07 verdict router, /api/verdict live (D-51); real verdicts NEUTRAL in template mode
-- Next: P8-01 seed + warm · R-06 news imported (D-52): no stock reaches 3 headlines, sentiment still abstains
-- Blockers: none · waiting: R-05-macro.md (macro import + retrain) · live LLM verified (G-23: MINIMAL thinking; 503s fall back) · open: B-020, G-22
-- Updated: 2026-10-15 00:31 PKT
+- Last: P8-01 seed 30 verdicts all LIVE, loads at startup as CACHED (D-54) · B-021/022/023 fixed
+- Next: P8-02 BLOCKED on H-07 (Render account + Blueprint); render.yaml + .python-version 3.11 pushed (G-24)
+- Blockers: H-07 · waiting: R-05-macro.md (after it: macro import, retrain, re-run precompute) · open: B-020, G-22
+- Updated: 2026-10-15 01:00 PKT
 
 ## Track B — antigravity
 - Phase: P3 Dashboard — DONE by claude-code (Haider B-override, D-43) → A-P3 audit can start
