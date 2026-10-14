@@ -70,7 +70,7 @@
 | H-01 | Rename folder to OpenPSX, add docs, first push | — | DONE | human | 2026-10-12 22:23 | docs added; rename dropped (D-22) |
 | H-02 | Copy source SQLite into data/source/ | H-01 | DONE | human | 2026-10-12 22:39 | 4 DBs from etf_d19_worktree |
 | H-03 | Gemini research R-01, R-02, R-03 (universe) | — | TODO | human | | |
-| H-04 | Gemini research R-04 (model IDs + limits) | — | TODO | human | | |
+| H-04 | Gemini research R-04 (model IDs + limits) | — | DONE | human | 2026-10-15 00:11 | R-04-api-limits.md in repo; marked by claude-code on Haider's request |
 | H-05 | Create .env and frontend/.env.local | P0-02, P1-03 | TODO | human | | |
 | H-06 | Add submitted AIEF proposal; reconcile PRD | — | TODO | human | | |
 | H-07 | Render + Vercel accounts linked to the repo | — | TODO | human | | |

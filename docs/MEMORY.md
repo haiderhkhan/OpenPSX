@@ -106,6 +106,7 @@
   - `?refresh=true` skips both keys and is limited to 1 per minute per symbol (in-process) → 429 `RATE_LIMITED`. ETF / KMI30 / unknown → 404 `NOT_IN_SCOPE` (as D-40). No DB or an unexpected router fault → 503 `UPSTREAM`. One agent crashing → that agent UNAVAILABLE, still 200. Never 500.
   - `startup.on_startup()` loads `data/precomputed/verdicts_<AS_OF>.json` when present; a missing or broken file is only logged.
   - Real DB, `LLM_ENABLED=false` (2026-10-14 23:5x): OGDC, LUCK and PSO are all NEUTRAL (scores 0.1256, −0.0448, 0.1253). Quant is NEGATIVE with k 0.06–0.09, fundamentals TEMPLATE (k 0.5), sentiment UNAVAILABLE, macro NEUTRAL TEMPLATE. With live LLM agents (k 1.0) OGDC/PSO would clear +0.15.
+- 2026-10-15 · claude-code · D-52 R-06 news imported from a normalised copy, `data/manual/news_R-06.csv` (kept there per G-22; Haider's `docs/research/R-06-news.csv` untouched): source "Business Recorder" → `BR`, ticker `ENGRO` → `ENGROH`, and the FrieslandCampina Engro Pakistan row dropped (a different company). 7 symbol-rows = 6 news rows (Lundali-1 is one row for MARI + OGDC). Sentiment window counts as of 2026-09-23: ENGROH 2, OGDC 2, HUBC 1, MARI 1, MEBL 1 → no stock reaches `MIN_HEADLINES` 3, so sentiment still abstains everywhere (threshold kept). B-020 stays open: these BR rows are not URL-checked.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
