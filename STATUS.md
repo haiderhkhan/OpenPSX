@@ -10,11 +10,11 @@
 **Deployed URLs:** frontend _tbd_ · backend _tbd_
 
 ## Track A — claude-code
-- Phase: P4 ML Quant — DONE (exit criteria hold) → A-P4 audit can start; P2-05 still TODO
-- Last done: P4-04 · endpoints 8–9 live; model acc 51.7% vs 51.5% persistence (no edge, said on card)
-- Next: P6 Agents + verdict (P6-01…) → P2-05 macro/manual import → retrain `scripts/train_quant.py`
-- Blockers: none · P6-01 DONE (D-41; live thinking choice unverified, G-18) · open: Q-06 (D-38)
-- Updated: 2026-10-14 02:35 PKT
+- Phase: P6 Agents + verdict — in progress · P4 DONE, A-P4 PASS WITH ISSUES (B-016, B-017 LOW)
+- Last done: P6-01 LLM gateway (D-41); live thinking choice unverified until a .env exists (G-18)
+- Next: P6-02 validators → P6-03 cache → P6-04…07 → P2-05 macro/manual import
+- Blockers: none · open: Q-06 (D-38), H-05 (.env) for the first live call
+- Updated: 2026-10-14 10:22 PKT
 
 ## Track B — antigravity
 - Phase: P1 Frontend shell — DONE; audit fixes B-005…B-011, B-014, B-015 FIXED by claude-code (antigravity quota swap, D-35)
