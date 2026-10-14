@@ -10,11 +10,11 @@
 **Deployed URLs:** frontend _tbd_ · backend _tbd_
 
 ## Track A — claude-code
-- Phase: P2 DONE (P2-05 closed) → A-P2 audit can run · P6 Agents + verdict in progress (P6-06 other session)
-- Last done: P2-05 manual import (`scripts/import_manual.py`, D-49); templates in data/manual/templates/
-- Next: P6-07 verdict router once P6-06 is DONE · import R-05 macro / R-06 KMI30 / R-07 news when Haider drops the files
-- Blockers: none · open: B-020 (verify-manual skips DAWN/BR imports), G-22 (build_db drops manual imports), H-05 (.env)
-- Updated: 2026-10-14 23:39 PKT
+- Phase: P6 Agents + verdict DONE (exit criteria hold) → A-P6 audit can start · P2 DONE → A-P2 can run
+- Last done: P6-06 macro (D-50, reassigned) + P6-07 verdict router, /api/verdict live (D-51); real verdicts NEUTRAL in template mode
+- Next: P8-01 seed + warm · R-06-news.csv import waits on Haider (source "Business Recorder"→BR, ENGRO→ENGROH)
+- Blockers: none · open: B-020 (verify-manual skips DAWN/BR), G-22 (build_db drops manual imports), H-05 (.env)
+- Updated: 2026-10-14 23:57 PKT
 
 ## Track B — antigravity
 - Phase: P3 Dashboard — DONE by claude-code (Haider B-override, D-43) → A-P3 audit can start
