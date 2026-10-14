@@ -50,7 +50,7 @@ export function StanceChip({ stance, size = "md" }: { stance: Stance; size?: "sm
   );
 }
 
-// Display only (R-18): a share the API computed (0–1) shown as a whole percent.
-export function formatShare(value: number): string {
-  return `${Math.round(value * 100)}%`;
+// Display only (R-18): a share the API computed (0–1) shown as a percent (whole by default).
+export function formatShare(value: number, digits = 0): string {
+  return `${(value * 100).toFixed(digits)}%`;
 }

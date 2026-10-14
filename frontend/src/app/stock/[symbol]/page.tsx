@@ -6,12 +6,14 @@ import {
   getReturns,
   getCompare,
   getQuant,
+  getModelCard,
   getVerdict,
   getHealth,
   ApiClientError,
 } from "@/lib/api";
 import type { ApiError, Basis } from "@/lib/types";
 import { ErrorState } from "@/components/states";
+import { QuantPanel } from "@/components/insights/QuantPanel";
 import { VerdictCard } from "@/components/insights/VerdictCard";
 import { BasisToggle } from "@/components/BasisToggle";
 import { PriceChart } from "@/components/charts/PriceChart";
@@ -63,12 +65,13 @@ export default async function StockPage({ params, searchParams }: StockPageProps
 
   // SCHEMA §4.2: quant (endpoint 8) excludes the index; verdict (endpoint 11) is STOCK only.
   // The KMI-30 overlay is meaningless for the index itself.
-  const [pricesRes, changesRes, returnsRes, compareRes, quantRes, verdictRes] = await Promise.all([
+  const [pricesRes, changesRes, returnsRes, compareRes, quantRes, cardRes, verdictRes] = await Promise.all([
     load(getPrices(upper, "1Y")),
     load(getChanges(upper, basis)),
     load(getReturns(upper, "M", basis)),
     symbolType === "INDEX" ? null : load(getCompare(upper, "1Y")),
     symbolType === "INDEX" ? null : load(getQuant(upper)),
+    symbolType === "INDEX" ? null : load(getModelCard()),
     symbolType === "STOCK" ? load(getVerdict(upper)) : null,
   ]);
   const prices = pricesRes.data;
@@ -193,77 +196,9 @@ export default async function StockPage({ params, searchParams }: StockPageProps
       </div>
 
       {/* Grid: Quant Insights & Verdict */}
-      <div className={`grid grid-cols-1 gap-8 ${verdictRes ? "lg:grid-cols-2" : ""}`}>
-        {/* Quant Panel Skeleton */}
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         {quantRes?.error && <ErrorState title="Quant model unavailable" message={quantRes.error.message} />}
-        {quant && (
-          <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
-            <div className="flex items-center justify-between pb-4 border-b border-border/60">
-              <div>
-                <h2 className="text-lg font-bold text-foreground">ML Quant Direction</h2>
-                <p className="text-xs text-muted-foreground">
-                  Horizon {quant.horizon} · Model {quant.model_version}
-                </p>
-              </div>
-              <span
-                className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
-                  quant.stance === "POSITIVE"
-                    ? "bg-positive-bg text-positive border border-positive-border"
-                    : quant.stance === "NEGATIVE"
-                    ? "bg-negative-bg text-negative border border-negative-border"
-                    : "bg-neutral-stance-bg text-neutral-stance border border-neutral-stance-border"
-                }`}
-              >
-                <span>{quant.stance === "POSITIVE" ? "▲" : quant.stance === "NEGATIVE" ? "▼" : "■"}</span>
-                <span>{quant.stance}</span>
-              </span>
-            </div>
-
-            <div className="mt-4 grid grid-cols-2 gap-4">
-              <div className="rounded-md bg-muted/30 p-3">
-                <span className="text-xs text-muted-foreground">Direction Probability</span>
-                <p className="mt-1 font-mono text-base font-bold text-foreground">
-                  {(quant.p_up * 100).toFixed(1)}% Up
-                </p>
-              </div>
-              <div className="rounded-md bg-muted/30 p-3">
-                <span className="text-xs text-muted-foreground">Model Confidence</span>
-                <p className="mt-1 font-mono text-base font-bold text-foreground">
-                  {(quant.confidence * 100).toFixed(1)}%
-                </p>
-              </div>
-              <div className="rounded-md bg-muted/30 p-3">
-                <span className="text-xs text-muted-foreground">Volatility Bucket</span>
-                <p className="mt-1 font-mono text-base font-bold text-foreground">
-                  {quant.volatility.bucket} ({quant.volatility.annualized_pct.toFixed(1)}%)
-                </p>
-              </div>
-              <div className="rounded-md bg-muted/30 p-3">
-                <span className="text-xs text-muted-foreground">Market Regime</span>
-                <p className="mt-1 font-mono text-base font-bold text-foreground">
-                  {quant.regime.label}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Top SHAP Feature Contributors
-              </h3>
-              <ul className="mt-2 divide-y divide-border/60 text-xs">
-                {quant.top_contributors.map((c) => (
-                  <li key={c.feature} className="flex items-center justify-between py-2">
-                    <span className="text-foreground">{c.label}</span>
-                    <span className="font-mono text-muted-foreground">
-                      {c.shap > 0 ? "+" : ""}
-                      {c.shap.toFixed(3)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
+        {quant && <QuantPanel quant={quant} card={cardRes?.data ?? null} />}
 
         {/* Outlook: KMI-30 stocks only (verdictRes is null for ETFs and the index) */}
         {verdictRes?.error && <ErrorState title="Outlook unavailable" message={verdictRes.error.message} />}
