@@ -208,3 +208,12 @@ def test_no_db_or_router_fault_is_503_not_500(env: Path, client, monkeypatch: py
     monkeypatch.setattr(config, "DB_PATH", env.parent / "missing.db")
     response = client.get("/api/verdict/OGDC")
     assert response.status_code == 503 and response.json()["error"]["code"] == "UPSTREAM"
+
+
+# --- B-022: prompts may only describe what is in the input ---
+
+@pytest.mark.parametrize("name", ["verdict_summary", "fundamentals", "macro", "sentiment"])
+def test_prompts_forbid_causes_not_in_the_payload(name: str) -> None:
+    text = (config.ROOT / "backend" / "agents" / "prompts" / f"{name}.md").read_text(encoding="utf-8")
+    assert "Do not state causes, drivers or reasons that are not in the payload." in text
+    assert "drives" not in text  # the old summary prompt asked "what drives it"
