@@ -10,11 +10,11 @@
 **Deployed URLs:** frontend _tbd_ · backend _tbd_
 
 ## Track A — claude-code
-- Phase: P6 Agents + verdict — in progress · P4 DONE, A-P4 PASS WITH ISSUES (B-016, B-017 LOW)
+- Phase: P6 Agents + verdict — in progress · P4 DONE, A-P4 PASS WITH ISSUES → closed: B-016 fixed (3 stocks re-bucketed), B-017 disclosed (D-47), B-018 handed to Track B
 - Last done: P6-01 LLM gateway (D-41); live thinking choice unverified until a .env exists (G-18)
 - Next: P6-02 validators → P6-03 cache → P6-04…07 → P2-05 macro/manual import
 - Blockers: none · open: Q-06 (D-38), H-05 (.env) for the first live call
-- Updated: 2026-10-14 10:22 PKT
+- Updated: 2026-10-14 11:17 PKT
 
 ## Track B — antigravity
 - Phase: P3 Dashboard — DONE by claude-code (Haider B-override, D-43) → A-P3 audit can start

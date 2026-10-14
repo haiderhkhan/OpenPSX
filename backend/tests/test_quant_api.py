@@ -65,6 +65,7 @@ def test_model_card_is_built_from_the_model_files(client: TestClient, tiny_model
     assert f"{metrics['metrics']['accuracy'] * 100:.1f}%" in text and "frozen at 2026-10-09" in text
     assert "ETF prices end on 2026-08-04" in text and "Policy rate" in text  # fixture has no macro rows
     assert "survivorship bias" in text and not BANNED.search(text)
+    assert "mid-week" not in text  # fixture AS_OF 2026-10-09 is a Friday (B-017)
 
 
 def test_limitations_flag_no_edge_only_when_it_is_so() -> None:
@@ -73,6 +74,7 @@ def test_limitations_flag_no_edge_only_when_it_is_so() -> None:
                "by_year": [{"year": 2024, "accuracy": 0.58, "n": 10}, {"year": 2025, "accuracy": 0.62, "n": 10}]}
     clear = " ".join(insights.limitations(metrics, [], {}, None))
     assert "a small edge" in clear and "No consistent edge" not in clear and "market-wide" not in clear
+    assert "latest data date falls mid-week" in clear and not BANNED.search(clear)  # 2026-09-23 is a Wednesday (B-017)
 
     weak = {**metrics, "metrics": {"accuracy": 0.518},
             "by_year": [{"year": 2019, "accuracy": 0.446, "n": 10}, {"year": 2022, "accuracy": 0.539, "n": 10}]}

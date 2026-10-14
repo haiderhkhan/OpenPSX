@@ -65,6 +65,29 @@ def test_vol_buckets_are_terciles_and_stances_follow_thresholds() -> None:
         "POSITIVE", "NEUTRAL", "NEUTRAL", "NEUTRAL", "NEGATIVE"]
 
 
+def test_vol_cutoffs_come_from_as_of_rows_only(caplog: pytest.LogCaptureFixture) -> None:
+    as_of = [60.0, 10, 30, 20, 50, 40]
+    for old in ([1000.0, 1000, 1000, 0.1], [0.0, 0, 0, 0]):  # B-016: extreme older-dated rows
+        vols = pd.Series(as_of + old)
+        buckets = regime.vol_buckets(vols, pd.Series([True] * 6 + [False] * 4))
+        assert buckets[:6] == regime.vol_buckets(pd.Series(as_of))
+        assert buckets[6:] == [{1000.0: "HIGH", 0.1: "LOW", 0.0: "LOW"}[v] for v in old]
+    assert regime.vol_buckets(pd.Series([30.0, 20, 10]), pd.Series([True, True, False])) == ["HIGH", "MEDIUM", "LOW"]
+    assert "2 rows at AS_OF" in caplog.text  # too few AS_OF rows: falls back to all rows, no crash
+
+
+def test_stale_etf_volatility_does_not_move_as_of_buckets(trained: tuple) -> None:
+    panel, features, model, kmi30 = trained
+    etf_live = panel.index[panel["symbol"] == "MZNPETF"][-1]
+    runs = []
+    for vol in (1e6, 0.0):
+        p = panel.copy()
+        p.loc[etf_live, "vol_4w"] = vol
+        runs.append({r[0]: r[6] for r in predict.predict(p, model, features, kmi30, "v", "2026-10-09T18:00:00+05:00")})
+    assert (runs[0]["MZNPETF"], runs[1]["MZNPETF"]) == ("HIGH", "LOW")
+    assert {s: b for s, b in runs[0].items() if s != "MZNPETF"} == {s: b for s, b in runs[1].items() if s != "MZNPETF"}
+
+
 def test_every_symbol_gets_a_prediction_on_its_effective_date(trained: tuple) -> None:
     panel, features, model, kmi30 = trained
     rows = predict.predict(panel, model, features, kmi30, "test-v", "2026-10-09T18:00:00+05:00")

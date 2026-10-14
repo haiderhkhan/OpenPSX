@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from datetime import date
 
 from fastapi import APIRouter
 
@@ -49,6 +50,9 @@ def limitations(metrics: dict, shap_global: list[dict], meta: dict[str, str], et
         f"Out-of-sample accuracy is {_pct(acc)}, against {_pct(base['persistence'])} for repeating last week's "
         f"direction and {_pct(base['majority_class'])} for always choosing the more common direction: {edge}.",
     ]
+    if date.fromisoformat(as_of).weekday() < 4:  # B-017: AS_OF before Friday
+        out.append("The latest data date falls mid-week, so the most recent weekly label and the live prediction use "
+                   "a partial week, unlike most training rows.")
     years = metrics["by_year"]
     if any(y["accuracy"] <= 0.5 for y in years):  # a year at or below a coin flip = the edge isn't consistent
         lo, hi = min(years, key=lambda y: y["accuracy"]), max(years, key=lambda y: y["accuracy"])

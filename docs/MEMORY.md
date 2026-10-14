@@ -79,6 +79,15 @@
   - Expiry: TEMPLATE = `min(now + 15 min, next midnight or next Monday)`; only LIVE/CACHED keep the long expiry; UNAVAILABLE is never cached.
   - Seed verdicts are stored under prompt_version/model `seed` with payload `{}` and status CACHED, because the loader can't know the agents' payload hashes. P6-07 falls back to that key.
   - `config.CACHE_DB_PATH` is read per call and the file and table are created on first use. The test clock is `cache._now` (monkeypatch). conftest does **not** redirect `CACHE_DB_PATH`, so agent tests (P6-04+) must point it at `tmp_path`, or `data/cache.db` gets written.
+- 2026-10-14 · claude-code · D-46 P6-04 fundamentals agent (`backend/agents/fundamentals.py`, `run(symbol) -> AgentResult`):
+  - Supersedes D-45's conftest note: `backend/tests/conftest.py` now has an autouse `cache_db` fixture, so every test gets an empty cache in `tmp_path`.
+  - Scope: only `type = 'STOCK'`. ETFs, KMI30 and unknown symbols raise `fundamentals.NotInScope` (a `ValueError`); P6-07 maps it to `NOT_IN_SCOPE`.
+  - Metrics: P/E = raw close (last ≤ AS_OF) / TTM EPS, only when EPS > 0. KMI-30 median P/E is over members with EPS > 0. Yield = TTM DPS / close × 100. EPS growth / revenue YoY come from the last two FY rows only (absent until P2-05 imports them). All values are rounded to 2 dp in the payload.
+  - Payload (grounding set): symbol, name, sector, as_of_date, close_date, close, eps_ttm, pe, fundamentals_date, fiscal_year, kmi30_median_pe, n_kmi30_with_pe, pe_limit_ratio 1.2, pe_vs_median_pct, dividend_yield_pct, [growth_fiscal_year, eps_growth_pct, revenue_yoy_pct]. Keys whose value is None are dropped. `evidence` is a fixed subset of the payload, never LLM output.
+  - No TTM row, a NULL EPS or no close → status `UNAVAILABLE`, NEUTRAL, no LLM call, not cached (real DB: SSGC). A cache hit reports `CACHED` when the stored status is LIVE, but a cached TEMPLATE stays `TEMPLATE`, so the router's k = 0.5 still applies.
+  - `weight` = the raw `AGENT_WEIGHTS` value; the router renormalises.
+  - Real-DB template run (AS_OF 2026-09-23): 21 POSITIVE, 8 NEUTRAL, 1 UNAVAILABLE; KMI-30 median P/E 9.89.
+- 2026-10-14 · claude-code · D-47 AUDIT-P4 fixes. B-016: `regime.vol_buckets` takes tercile cut-offs from the rows dated AS_OF only; older-dated rows (ETFs, 2026-08-04) get the bucket their vol falls in (< 3 AS_OF rows → old all-rows rule + warning). Predictions regenerated; model, metrics and SHAP files byte-identical; 3 stocks changed bucket. B-017 handled by disclosure (one `limitations` line when AS_OF is before Friday), not retraining, because the model has no measurable edge (51.75% vs 51.46% baseline) and retraining would change committed metrics on deadline eve.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.

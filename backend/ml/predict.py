@@ -27,7 +27,7 @@ def predict(panel: pd.DataFrame, model: lgb.LGBMClassifier, features: list[str],
     live = panel.groupby("symbol").tail(1).reset_index(drop=True)
     contrib = explain.contributions(model, live[features])
     p_up = model.predict_proba(live[features])[:, 1]
-    buckets = regime.vol_buckets(live["vol_4w"])
+    buckets = regime.vol_buckets(live["vol_4w"], live["date"] == live["date"].max())  # latest date = AS_OF (B-016)
     return [(row.symbol, row.date.date().isoformat(), version, round(float(p), 4), stance(p),
              round(float(row.vol_4w), 2), bucket, regime.regime(kmi30.loc[:row.date]),
              json.dumps(explain.top_contributors(contrib.iloc[i], live.loc[i, features])), created_at)
