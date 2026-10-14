@@ -48,7 +48,7 @@
 | P3-04 | Wire dashboard to live API | P3-01, P3-02, P3-03, P2-06 | DONE | claude-code (B-override) | 2026-10-14 10:50 | Live on :8000 verified; friendly UPSTREAM message; index shown in points |
 | P5-01 | Quant panel on stock page | P1-04 | TODO | claude-code (B-override) | | reassigned: Antigravity unavailable (D-55) |
 | P5-02 | Model card page | P1-04 | TODO | claude-code (B-override) | | reassigned: Antigravity unavailable (D-55) |
-| P5-03 | Verdict card + agent rows | P1-04 | TODO | claude-code (B-override) | | reassigned: Antigravity unavailable (D-55) |
+| P5-03 | Verdict card + agent rows | P1-04 | DONE | claude-code (B-override) | 2026-10-15 02:08 | NEUTRAL='Mixed signals'; badges; refresh+429; no card for ETF/index |
 | P5-04 | Macro card on overview | P3-01 | TODO | claude-code (B-override) | | reassigned: Antigravity unavailable (D-55) |
 | P7-01 | Chat router: aliases, intents, scope gate | P2-06, P4-04, P6-01 | TODO | claude-code (B-override) | | reassigned: Antigravity unavailable (D-55) |
 | P7-02 | /api/chat answer composer | P7-01, P6-02, P6-03 | TODO | claude-code (B-override) | | reassigned: Antigravity unavailable (D-55) |

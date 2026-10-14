@@ -12,7 +12,7 @@ import {
 } from "@/lib/api";
 import type { ApiError, Basis } from "@/lib/types";
 import { ErrorState } from "@/components/states";
-import { Disclaimer } from "@/components/Disclaimer";
+import { VerdictCard } from "@/components/insights/VerdictCard";
 import { BasisToggle } from "@/components/BasisToggle";
 import { PriceChart } from "@/components/charts/PriceChart";
 import { ReturnsBars } from "@/components/charts/ReturnsBars";
@@ -193,7 +193,7 @@ export default async function StockPage({ params, searchParams }: StockPageProps
       </div>
 
       {/* Grid: Quant Insights & Verdict */}
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <div className={`grid grid-cols-1 gap-8 ${verdictRes ? "lg:grid-cols-2" : ""}`}>
         {/* Quant Panel Skeleton */}
         {quantRes?.error && <ErrorState title="Quant model unavailable" message={quantRes.error.message} />}
         {quant && (
@@ -265,83 +265,10 @@ export default async function StockPage({ params, searchParams }: StockPageProps
           </div>
         )}
 
-        {/* Verdict / Agent Synthesis Card */}
-        {verdictRes?.error ? (
-          <ErrorState title="Agent verdict unavailable" message={verdictRes.error.message} />
-        ) : verdict ? (
-          <div className="rounded-xl border border-border bg-card p-6 shadow-xs flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between pb-4 border-b border-border/60">
-                <div>
-                  <h2 className="text-lg font-bold text-foreground">Agent Verdict</h2>
-                  <p className="text-xs text-muted-foreground">
-                    Synthesized from 4 agents via Python router
-                  </p>
-                </div>
-                <span
-                  className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
-                    verdict.label === "POSITIVE"
-                      ? "bg-positive-bg text-positive border border-positive-border"
-                      : verdict.label === "NEGATIVE"
-                      ? "bg-negative-bg text-negative border border-negative-border"
-                      : "bg-neutral-stance-bg text-neutral-stance border border-neutral-stance-border"
-                  }`}
-                >
-                  <span>{verdict.label === "POSITIVE" ? "▲" : verdict.label === "NEGATIVE" ? "▼" : "■"}</span>
-                  <span>{verdict.label}</span>
-                </span>
-              </div>
-
-              <div className="mt-4 rounded-md bg-muted/30 p-4">
-                <p className="text-sm text-foreground leading-relaxed">
-                  {verdict.summary}
-                </p>
-              </div>
-
-              <div className="mt-6 space-y-3">
-                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Contributing Agent Stances
-                </h3>
-                {verdict.agents.map((agent) => (
-                  <div
-                    key={agent.agent}
-                    className="flex items-center justify-between rounded-md border border-border/70 p-2.5 text-xs"
-                  >
-                    <span className="capitalize font-medium text-foreground">{agent.agent}</span>
-                    <span
-                      className={`font-semibold ${
-                        agent.stance === "POSITIVE"
-                          ? "text-positive"
-                          : agent.stance === "NEGATIVE"
-                          ? "text-negative"
-                          : "text-muted-foreground"
-                      }`}
-                    >
-                      {agent.stance === "POSITIVE" ? "+ " : agent.stance === "NEGATIVE" ? "- " : "· "}
-                      {agent.stance}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <Disclaimer asOfDate={verdict.as_of_date} />
-            </div>
-          </div>
-        ) : (
-          <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
-            <h2 className="text-lg font-bold text-foreground">Outlook &amp; Synthesis</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Comprehensive 4-agent verdict is scoped to KMI-30 constituents.
-            </p>
-            <div className="mt-6">
-              <Disclaimer asOfDate={lastBar?.date} />
-            </div>
-          </div>
-        )}
+        {/* Outlook: KMI-30 stocks only (verdictRes is null for ETFs and the index) */}
+        {verdictRes?.error && <ErrorState title="Outlook unavailable" message={verdictRes.error.message} />}
+        {verdict && <VerdictCard initial={verdict} />}
       </div>
     </div>
   );
 }
-
