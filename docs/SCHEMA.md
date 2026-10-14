@@ -346,6 +346,11 @@ CREATE INDEX idx_cache_expires ON llm_cache(expires_at);
 - **`TEMPLATE` results are cached for 15 minutes only**, so a later live call can replace them.
 - **Seed:** at startup, `data/precomputed/verdicts_<AS_OF>.json` is inserted if no row exists, with expiry = next midnight. On Render, every cold start reloads it.
 - **`?refresh=true`** bypasses the cache, limited to 1 call per minute per symbol (otherwise `RATE_LIMITED`).
+- **Implementation (D-45, `backend/cache/cache.py`):**
+  - API: `get(agent, symbol, as_of_date, prompt_version, model, payload) -> (response, stored_status) | None`; `put(..., payload, response, status)`; `load_seed(path) -> rows inserted`.
+  - Only `LIVE` / `CACHED` get the long expiry. `TEMPLATE` = `min(now + 15 min, long expiry)`, so it never reaches midnight. `UNAVAILABLE` raises `ValueError`.
+  - Timestamps are PKT ISO strings (`2026-10-14T23:59:00+05:00`). Expired rows are purged on every `put` / `load_seed`.
+  - Seed rows: `agent='verdict'`, `prompt_version = model = 'seed'`, payload `{}`, status `CACHED`. Insert-if-absent, so a second load inserts nothing. P6-07 checks its live verdict key first, then `get('verdict', symbol, as_of, 'seed', 'seed', {})`.
 
 ## 9. Agents and verdict router
 **Every agent returns an `AgentResult` (§4).** Python fills `evidence`; the LLM fills `stance` and `reasons` only. Token caps are `max_output_tokens`.

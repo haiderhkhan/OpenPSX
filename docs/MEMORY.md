@@ -74,6 +74,11 @@
 - 2026-10-14 · claude-code · D-44 P6-02 follow-up (Haider's extra cases), extends D-42 and SCHEMA §7:
   - Banned list gains `\bhold (on ?to )?(the |this |…)?(stocks?|shares?|positions?|securit(y|ies)|scrips?)\b`, so "hold the stock" and "hold onto their shares" fail. A bare `\bhold\b` was rejected because the model-card limitation in `backend/api/insights.py` says "features hold 60% of the top-10 SHAP weight". "household", "holdings", "buyer" and "seller" pass (word boundaries).
   - The `N%` × 100 rule now needs a payload fraction `|v| < 1` (was ≤ 1), so a payload `1` (e.g. one headline) no longer grounds "100%".
+- 2026-10-14 · claude-code · D-45 P6-03 cache (`backend/cache/cache.py`; details in SCHEMA §8):
+  - `get`/`put` take the key parts and hash them themselves; `get` returns `(response, stored_status)`, and callers report a hit as `CACHED`.
+  - Expiry: TEMPLATE = `min(now + 15 min, next midnight or next Monday)`; only LIVE/CACHED keep the long expiry; UNAVAILABLE is never cached.
+  - Seed verdicts are stored under prompt_version/model `seed` with payload `{}` and status CACHED, because the loader can't know the agents' payload hashes. P6-07 falls back to that key.
+  - `config.CACHE_DB_PATH` is read per call and the file and table are created on first use. The test clock is `cache._now` (monkeypatch). conftest does **not** redirect `CACHE_DB_PATH`, so agent tests (P6-04+) must point it at `tmp_path`, or `data/cache.db` gets written.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
