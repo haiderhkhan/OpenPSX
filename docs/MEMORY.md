@@ -62,6 +62,15 @@
   - Thinking from the model ID: `gemini-3*` → `thinking_level` `minimal`, then `low`, then no `thinking_config`; `gemini-2.5*` → `thinking_budget=0`, then none. Any 400 advances to the next option (a real bad request costs ≤ 2 extra calls); the first accepted option is remembered per model and logged at INFO (`thinking config for <model>: ...`).
   - Errors: `LLMDisabled` (kill switch, no call), `QuotaExhausted` (all keys 429, or the daily cap), `LLMUnavailable` (no keys, other API/network error, non-JSON reply). All subclass `LLMError`, so callers can `except LLMError` → template.
   - The daily counter is in-process per PKT day; it counts one per `generate_json` call (failover/thinking retries are not counted) and resets on restart (Render sleep).
+- 2026-10-14 · claude-code · D-42 P6-02 validators (`backend/agents/validators.py`):
+  - API: `run_with_validation(call, payload, template_fn, schema=None) -> (result, "LIVE" | "TEMPLATE")`. `call(payload) -> dict` (agents wrap `llm.generate_json`); the retry payload is `{**payload, "previous_error": ...}`, while grounding and `template_fn` always use the original payload. Any `LLMError` → template at once; other exceptions propagate (they are bugs).
+  - Checks every string in the result: banned phrases (§7, exceptions stripped first), number grounding, `MAX_TEXT_CHARS` = 600. With `schema`, also a hand-rolled JSON-schema subset (type, enum, required, properties, additionalProperties, items, min/maxItems, min/maxLength, minimum/maximum); `jsonschema` isn't installed, and Gemini already enforces the schema server-side.
+  - Grounding refinements are documented in SCHEMA §7: no digits inside words, `1,234` = one number, `KMI-30` stripped, signs ignored, `N%` matches a 0–1 value × 100 (D-37), tolerance = half a unit of the last digit written.
+  - Small counts in text ("3 reasons", "top 5") must be in the payload too. Agents should put any count they want written into the payload.
+- 2026-10-14 · claude-code (B-override) · D-43 P3 dashboard (Haider override: claude-code builds Track B P3-01…P3-04):
+  - `?basis=` is URL state: server pages read it and pass it to the API; `fiscal` is honoured only when `health.features.fiscal_toggle` is true. If `/api/health` fails, the fiscal toggle and ETF tab are hidden and the data request shows the outage.
+  - `components/overview/Pct.tsx` is the one display formatter for API percentages (sign + 2 dp + `%`, colour only reinforces the sign, R-18); reuse it, don't re-inline `toFixed`.
+  - Overview table sorting/tab filtering is client-side ordering only (nulls last); no value is derived.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
@@ -100,6 +109,7 @@
   - `is_anomaly = 1` mostly means OHLC-inconsistent (open/close outside [low, high]); the close is usable.
 - 2026-10-12 · claude-code · G-17 The source ends 2026-09-23: from 2026-09-25 PSX DPS refused the old scraper (`vendor_blocked`, PSXAuthError). Later prices come only through P2-05 manual import.
 - 2026-10-14 · claude-code · G-18 The working thinking choice for `gemini-3.1-flash-lite` is **UNVERIFIED**: no `.env` existed at P6-01, so no live call was made. On the first live call (after H-05), read the INFO line `thinking config for <model>: ...` from `backend.agents.llm` and append the result here.
+- 2026-10-14 · claude-code · G-19 On this machine Git Bash ignores `TZ=Asia/Karachi` (prints UTC, 5 h behind). Take PKT stamps from PowerShell: `[TimeZoneInfo]::ConvertTimeBySystemTimeZoneId((Get-Date), 'Pakistan Standard Time').ToString('yyyy-MM-dd HH:mm')`. Also: `next dev` (re)writes `frontend/AGENTS.md` (Next.js agent notice); commit it rather than deleting it.
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.

@@ -23,7 +23,7 @@
 | P4-03 | SHAP, volatility bucket, regime, predictions | P4-02 | DONE | claude-code | 2026-10-14 02:15 | 39 predictions; ETFs dated 2026-08-04, no stale flag (D-39) |
 | P4-04 | Quant + model-card endpoints | P4-03 | DONE | claude-code | 2026-10-14 02:35 | Endpoints 8–9 live; quant ETF-off → NOT_IN_SCOPE (D-40) |
 | P6-01 | LLM gateway: google-genai, key failover, JSON, kill switch | P0-05, H-04 | DONE | claude-code | 2026-10-14 10:21 | 14 fake-client tests; thinking choice unverified live (G-18) |
-| P6-02 | Validators: banned phrases, number grounding | P6-01 | TODO | | | |
+| P6-02 | Validators: banned phrases, number grounding | P6-01 | DOING | claude-code | 2026-10-14 10:27 | |
 | P6-03 | Cache: cache.db, midnight PKT expiry, seeds | P6-01 | TODO | | | |
 | P6-04 | Fundamentals agent | P2-06, P6-02, P6-03 | TODO | | | |
 | P6-05 | News archive + Sentiment agent | P2-06, P6-02, P6-03 | TODO | | | |
@@ -42,7 +42,7 @@
 | P1-02 | App shell, design tokens, disclaimer | P1-01 | DONE | antigravity | 2026-10-12 22:13 | Shell, responsive Header/Nav/Footer, calm tokens, verbatim disclaimer |
 | P1-03 | Typed API client + mock mode | P1-01, P0-04 | DONE | antigravity | 2026-10-12 22:31 | Typed client for all 13 endpoints; sync-mocks copies fixtures |
 | P1-04 | Route skeletons + loading/error/empty states | P1-02, P1-03 | DONE | antigravity | 2026-10-12 22:44 | 4 routes rendered in mock mode; Loading/Error/Empty states reusable |
-| P3-01 | Overview page: KMI-30 card, basis toggle, table | P1-04 | TODO | | | |
+| P3-01 | Overview page: KMI-30 card, basis toggle, table | P1-04 | DONE | claude-code (B-override) | 2026-10-14 10:33 | ?basis= URL toggle; sortable Stocks/ETFs table; Pct formatter (D-43) |
 | P3-02 | Price chart: line/candle, ranges | P1-04 | TODO | | | |
 | P3-03 | Return bars + vs-KMI-30 overlay | P1-04 | TODO | | | |
 | P3-04 | Wire dashboard to live API | P3-01, P3-02, P3-03, P2-06 | TODO | | | |
