@@ -1,19 +1,22 @@
-"""Insight endpoints 8–11 (SCHEMA.md §4.2). 8–9 are live (P4-04); 10–11 return fixtures until P6."""
+"""Insight endpoints 8–11 (SCHEMA.md §4.2). 8–9 live (P4-04), 10 live (P6-06); 11 returns a fixture until P6-07."""
 from __future__ import annotations
 
 import json
+import logging
 import sqlite3
 from datetime import date
 
 from fastapi import APIRouter
 
 from backend import config
+from backend.agents import macro as macro_agent
 from backend.api import ApiException, load_fixture
 from backend.api.market import _db
 from backend.db import queries
 from backend.ml.features import FEATURES
 from backend.schemas.insights import MacroOutput, ModelCard, QuantOutput, Verdict
 
+log = logging.getLogger(__name__)
 router = APIRouter(tags=["insights"])
 MODELS_DIR = config.ROOT / "data" / "models"
 HORIZON = "1W"
@@ -114,7 +117,12 @@ def model_card() -> ModelCard:
 
 @router.get("/macro")
 def macro() -> MacroOutput:
-    return load_fixture("macro.json", MacroOutput)
+    """The newest weekly macro file, else the template computed now (P6-06). Never 500."""
+    try:
+        return macro_agent.current()
+    except Exception as exc:  # no DB / unreadable DB: an UNAVAILABLE brief, not a 500
+        log.warning("macro unavailable: %s", exc)
+        return macro_agent.unavailable("Macro indicators are unavailable right now.")
 
 
 @router.get("/verdict/{symbol}")

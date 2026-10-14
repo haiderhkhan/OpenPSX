@@ -1,0 +1,14 @@
+{
+  "week": "2026-W42",
+  "as_of_date": "2026-09-23",
+  "stance": "NEUTRAL",
+  "indicators": {
+    "policy_rate_pct": 11.5,
+    "cpi_yoy_pct": 9.2,
+    "pkr_usd": 277.55,
+    "pkr_usd_4w_change_pct": null
+  },
+  "brief": "As of 2026-09-23, the policy rate is 11.50% and CPI inflation is 9.20% year on year. PKR/USD is 277.55, with no 4-week comparison available.",
+  "status": "TEMPLATE",
+  "generated_at": "2026-10-14T23:46:16.313810+05:00"
+}
