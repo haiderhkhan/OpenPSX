@@ -401,15 +401,15 @@ Each P5 task uses mocks if its endpoint isn't live yet. P9-01 verifies everythin
 - **Do:**
   - `generate_json(agent, prompt_version, system, payload, response_schema, max_output_tokens) -> dict`, using `google-genai`:
     - model from `GEMINI_MODEL`, temperature 0.2;
-    - JSON output with the schema;
-    - thinking disabled if R-04 confirms support.
+    - JSON output via `response_mime_type="application/json"` + `response_json_schema`;
+    - thinking from the model ID (R-04 §3, D-41): `gemini-3*` → `ThinkingConfig(thinking_level="minimal")`, `gemini-2.5*` → `thinking_budget=0`. If the API rejects it (400), retry with `"low"` (3.x only), then without `thinking_config`; remember the working choice per model.
   - Keys come from `GEMINI_API_KEYS` in order. On 429 / resource-exhausted → try the next key.
     - All keys exhausted → raise `QuotaExhausted`.
     - Other failures → raise `LLMUnavailable`.
   - A daily call counter (PKT day) against `LLM_DAILY_CALL_LIMIT`. `LLM_ENABLED=false` → raise `LLMDisabled` without any network call.
   - The client is created lazily, never at import time (G-07).
 - **Done when:**
-  - Tests with a fake client cover: success, a 429 then the next key, all keys exhausted, the kill switch, the counter limit, and a missing key.
+  - Tests with a fake client cover: success, a 429 then the next key, all keys exhausted, the kill switch, the counter limit, a missing key, and the thinking-config fallback.
   - The tests make zero network calls.
 
 ### P6-02 · Validators

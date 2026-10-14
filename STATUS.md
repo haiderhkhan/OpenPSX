@@ -13,7 +13,7 @@
 - Phase: P4 ML Quant — DONE (exit criteria hold) → A-P4 audit can start; P2-05 still TODO
 - Last done: P4-04 · endpoints 8–9 live; model acc 51.7% vs 51.5% persistence (no edge, said on card)
 - Next: P6 Agents + verdict (P6-01…) → P2-05 macro/manual import → retrain `scripts/train_quant.py`
-- Blockers: none · open: Q-06 macro history (4 macro features dropped, D-38)
+- Blockers: none · P6-01 DONE (D-41; live thinking choice unverified, G-18) · open: Q-06 (D-38)
 - Updated: 2026-10-14 02:35 PKT
 
 ## Track B — antigravity

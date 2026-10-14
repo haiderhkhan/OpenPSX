@@ -406,11 +406,11 @@ CREATE INDEX idx_cache_expires ON llm_cache(expires_at);
 | Var | Default | Meaning |
 |---|---|---|
 | `GEMINI_API_KEYS` | — | Comma-separated. Failover order. Quota is per Google Cloud project. |
-| `GEMINI_MODEL` | from R-04 (v1 used `gemini-3.1-flash-lite`) | Single model for all agents |
+| `GEMINI_MODEL` | `gemini-3.1-flash-lite` (R-04) | Single model for all agents. Thinking is chosen from the ID: `gemini-3*` → `thinking_level` `minimal` → `low` → none on a 400; `gemini-2.5*` → `thinking_budget=0` → none (D-41) |
 | `GROQ_API_KEY` | — | Whisper |
 | `GROQ_WHISPER_MODEL` | from R-04 | e.g. a `whisper-large-v3*` model |
 | `LLM_ENABLED` | `true` | Kill switch → every LLM feature uses templates |
-| `LLM_DAILY_CALL_LIMIT` | `400` | Soft cap; above it → templates |
+| `LLM_DAILY_CALL_LIMIT` | `200` | Soft cap per PKT day (in-process counter; resets on restart); above it → templates |
 | `DB_PATH` | `data/openpsx.db` | |
 | `CACHE_DB_PATH` | `data/cache.db` | |
 | `APP_TZ` | `Asia/Karachi` | |

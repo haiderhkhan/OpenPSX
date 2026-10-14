@@ -154,7 +154,7 @@ flowchart LR
 | **Cache until 00:00 PKT** | Repeat questions or pages cost 0 tokens; macro is cached per ISO week |
 | **Python-first routing** | No LLM call to route the verdict or most chat questions |
 | **Compact payloads** | Canonical JSON with only the needed fields; short prompt files; `max_output_tokens` caps (`SCHEMA.md` §9) |
-| **JSON schema output** | No parsing retries; thinking disabled if the model supports it (R-04) |
+| **JSON schema output** | No parsing retries; minimal thinking (`thinking_level="minimal"` on 3.x, `thinking_budget=0` on 2.5; D-41) |
 | **Key failover** | On 429 → next key in `GEMINI_API_KEYS`. Only keys from **separate projects** add quota. |
 | **Soft cap + kill switch** | `LLM_DAILY_CALL_LIMIT`, `LLM_ENABLED=false` → templates |
 

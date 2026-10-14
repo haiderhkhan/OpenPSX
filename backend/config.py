@@ -45,11 +45,11 @@ def _path(name: str, default: str) -> Path:
 
 # --- Environment (SCHEMA.md §11) ---
 GEMINI_API_KEYS: list[str] = _list("GEMINI_API_KEYS")
-GEMINI_MODEL: str = _str("GEMINI_MODEL", "gemini-3.1-flash-lite")  # confirm via R-04
+GEMINI_MODEL: str = _str("GEMINI_MODEL", "gemini-3.1-flash-lite")  # R-04 §1
 GROQ_API_KEY: str = _str("GROQ_API_KEY", "")
 GROQ_WHISPER_MODEL: str = _str("GROQ_WHISPER_MODEL", "whisper-large-v3-turbo")  # confirm via R-04
 LLM_ENABLED: bool = _bool("LLM_ENABLED", True)
-LLM_DAILY_CALL_LIMIT: int = _int("LLM_DAILY_CALL_LIMIT", 400)
+LLM_DAILY_CALL_LIMIT: int = _int("LLM_DAILY_CALL_LIMIT", 200)  # R-04 §2 starting value
 DB_PATH: Path = _path("DB_PATH", "data/openpsx.db")
 CACHE_DB_PATH: Path = _path("CACHE_DB_PATH", "data/cache.db")
 APP_TZ: str = _str("APP_TZ", "Asia/Karachi")

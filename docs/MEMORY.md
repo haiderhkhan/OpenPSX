@@ -56,6 +56,12 @@
 - 2026-10-14 · haider · D-38 P4-02 feature fill rule: train only on features non-null in ≥ `config.FEATURE_MIN_FILL` = 0.20 of labelled rows; the dropped list goes into `quant_metrics.json`. First real run (AS_OF 2026-09-23) dropped all 4 macro features (policy_rate 1.5%, policy_rate_chg_12w 0%, cpi_yoy 1.2%, pkr_usd_chg_4w 0%; Q-06). They return once P2-05 imports macro history and `scripts/train_quant.py` is rerun.
 - 2026-10-14 · haider · D-39 P4-03 stale ETFs: no skip and no `stale` flag (no contract change). Each prediction is made on the symbol's last panel week and stored with that date, so `quant_predictions.as_of_date` / `QuantOutput.as_of_date` = the effective date (SCHEMA §1, D-24): all 9 ETFs = 2026-08-04, stocks = AS_OF. Regime is computed on KMI30 up to that same date. The UI should show "as of <date>" when it differs from AS_OF. `quant_predictions` is fully replaced on each run.
 - 2026-10-14 · claude-code · D-40 P4-04 errors (per the P4-04 spec, unlike D-34's market endpoints): `/api/quant/{symbol}` returns 404 `NOT_IN_SCOPE` for unknown symbols, `KMI30`, and ETFs while `FEATURE_ETFS=false` (market endpoints answer `FEATURE_OFF` there); 404 `NOT_FOUND` when a symbol has no prediction. `/api/model/card` returns 503 `UPSTREAM` until `scripts/train_quant.py` has run. `ModelCard.limitations` is generated from `quant_metrics.json` + `quant_shap_global.json` + `meta`, so retraining updates it. The fixture DB's seeded OGDC prediction now carries 5 contributors (`QuantOutput` requires 5).
+- 2026-10-14 · claude-code · D-41 P6-01 gateway (`backend/agents/llm.py`), from R-04:
+  - `GEMINI_MODEL` default `gemini-3.1-flash-lite`; `LLM_DAILY_CALL_LIMIT` default 400 → **200** (R-04 §2).
+  - JSON via `response_mime_type="application/json"` + `response_json_schema`; temperature 0.2; the payload is sent as canonical JSON (sorted keys, no spaces), the prompt as `system_instruction`.
+  - Thinking from the model ID: `gemini-3*` → `thinking_level` `minimal`, then `low`, then no `thinking_config`; `gemini-2.5*` → `thinking_budget=0`, then none. Any 400 advances to the next option (a real bad request costs ≤ 2 extra calls); the first accepted option is remembered per model and logged at INFO (`thinking config for <model>: ...`).
+  - Errors: `LLMDisabled` (kill switch, no call), `QuotaExhausted` (all keys 429, or the daily cap), `LLMUnavailable` (no keys, other API/network error, non-JSON reply). All subclass `LLMError`, so callers can `except LLMError` → template.
+  - The daily counter is in-process per PKT day; it counts one per `generate_json` call (failover/thinking retries are not counted) and resets on restart (Render sleep).
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
@@ -93,6 +99,7 @@
   - `daily_snapshot` P/E, market cap and dividend yield are a 2026-07-31 snapshot copied back to 2016 (look-ahead). Never use them as features.
   - `is_anomaly = 1` mostly means OHLC-inconsistent (open/close outside [low, high]); the close is usable.
 - 2026-10-12 · claude-code · G-17 The source ends 2026-09-23: from 2026-09-25 PSX DPS refused the old scraper (`vendor_blocked`, PSXAuthError). Later prices come only through P2-05 manual import.
+- 2026-10-14 · claude-code · G-18 The working thinking choice for `gemini-3.1-flash-lite` is **UNVERIFIED**: no `.env` existed at P6-01, so no live call was made. On the first live call (after H-05), read the INFO line `thinking config for <model>: ...` from `backend.agents.llm` and append the result here.
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.
