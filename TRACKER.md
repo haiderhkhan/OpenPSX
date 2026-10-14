@@ -49,7 +49,7 @@
 | P5-01 | Quant panel on stock page | P1-04 | DONE | claude-code (B-override) | 2026-10-15 02:11 | p_up bar, top-5 SHAP bars, 51.7% vs 51.5% line; stock+ETF live |
 | P5-02 | Model card page | P1-04 | DONE | claude-code (B-override) | 2026-10-15 02:13 | 51.7% vs 51.5% on a 0-100 scale; by-year, SHAP, features, limits |
 | P5-03 | Verdict card + agent rows | P1-04 | DONE | claude-code (B-override) | 2026-10-15 02:08 | NEUTRAL='Mixed signals'; badges; refresh+429; no card for ETF/index |
-| P5-04 | Macro card on overview | P3-01 | TODO | claude-code (B-override) | | reassigned: Antigravity unavailable (D-55) |
+| P5-04 | Macro card on overview | P3-01 | DONE | claude-code (B-override) | 2026-10-15 02:15 | week, stance, 4 indicators (null shows —), brief, badge; build ok |
 | P7-01 | Chat router: aliases, intents, scope gate | P2-06, P4-04, P6-01 | TODO | claude-code (B-override) | | reassigned: Antigravity unavailable (D-55) |
 | P7-02 | /api/chat answer composer | P7-01, P6-02, P6-03 | TODO | claude-code (B-override) | | reassigned: Antigravity unavailable (D-55) |
 | P7-03 | /api/transcribe via Groq Whisper | P0-04 | TODO | claude-code (B-override) | | reassigned: Antigravity unavailable (D-55) |

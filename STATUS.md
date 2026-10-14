@@ -18,12 +18,12 @@
 - Blockers: H-07 · waiting: R-05-macro.md (after it: macro import, retrain, re-run precompute) · open: B-020, G-22
 - Updated: 2026-10-15 01:00 PKT
 
-## Track B — antigravity
-- Phase: P3 Dashboard — DONE by claude-code (Haider B-override, D-43) → A-P3 audit can start
-- Last done: P3-01 overview · P3-02 price chart · P3-03 return bars + KMI-30 overlay · P3-04 live wiring (5 symbols × 2 bases)
-- Next: P5-01 Quant panel (P5-04 macro card now unblocked) · open: B-004 (ETF last_date badge — affects P3 overview); B-012, B-013
-- Blockers: none · note: frontend/.env.local now NEXT_PUBLIC_USE_MOCKS=false (live :8000)
-- Updated: 2026-10-14 10:50 PKT
+## Track B — antigravity (Antigravity unavailable: claude-code B-override, D-55)
+- Phase: P5 Insights UI DONE (lint/tsc/build clean) → A-P5 audit can start · P3 DONE (D-43)
+- Last done: P5-03 verdict card · P5-01 quant panel · P5-02 model card · P5-04 macro card (live :8000)
+- Next: P7-01 → P7-02 → P7-04 → P7-03 (voice drops first if short: FEATURE_VOICE=false, mic hidden)
+- Blockers: none · open: B-004, B-012, B-013 · shared badges in frontend/src/components/StatusBadge.tsx
+- Updated: 2026-10-15 02:16 PKT
 
 ## Human — Haider
 - Now: H-01 (rename + add docs + push) → open both tools

@@ -1,7 +1,8 @@
-import { ApiClientError, getHealth, getOverview } from "@/lib/api";
+import { ApiClientError, getHealth, getMacro, getOverview } from "@/lib/api";
 import type { ApiError, Basis, Overview } from "@/lib/types";
 import { BasisToggle } from "@/components/BasisToggle";
 import { IndexCard } from "@/components/overview/IndexCard";
+import { MacroCard } from "@/components/overview/MacroCard";
 import { OverviewTable } from "@/components/overview/OverviewTable";
 import { EmptyState, ErrorState } from "@/components/states";
 
@@ -10,7 +11,11 @@ interface OverviewPageProps {
 }
 
 export default async function OverviewPage({ searchParams }: OverviewPageProps) {
-  const [{ basis: rawBasis }, health] = await Promise.all([searchParams, getHealth().catch(() => null)]);
+  const [{ basis: rawBasis }, health, macro] = await Promise.all([
+    searchParams,
+    getHealth().catch(() => null),
+    getMacro().catch(() => null), // the macro card is optional: no brief, no card
+  ]);
   // Unknown health → hide optional features; the overview request below reports the outage.
   const fiscalToggle = health?.features.fiscal_toggle ?? false;
   const etfsEnabled = health?.features.etfs ?? false;
@@ -44,6 +49,7 @@ export default async function OverviewPage({ searchParams }: OverviewPageProps) 
       ) : overview && (
         <>
           <IndexCard index={overview.index} />
+          {macro && <MacroCard macro={macro} />}
           {overview.rows.length === 0 ? (
             <EmptyState
               title="No symbols to show"

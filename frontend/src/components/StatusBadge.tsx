@@ -4,7 +4,7 @@ import type { Stance, Status } from "@/lib/types";
 const STATUS_STYLE: Record<Status, { className: string; title: string }> = {
   LIVE: {
     className: "border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-200",
-    title: "Written by the AI model just now from the numbers shown",
+    title: "Written by the AI model from the numbers shown",
   },
   CACHED: {
     className: "border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300",
