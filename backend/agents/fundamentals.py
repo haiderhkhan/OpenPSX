@@ -16,7 +16,7 @@ from backend.db import queries
 from backend.schemas.insights import AgentResult
 
 AGENT = "fundamentals"
-PROMPT_VERSION = "fund-v2"
+PROMPT_VERSION = "fund-v3"
 PROMPT = Path(__file__).with_name("prompts") / "fundamentals.md"
 MAX_OUTPUT_TOKENS = 220
 PE_LIMIT_RATIO = 1.2  # template: EPS > 0 and P/E <= 1.2 x KMI-30 median -> POSITIVE
@@ -87,6 +87,7 @@ def build_payload(conn: sqlite3.Connection, row: sqlite3.Row, as_of: str) -> dic
         "close_date": close_date, "close": _r(close), "eps_ttm": _r(eps), "pe": _r(pe),
         "fundamentals_date": ttm[code]["period_end"], "fiscal_year": ttm[code]["fiscal_year"],
         "kmi30_median_pe": _r(median), "n_kmi30_with_pe": len(pes), "pe_limit_ratio": PE_LIMIT_RATIO,
+        "pe_limit": _r(PE_LIMIT_RATIO * median) if median else None,  # B-023: never ask the LLM to multiply
         "pe_vs_median_pct": _r((pe / median - 1) * 100) if pe and median else None,
         "dividend_yield_pct": _r(dps / close * 100) if dps is not None else None,
         **_fy_growth(conn, code, as_of),

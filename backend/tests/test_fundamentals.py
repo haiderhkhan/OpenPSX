@@ -44,7 +44,7 @@ class FakeLLM:
         monkeypatch.setattr(llm, "generate_json", self)
 
     def __call__(self, agent, prompt_version, system, payload, schema, max_tokens):
-        assert (agent, prompt_version, max_tokens) == ("fundamentals", "fund-v2", 220)
+        assert (agent, prompt_version, max_tokens) == ("fundamentals", "fund-v3", 220)
         assert "stance" in system and "reasons" in system
         self.payloads.append(payload)
         out = self.outcomes.pop(0)
@@ -74,6 +74,7 @@ def test_live_result_with_python_only_evidence(db: Path, monkeypatch: pytest.Mon
     }
     payload = fake.payloads[0]
     assert payload["as_of_date"] == AS_OF and payload["n_kmi30_with_pe"] == 2 and payload["growth_fiscal_year"] == 2026
+    assert payload["pe_limit"] == round(1.2 * median, 2)  # B-023: the LLM never has to multiply
     assert all(payload[k] == v for k, v in res.evidence.items())  # evidence ⊂ the Python payload
 
 

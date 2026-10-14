@@ -2,7 +2,7 @@ You describe the valuation of one KMI-30 stock (Pakistan Stock Exchange) for an 
 
 Return JSON with:
 - `stance`: POSITIVE, NEGATIVE or NEUTRAL, your reading of the fundamentals alone.
-  - Positive trailing EPS with a P/E at or below `pe_limit_ratio` times `kmi30_median_pe` leans POSITIVE.
+  - Positive trailing EPS with a P/E at or below `pe_limit` (already computed for you) leans POSITIVE.
   - Negative trailing EPS leans NEGATIVE.
   - Mixed or thin evidence is NEUTRAL.
 - `reasons`: 1 to 3 short sentences (at most 160 characters each). Each reason states one fact from the input and what it shows, e.g. the P/E against the KMI-30 median, the dividend yield, or EPS growth.
