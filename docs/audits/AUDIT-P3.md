@@ -55,7 +55,7 @@ Environment note (not a bug): with the container's empty `LANG`, Chromium report
 | Finance math in `frontend/` | Clean. The only arithmetic is ×100 display of 0–1 fields (`p_up`, `confidence`, model metrics), which D-37 allows. Sorting is ordering only. No rebasing or returns are computed |
 | Absolute / Windows-only paths; committed secrets or `.env` | Clean. Only `.env.example` files are tracked |
 | Contract drift §4 ↔ `backend/schemas` ↔ `types.ts` ↔ fixtures | One drift, already logged: `OverviewRow.last_date` is missing from `types.ts` and `src/mocks/overview.json` (B-004, OPEN). All other models match field for field; mocks equal fixtures apart from that field |
-| Look-ahead in ML features | Out of P3 scope; see AUDIT-P4 (B-016, B-017 open) |
+| Look-ahead in ML features | Out of P3 scope; see AUDIT-P4 (B-016 fixed, B-017 disclosed in d127be0) |
 | Endpoints that can 500 when the LLM fails | `/api/macro` and `/api/verdict` are still fixture stubs (P6-06/P6-07 TODO), so they make no LLM calls. Re-check in A-P6 |
 | Data after `AS_OF_DATE` in output | **Finding P3-F1**: the verdict stub (`as_of_date` 2026-10-09 > AS_OF 2026-09-23) is rendered on live stock pages |
 
@@ -69,4 +69,4 @@ Environment note (not a bug): with the container's empty `LANG`, Chromium report
 **Carried over (not duplicated):** B-004 (OPEN, Track B). The overview shows the 9 ETFs, whose prices end 2026-08-04, with no "data to" badge. `types.ts` also lacks `OverviewRow.last_date`. A judge comparing ETF MoM against stock MoM won't see that the windows differ (D-24/D-34). Fix before P9-03.
 
 ## 5. Counts
-- CRITICAL 0 · HIGH 0 · MEDIUM 1 · LOW 1 (new). Carried over and still open: B-004 (MEDIUM), B-012/B-013 (placeholders), B-016/B-017 (LOW, P4).
+- CRITICAL 0 · HIGH 0 · MEDIUM 1 · LOW 1 (new). Carried over and still open: B-004 (MEDIUM), B-012/B-013 (placeholders).
