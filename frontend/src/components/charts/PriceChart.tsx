@@ -59,7 +59,8 @@ export function PriceChart({ initial }: { initial: Prices }) {
         layout: { background: { type: ColorType.Solid, color: "transparent" }, textColor: token("--muted-foreground") },
         grid: { vertLines: { visible: false }, horzLines: { color: token("--border") } },
         rightPriceScale: { borderVisible: false },
-        timeScale: { borderVisible: false },
+        // fitContent() can run before the container reaches its final width; keep the fitted range on resize.
+        timeScale: { borderVisible: false, lockVisibleTimeRangeOnResize: true },
       });
       if (shownMode === "candle") {
         chart

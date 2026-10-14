@@ -1,12 +1,26 @@
 import Link from "next/link";
-import { getSymbolInfo, getPrices, getChanges, getQuant, getVerdict, ApiClientError } from "@/lib/api";
-import type { ApiError } from "@/lib/types";
+import {
+  getSymbolInfo,
+  getPrices,
+  getChanges,
+  getReturns,
+  getCompare,
+  getQuant,
+  getVerdict,
+  getHealth,
+  ApiClientError,
+} from "@/lib/api";
+import type { ApiError, Basis } from "@/lib/types";
 import { ErrorState } from "@/components/states";
 import { Disclaimer } from "@/components/Disclaimer";
+import { BasisToggle } from "@/components/BasisToggle";
 import { PriceChart } from "@/components/charts/PriceChart";
+import { ReturnsBars } from "@/components/charts/ReturnsBars";
+import { CompareChart } from "@/components/charts/CompareChart";
 
 interface StockPageProps {
   params: Promise<{ symbol: string }>;
+  searchParams: Promise<{ basis?: string | string[] }>;
 }
 
 type Loaded<T> = { data: T; error: null } | { data: null; error: ApiError["error"] };
@@ -21,9 +35,15 @@ async function load<T>(request: Promise<T>): Promise<Loaded<T>> {
   }
 }
 
-export default async function StockPage({ params }: StockPageProps) {
-  const { symbol } = await params;
+export default async function StockPage({ params, searchParams }: StockPageProps) {
+  const [{ symbol }, { basis: rawBasis }, health] = await Promise.all([
+    params,
+    searchParams,
+    getHealth().catch(() => null),
+  ]);
   const upper = symbol.toUpperCase();
+  const fiscalToggle = health?.features.fiscal_toggle ?? false;
+  const basis: Basis = fiscalToggle && rawBasis === "fiscal" ? "fiscal" : "calendar";
 
   // The universe lookup decides scope and type; it is the only request that can fail the whole page.
   const lookup = await load(getSymbolInfo(upper));
@@ -42,14 +62,19 @@ export default async function StockPage({ params }: StockPageProps) {
   const symbolType = lookup.data.type;
 
   // SCHEMA §4.2: quant (endpoint 8) excludes the index; verdict (endpoint 11) is STOCK only.
-  const [pricesRes, changesRes, quantRes, verdictRes] = await Promise.all([
+  // The KMI-30 overlay is meaningless for the index itself.
+  const [pricesRes, changesRes, returnsRes, compareRes, quantRes, verdictRes] = await Promise.all([
     load(getPrices(upper, "1Y")),
-    load(getChanges(upper, "calendar")),
+    load(getChanges(upper, basis)),
+    load(getReturns(upper, "M", basis)),
+    symbolType === "INDEX" ? null : load(getCompare(upper, "1Y")),
     symbolType === "INDEX" ? null : load(getQuant(upper)),
     symbolType === "STOCK" ? load(getVerdict(upper)) : null,
   ]);
   const prices = pricesRes.data;
   const changes = changesRes.data;
+  const returns = returnsRes.data;
+  const compare = compareRes?.data;
   const quant = quantRes?.data;
   const verdict = verdictRes?.data;
 
@@ -95,6 +120,11 @@ export default async function StockPage({ params }: StockPageProps) {
 
       {pricesRes.error && <ErrorState title="Prices unavailable" message={pricesRes.error.message} />}
       {prices && <PriceChart initial={prices} />}
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-lg font-bold text-foreground">Performance</h2>
+        {fiscalToggle && <BasisToggle basis={basis} />}
+      </div>
 
       {/* Performance Period Cards */}
       {changesRes.error && <ErrorState title="Period changes unavailable" message={changesRes.error.message} />}
@@ -154,6 +184,13 @@ export default async function StockPage({ params }: StockPageProps) {
           </div>
         </div>
       )}
+
+      <div className={`grid grid-cols-1 gap-8 ${compareRes ? "lg:grid-cols-2" : ""}`}>
+        {returnsRes.error && <ErrorState title="Period returns unavailable" message={returnsRes.error.message} />}
+        {returns && <ReturnsBars key={basis} initial={returns} />}
+        {compareRes?.error && <ErrorState title="KMI-30 comparison unavailable" message={compareRes.error.message} />}
+        {compare && <CompareChart data={compare} />}
+      </div>
 
       {/* Grid: Quant Insights & Verdict */}
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
