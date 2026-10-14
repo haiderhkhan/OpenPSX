@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 
 ROUTER_VERSION = "router-v1"
 SUMMARY_AGENT = "verdict_summary"
-SUMMARY_PROMPT_VERSION = "vsum-v1"
+SUMMARY_PROMPT_VERSION = "vsum-v2"
 SUMMARY_PROMPT = Path(__file__).resolve().parents[1] / "agents" / "prompts" / "verdict_summary.md"
 SUMMARY_MAX_TOKENS = 120
 REFRESH_INTERVAL = timedelta(minutes=1)

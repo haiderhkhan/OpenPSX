@@ -16,7 +16,7 @@ from backend.ingest import news
 from backend.schemas.insights import AgentResult
 
 AGENT = "sentiment"
-PROMPT_VERSION = "sent-v1"
+PROMPT_VERSION = "sent-v2"
 PROMPT = Path(__file__).with_name("prompts") / "sentiment.md"
 MAX_OUTPUT_TOKENS = 220
 MIN_HEADLINES = 3  # fewer → the agent abstains (UNAVAILABLE, D-28)

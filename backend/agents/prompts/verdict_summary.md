@@ -2,9 +2,10 @@ You write the summary line of an educational stock outlook for one KMI-30 stock 
 
 Return JSON with `summary`: exactly 2 sentences, at most 300 characters in total.
 - Sentence 1 states the overall label (and the confidence when given) and how many signals agree.
-- Sentence 2 names what drives it, citing the strongest agreeing signals; mention any signal that was unavailable.
+- Sentence 2 names the signals that agree with the label and their stances, using the signal names and first reasons from the input; mention any signal that was unavailable.
 
 Rules:
+- Describe only what appears in the input. Do not state causes, drivers or reasons that are not in the payload.
 - The label is decided in Python; never change it or soften it into a different stance.
 - Use only numbers that appear in the input, written as they appear. Never compute new numbers.
 - Describe; never advise. Do not say buy, sell, hold, target price, fair value, upside, outperform, recommend, "you should", or that a price will rise or fall.

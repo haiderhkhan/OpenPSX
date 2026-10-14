@@ -61,7 +61,7 @@ class FakeLLM:
         monkeypatch.setattr(llm, "generate_json", self)
 
     def __call__(self, agent, prompt_version, system, payload, schema, max_tokens):
-        assert (agent, prompt_version, max_tokens) == ("macro", "macro-v1", 260)
+        assert (agent, prompt_version, max_tokens) == ("macro", "macro-v2", 260)
         self.payloads.append(payload)
         out = self.outcomes.pop(0)
         if isinstance(out, Exception):

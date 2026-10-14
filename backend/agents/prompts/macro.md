@@ -8,6 +8,7 @@ Return JSON with:
 - `brief`: at most 2 sentences, at most 300 characters, each sentence under 150 characters. State the readings and what they show. Say plainly when a change is not available.
 
 Rules:
+- Describe only what appears in the input. Do not state causes, drivers or reasons that are not in the payload.
 - Use only numbers that appear in the input, written as they appear or rounded. Never compute new numbers.
 - Describe; never advise or forecast. Do not say buy, sell, hold, target price, upside, outperform, recommend, "you should", or that rates, prices or the rupee will rise or fall.
 - If the input has a `previous_error`, your last answer broke a rule: fix exactly that problem.

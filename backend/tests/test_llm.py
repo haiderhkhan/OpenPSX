@@ -19,6 +19,8 @@ def _err(cls, code: int, status: str) -> errors.APIError:
 QUOTA = _err(errors.ClientError, 429, "RESOURCE_EXHAUSTED")
 BAD_ARG = _err(errors.ClientError, 400, "INVALID_ARGUMENT")
 DOWN = _err(errors.ServerError, 503, "UNAVAILABLE")
+INTERNAL = _err(errors.ServerError, 500, "INTERNAL")
+FORBIDDEN = _err(errors.ClientError, 403, "PERMISSION_DENIED")
 
 
 class FakeModels:
@@ -51,6 +53,20 @@ def fake(monkeypatch: pytest.MonkeyPatch):
         return log
 
     return install
+
+
+@pytest.fixture(autouse=True)
+def sleeps(monkeypatch: pytest.MonkeyPatch) -> list[float]:
+    """Records the gateway's backoff sleeps instead of waiting."""
+    slept: list[float] = []
+    monkeypatch.setattr(llm, "time", SimpleNamespace(sleep=slept.append))
+    return slept
+
+
+def _seq(*outcomes):
+    """A script entry that returns `outcomes` one per request."""
+    it = iter(outcomes)
+    return lambda cfg: next(it)
 
 
 def _gen() -> dict:
@@ -87,11 +103,45 @@ def test_all_keys_exhausted_raises_quota_exhausted(fake) -> None:
     assert _keys(log) == ["k1", "k2"]
 
 
-def test_other_api_error_raises_unavailable_without_failover(fake) -> None:
+def test_other_api_error_raises_unavailable_without_failover_or_retry(fake, sleeps) -> None:
+    log = fake(k1=FORBIDDEN, k2='{"label": "x"}')
+    with pytest.raises(llm.LLMUnavailable, match="403"):
+        _gen()
+    assert _keys(log) == ["k1"]
+    assert sleeps == []
+
+
+@pytest.mark.parametrize("overload", [DOWN, INTERNAL])
+def test_5xx_is_retried_once_after_2s_and_counted(fake, sleeps, overload) -> None:
+    log = fake(k1=_seq(overload, '{"label": "x"}'))
+    assert _gen() == {"label": "x"}
+    assert _keys(log) == ["k1", "k1"]
+    assert sleeps == [2.0]
+    assert sum(llm._calls.values()) == 2  # the retry counts against LLM_DAILY_CALL_LIMIT
+
+
+def test_5xx_twice_raises_unavailable_without_failover(fake, sleeps) -> None:
     log = fake(k1=DOWN, k2='{"label": "x"}')
     with pytest.raises(llm.LLMUnavailable, match="503"):
         _gen()
-    assert _keys(log) == ["k1"]
+    assert _keys(log) == ["k1", "k1"]
+    assert sleeps == [2.0]
+
+
+def test_5xx_retry_is_refused_at_the_daily_limit(fake, sleeps, monkeypatch: pytest.MonkeyPatch) -> None:
+    log = fake(k1=_seq(DOWN, '{"label": "x"}'))
+    monkeypatch.setattr(config, "LLM_DAILY_CALL_LIMIT", 1)
+    with pytest.raises(llm.QuotaExhausted, match="daily"):
+        _gen()
+    assert len(log) == 1
+
+
+def test_400_and_429_are_never_retried(fake, sleeps) -> None:
+    log = fake(k1=QUOTA, k2=BAD_ARG)
+    with pytest.raises(llm.LLMUnavailable, match="400"):
+        _gen()
+    assert _keys(log) == ["k1", "k2", "k2", "k2"]  # 429 fails over; 400 walks the thinking options only
+    assert sleeps == []
 
 
 def test_non_json_reply_raises_unavailable(fake) -> None:

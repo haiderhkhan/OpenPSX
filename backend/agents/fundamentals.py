@@ -16,7 +16,7 @@ from backend.db import queries
 from backend.schemas.insights import AgentResult
 
 AGENT = "fundamentals"
-PROMPT_VERSION = "fund-v1"
+PROMPT_VERSION = "fund-v2"
 PROMPT = Path(__file__).with_name("prompts") / "fundamentals.md"
 MAX_OUTPUT_TOKENS = 220
 PE_LIMIT_RATIO = 1.2  # template: EPS > 0 and P/E <= 1.2 x KMI-30 median -> POSITIVE

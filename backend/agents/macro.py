@@ -25,7 +25,7 @@ from backend.schemas.insights import AgentResult, MacroOutput
 log = logging.getLogger(__name__)
 
 AGENT = "macro"
-PROMPT_VERSION = "macro-v1"
+PROMPT_VERSION = "macro-v2"
 PROMPT = Path(__file__).with_name("prompts") / "macro.md"
 MACRO_DIR = config.ROOT / "data" / "macro"
 MAX_OUTPUT_TOKENS = 260

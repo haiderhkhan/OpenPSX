@@ -8,6 +8,7 @@ Return JSON with:
 - `reasons`: 1 to 3 short sentences (at most 160 characters each). Each reason states one fact from the input and what it shows, e.g. the P/E against the KMI-30 median, the dividend yield, or EPS growth.
 
 Rules:
+- Describe only what appears in the input. Do not state causes, drivers or reasons that are not in the payload.
 - Use only numbers that appear in the input, written as they appear or rounded. Never compute new numbers: no ratios, differences or percentages that are not already in the input.
 - Describe; never advise. Do not say buy, sell, hold, target price, fair value, upside, outperform, recommend, "you should", or that a price will rise or fall.
 - Prices and EPS are in PKR. `fundamentals_date` is when the EPS and dividend figures were taken; `close_date` is the date of the closing price.

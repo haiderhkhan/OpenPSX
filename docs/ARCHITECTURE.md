@@ -155,7 +155,7 @@ flowchart LR
 | **Python-first routing** | No LLM call to route the verdict or most chat questions |
 | **Compact payloads** | Canonical JSON with only the needed fields; short prompt files; `max_output_tokens` caps (`SCHEMA.md` §9) |
 | **JSON schema output** | No parsing retries; minimal thinking (`thinking_level="minimal"` on 3.x, `thinking_budget=0` on 2.5; D-41) |
-| **Key failover** | On 429 → next key in `GEMINI_API_KEYS`. Only keys from **separate projects** add quota. |
+| **Key failover** | On 429 → next key in `GEMINI_API_KEYS`. Only keys from **separate projects** add quota. On a 5xx (server overload) → 1 retry on the same key after 2 s, counted as a call; never for 400 / 429 (D-53). |
 | **Soft cap + kill switch** | `LLM_DAILY_CALL_LIMIT`, `LLM_ENABLED=false` → templates |
 
 Rough budget: one live verdict = 3 agent calls + 1 summary = 4 calls (macro comes from the weekly file). One chat = 1–2 calls.

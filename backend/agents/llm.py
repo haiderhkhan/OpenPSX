@@ -9,6 +9,7 @@ import functools
 import json
 import logging
 import threading
+import time
 from datetime import datetime
 from typing import Any
 
@@ -19,6 +20,7 @@ from backend import config
 log = logging.getLogger(__name__)
 
 TEMPERATURE = 0.2
+RETRY_DELAY_S = 2.0  # one retry after a 5xx overload (G-23); never on 400 / 429
 
 
 class LLMError(RuntimeError):
@@ -98,6 +100,19 @@ def _call(key: str, model: str, system: str, contents: str, schema: dict, max_to
     raise AssertionError("unreachable")  # the last option re-raises
 
 
+def _call_retrying_overload(tag: str, key: str, *args: Any) -> Any:
+    """`_call`, retried exactly once after a 5xx (server overload). The retry counts as a daily call."""
+    try:
+        return _call(key, *args)
+    except errors.APIError as exc:
+        if not 500 <= (exc.code or 0) < 600:
+            raise
+        log.warning("%s: API error %s %s, retrying once in %.0f s", tag, exc.code, exc.status, RETRY_DELAY_S)
+    time.sleep(RETRY_DELAY_S)
+    _take_call()
+    return _call(key, *args)
+
+
 def generate_json(
     agent: str,
     prompt_version: str,
@@ -119,12 +134,14 @@ def generate_json(
     contents = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
     for n, key in enumerate(keys, start=1):
         try:
-            resp = _call(key, model, system, contents, response_schema, max_output_tokens)
+            resp = _call_retrying_overload(tag, key, model, system, contents, response_schema, max_output_tokens)
         except errors.APIError as exc:
             if exc.code == 429:
                 log.warning("%s: key %d of %d hit 429", tag, n, len(keys))
                 continue
             raise LLMUnavailable(f"{tag}: API error {exc.code} {exc.status}") from exc
+        except LLMError:  # the retry hit the daily limit
+            raise
         except Exception as exc:  # network / SDK errors: callers only need "unavailable"
             raise LLMUnavailable(f"{tag}: {type(exc).__name__}: {exc}") from exc
         try:
