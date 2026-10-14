@@ -303,7 +303,9 @@ interface Transcription { text: string; duration_s: number | null }
 \btarget price\b  \bprice target\b  \bfair value\b  \bguarantee(d|s)?\b  \brisk[- ]free\b
 \bwill (rise|fall|go up|go down|surge|crash|double)\b  \byou should\b  \bwe recommend\b  \brecommend(s|ed|ation)?\b
 \baccumulate\b  \boverweight\b  \bunderweight\b  \boutperform\b  \bunderperform\b  \bupside\b  \bmultibagger\b  \bsure[- ]shot\b
+\bhold (on ?to )?(the |this |that |these |those |your |its |their )?(stocks?|shares?|positions?|securit(y|ies)|scrips?)\b
 ```
+- The last pattern (D-44) catches "hold the stock" but not a bare `hold`: the model card says "features hold 60% of the … weight".
 - **Allowed exceptions**, stripped before matching: `sell-off`, `selloff`, `buyback`, `buy-back`.
 - `invest`, `investment` and `investor` are **allowed**.
 
@@ -316,7 +318,11 @@ interface Transcription { text: string; duration_s: number | null }
 **Number grounding:**
 - Every number in LLM text (regex `-?\d+(?:[.,]\d+)?%?`) must equal a number in that call's input payload, after rounding to the precision written.
 - Years and dates present in the payload count as numbers.
-- On a violation: 1 retry with the error appended, then the template.
+- Implementation details (D-42, `backend/agents/validators.py`):
+  - The regex is refined to `(?<![\w.])-?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?%?`. Digits inside a word (`FY26`, `Q1`, `KMI30`) don't count, `1,234` is a single number, and `KMI-30` / `KMI 30` are stripped first.
+  - Signs are ignored ("fell 5.2%" grounds on −5.2). An `N%` also grounds on a payload fraction (|v| < 1) × 100 (D-37); a payload `1` never grounds "100%" (D-44).
+  - "Rounding to the precision written" means `|payload − text| ≤ 0.5 × 10^−decimals`.
+- On a violation: 1 retry with the error appended (`payload["previous_error"]`), then the template. An `LLMError` (kill switch, quota, outage) goes straight to the template.
 
 ## 8. Cache — `data/cache.db`
 ```sql

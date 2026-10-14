@@ -23,7 +23,7 @@
 | P4-03 | SHAP, volatility bucket, regime, predictions | P4-02 | DONE | claude-code | 2026-10-14 02:15 | 39 predictions; ETFs dated 2026-08-04, no stale flag (D-39) |
 | P4-04 | Quant + model-card endpoints | P4-03 | DONE | claude-code | 2026-10-14 02:35 | Endpoints 8–9 live; quant ETF-off → NOT_IN_SCOPE (D-40) |
 | P6-01 | LLM gateway: google-genai, key failover, JSON, kill switch | P0-05, H-04 | DONE | claude-code | 2026-10-14 10:21 | 14 fake-client tests; thinking choice unverified live (G-18) |
-| P6-02 | Validators: banned phrases, number grounding | P6-01 | DOING | claude-code | 2026-10-14 10:27 | |
+| P6-02 | Validators: banned phrases, number grounding | P6-01 | DONE | claude-code | 2026-10-14 10:51 | run_with_validation → (result, LIVE/TEMPLATE); grounding rules D-42, D-44 |
 | P6-03 | Cache: cache.db, midnight PKT expiry, seeds | P6-01 | TODO | | | |
 | P6-04 | Fundamentals agent | P2-06, P6-02, P6-03 | TODO | | | |
 | P6-05 | News archive + Sentiment agent | P2-06, P6-02, P6-03 | TODO | | | |

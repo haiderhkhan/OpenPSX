@@ -71,6 +71,9 @@
   - `?basis=` is URL state: server pages read it and pass it to the API; `fiscal` is honoured only when `health.features.fiscal_toggle` is true. If `/api/health` fails, the fiscal toggle and ETF tab are hidden and the data request shows the outage.
   - `components/overview/Pct.tsx` is the one display formatter for API percentages (sign + 2 dp + `%`, colour only reinforces the sign, R-18); reuse it, don't re-inline `toFixed`.
   - Overview table sorting/tab filtering is client-side ordering only (nulls last); no value is derived.
+- 2026-10-14 · claude-code · D-44 P6-02 follow-up (Haider's extra cases), extends D-42 and SCHEMA §7:
+  - Banned list gains `\bhold (on ?to )?(the |this |…)?(stocks?|shares?|positions?|securit(y|ies)|scrips?)\b`, so "hold the stock" and "hold onto their shares" fail. A bare `\bhold\b` was rejected because the model-card limitation in `backend/api/insights.py` says "features hold 60% of the top-10 SHAP weight". "household", "holdings", "buyer" and "seller" pass (word boundaries).
+  - The `N%` × 100 rule now needs a payload fraction `|v| < 1` (was ≤ 1), so a payload `1` (e.g. one headline) no longer grounds "100%".
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
