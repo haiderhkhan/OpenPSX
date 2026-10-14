@@ -1,0 +1,5 @@
+# fundamentals: period_type Q1 | H1 | 9M | FY | TTM (cumulative, PSX style, D-26). fiscal_year = company FY label
+# (FY ends Jun: FY2026 = Jul 2025 - Jun 2026). eps / dps PKR per share; revenue / net_income PKR millions. Blank = unknown.
+# Import: .venv\Scripts\python scripts/import_manual.py fundamentals <file> --dry-run
+symbol,period_end,period_type,fiscal_year,eps,revenue,net_income,dps,source
+# e.g. OGDC,2026-06-30,FY,2026,41.20,410000,177000,15.50,PSX annual report

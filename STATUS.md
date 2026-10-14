@@ -10,11 +10,11 @@
 **Deployed URLs:** frontend _tbd_ · backend _tbd_
 
 ## Track A — claude-code
-- Phase: P6 Agents + verdict — in progress · P4 DONE, A-P4 PASS WITH ISSUES → closed: B-016 fixed (3 stocks re-bucketed), B-017 disclosed (D-47), B-018 handed to Track B
-- Last done: P6-01 LLM gateway (D-41); live thinking choice unverified until a .env exists (G-18)
-- Next: P6-02 validators → P6-03 cache → P6-04…07 → P2-05 macro/manual import
-- Blockers: none · open: Q-06 (D-38), H-05 (.env) for the first live call
-- Updated: 2026-10-14 11:17 PKT
+- Phase: P2 DONE (P2-05 closed) → A-P2 audit can run · P6 Agents + verdict in progress (P6-06 other session)
+- Last done: P2-05 manual import (`scripts/import_manual.py`, D-49); templates in data/manual/templates/
+- Next: P6-07 verdict router once P6-06 is DONE · import R-05 macro / R-06 KMI30 / R-07 news when Haider drops the files
+- Blockers: none · open: B-020 (verify-manual skips DAWN/BR imports), G-22 (build_db drops manual imports), H-05 (.env)
+- Updated: 2026-10-14 23:39 PKT
 
 ## Track B — antigravity
 - Phase: P3 Dashboard — DONE by claude-code (Haider B-override, D-43) → A-P3 audit can start

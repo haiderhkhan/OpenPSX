@@ -1,0 +1,5 @@
+# kmi30_history: the prices template with symbol KMI30 (index points). OHLC/volume optional.
+# Official downloads only (R-06, D-27). Imported rows replace back-fill rows; the back-fill is then rebuilt (D-25).
+# Import: .venv\Scripts\python scripts/import_manual.py kmi30_history <file> --dry-run
+symbol,date,open,high,low,close,volume
+# e.g. KMI30,2026-04-24,,,,165432.10,

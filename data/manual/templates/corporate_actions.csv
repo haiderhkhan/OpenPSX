@@ -1,0 +1,6 @@
+# corporate_actions: action_type CASH_DIVIDEND (value PKR/share) | BONUS (value %) | RIGHT (value %) | SPLIT (value new per old).
+# ex_date YYYY-MM-DD, not after AS_OF_DATE. BONUS / SPLIT re-run the price adjustment; an official event replaces an inferred one.
+# Import: .venv\Scripts\python scripts/import_manual.py corporate_actions <file> --dry-run
+symbol,ex_date,action_type,value,source
+# e.g. LUCK,2026-09-14,CASH_DIVIDEND,12.00,PSX notice
+# e.g. OGDC,2026-09-01,BONUS,10,PSX notice

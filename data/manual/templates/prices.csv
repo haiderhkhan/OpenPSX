@@ -1,0 +1,6 @@
+# prices: one row per symbol per trading day (STOCK, ETF or KMI30). Dates YYYY-MM-DD, not after AS_OF_DATE.
+# Raw prices as traded, PKR; open/high/low/volume optional. Manual rows replace source and back-fill rows (D-25).
+# Import: .venv\Scripts\python scripts/import_manual.py prices <file> --dry-run
+symbol,date,open,high,low,close,volume
+# e.g. OGDC,2026-09-22,231.50,234.00,230.10,232.75,4518200
+# e.g. MZNPETF,2026-09-22,,,,18.42,

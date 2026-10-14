@@ -1,0 +1,6 @@
+# macro: series POLICY_RATE (%) | CPI_YOY (%) | PKR_USD (PKR per USD). Dates may run past AS_OF_DATE.
+# release_date = when it became public (ML joins on it). Blank: POLICY_RATE / PKR_USD = date, CPI_YOY = 5th of next month.
+# Official SBP / PBS downloads only (R-05, D-27). Import: .venv\Scripts\python scripts/import_manual.py macro <file> --dry-run
+series,date,value,release_date,source
+# e.g. POLICY_RATE,2026-09-15,11.00,2026-09-15,SBP monetary policy statement
+# e.g. CPI_YOY,2026-08-31,4.10,,PBS CPI release

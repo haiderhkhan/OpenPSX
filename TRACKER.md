@@ -16,7 +16,7 @@
 | P2-02 | Universe files: KMI-30, ETFs, aliases | P2-01 | DONE | claude-code | 2026-10-12 23:06 | 30 + KMI30 + 9 ETFs from source; ETF names drafted (R-02) |
 | P2-03 | Target schema + build_db.py → data/openpsx.db | P2-01, P2-02 | DONE | claude-code | 2026-10-12 23:14 | AS_OF 2026-09-23; DB 10.0 MB; KMI30 back-filled before 2026-04-27 |
 | P2-04 | Bonus/split price adjustment | P2-03 | DONE | claude-code | 2026-10-12 23:19 | 9 breaks inferred (D-33); 0 violators; 23 drops to verify |
-| P2-05 | Manual CSV/Excel import + templates | P2-03 | TODO | | | |
+| P2-05 | Manual CSV/Excel import + templates | P2-03 | DONE | claude-code | 2026-10-14 23:39 | 6 templates; all-or-nothing, --dry-run; R-05/R-06/R-07 files not yet present (D-49) |
 | P2-06 | Period analytics + live market endpoints + fixture DB | P2-04 | DONE | claude-code | 2026-10-13 01:28 | Endpoints 1–7 live; P3-04 can start; errors per D-34 |
 | P4-01 | Weekly feature panel (no look-ahead) | P2-06 | DONE | claude-code | 2026-10-14 01:51 | build_panel + FEATURES labels; 1.7 s real DB; macro features near-empty (Q-06) |
 | P4-02 | LightGBM walk-forward backtest + baselines | P4-01 | DONE | claude-code | 2026-10-14 02:00 | acc 0.518 vs persistence 0.515; macro dropped by fill rule (D-38) |
@@ -27,7 +27,7 @@
 | P6-03 | Cache: cache.db, midnight PKT expiry, seeds | P6-01 | DONE | claude-code | 2026-10-14 11:07 | get/put/load_seed; TEMPLATE 15 min max; seed key 'seed' (D-45) |
 | P6-04 | Fundamentals agent | P2-06, P6-02, P6-03 | DONE | claude-code | 2026-10-14 11:27 | run(symbol)->AgentResult; NotInScope for ETF/index; conftest cache_db fixture (D-46) |
 | P6-05 | News archive + Sentiment agent | P2-06, P6-02, P6-03 | DONE | claude-code | 2026-10-14 11:39 | 76 RSS rows, none in window: all abstain until manual news (G-21) |
-| P6-06 | Macro weekly agent + /api/macro | P2-06, P6-02, P6-03 | DOING | claude-code-2 | 2026-10-14 11:08 | P6-04/P6-05 left to the other session |
+| P6-06 | Macro weekly agent + /api/macro | P2-06, P6-02, P6-03 | DOING | claude-code | 2026-10-14 23:38 | reassigned by human from claude-code-2 |
 | P6-07 | Verdict router + /api/verdict | P4-04, P6-04, P6-05, P6-06 | TODO | | | |
 | P8-01 | Precompute seed outputs + warm script | P6-07 | TODO | | | |
 | P8-02 | Deploy backend to Render | P8-01, H-07 | TODO | | | |
