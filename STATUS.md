@@ -12,7 +12,8 @@
 ## Track A — claude-code
 - Phase: P6 Agents + verdict DONE (exit criteria hold) → A-P6 audit can start · P2 DONE → A-P2 can run
 - Last done: P6-06 macro (D-50, reassigned) + P6-07 verdict router, /api/verdict live (D-51); real verdicts NEUTRAL in template mode
-- Last: P8-01 seed 30 verdicts all LIVE, loads at startup as CACHED (D-54) · B-021/022/023 fixed
+- Last: P8-04 local launcher scripts/run_local.ps1 (offline: -SkipBuild, G-25) · P8-01 seed 30 LIVE (D-54) · B-021/022/023 fixed
+- Note: P8-05 cannot start: P7-02 TODO; all P5-01..04 and P7-01..04 are TODO (Track B, no owner)
 - Next: P8-02 BLOCKED on H-07 (Render account + Blueprint); render.yaml + .python-version 3.11 pushed (G-24)
 - Blockers: H-07 · waiting: R-05-macro.md (after it: macro import, retrain, re-run precompute) · open: B-020, G-22
 - Updated: 2026-10-15 01:00 PKT

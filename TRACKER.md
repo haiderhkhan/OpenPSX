@@ -32,7 +32,7 @@
 | P8-01 | Precompute seed outputs + warm script | P6-07 | DONE | claude-code | 2026-10-15 00:56 | Seed 30 verdicts all LIVE; loads at startup as CACHED (D-54) |
 | P8-02 | Deploy backend to Render | P8-01, H-07 | BLOCKED | claude-code | 2026-10-15 01:00 | waits on H-07: render.yaml + .python-version pushed (G-24) |
 | P8-03 | Deploy frontend to Vercel + CORS | P8-02, P3-04 | TODO | | | |
-| P8-04 | Local backup launcher (PowerShell) | P8-01 | TODO | | | |
+| P8-04 | Local backup launcher (PowerShell) | P8-01 | DONE | claude-code | 2026-10-15 01:31 | run_local.ps1 [-SkipBuild offline]; 43 s to browser; offline via seed (G-25) |
 | P8-05 | Production smoke test | P8-03, P7-02 | TODO | | | |
 
 ## Track B — antigravity

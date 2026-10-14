@@ -158,6 +158,11 @@
   - The health check (`healthCheckPath`) must answer 2xx/3xx within 5 s. 60 s of failures → restart.
   - `sync: false` env vars are asked for only when the Blueprint is first created; later secrets go in the dashboard by hand.
   - `autoDeploy` is deprecated; use `autoDeployTrigger: commit`.
+- 2026-10-15 · claude-code · G-25 Offline local demo (P8-04, `scripts/run_local.ps1`):
+  - `next build` needs the network because `layout.tsx` uses `next/font/google`. Build once while online. With Wi-Fi off, run `run_local.ps1 -SkipBuild`; a failed build also falls back to the previous `.next` build.
+  - Built pages make no external requests (fonts are self-hosted), so the browser needs only localhost.
+  - Backend offline, simulated with a dead `HTTPS_PROXY`: seeded verdicts come back CACHED; a `refresh=true` verdict falls back to templates in ~5 s; every endpoint returns 200.
+  - Online run on 2026-10-15: 43 s from launch to browser; `/`, `/stock/OGDC`, `/stock/HBLTETF`, `/model` and `/about` all 200.
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.
