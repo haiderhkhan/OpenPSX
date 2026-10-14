@@ -48,6 +48,14 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Iterator[Path]:
         yield path
 
 
+@pytest.fixture(autouse=True)
+def cache_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Every test gets an empty LLM cache in its own temp dir, never data/cache.db (D-45)."""
+    path = tmp_path / "cache.db"
+    monkeypatch.setattr(config, "CACHE_DB_PATH", path)
+    return path
+
+
 @pytest.fixture
 def client() -> Iterator[TestClient]:
     with TestClient(app) as c:  # runs the lifespan hook

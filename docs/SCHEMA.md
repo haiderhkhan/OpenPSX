@@ -363,6 +363,8 @@ CREATE INDEX idx_cache_expires ON llm_cache(expires_at);
 | macro | policy rate + 12w change, CPI YoY, PKR/USD + 4w change | stance + brief (≤ 2 sentences) | 260 | rate falling and CPI falling → POSITIVE; rate rising or PKR down > 2% in 4w → NEGATIVE; else NEUTRAL |
 | verdict_summary | label, confidence, agent stances + first reason each | 2 sentences | 120 | "Overall outlook: {label} ({confidence}% confidence). {n_agree} of {n_active} signals agree." |
 
+- **Agent statuses (D-46):** a cache hit is `CACHED` only if the stored result was `LIVE`; a cached `TEMPLATE` stays `TEMPLATE`. Missing input data (e.g. no TTM EPS) gives `UNAVAILABLE` with no LLM call. Fundamentals P/E and the KMI-30 median use only EPS > 0.
+
 **Verdict math** (`backend/routing/verdict_router.py`; constants in `backend/config.py`):
 - **Weights:** `W = {quant: 0.40, fundamentals: 0.25, sentiment: 0.20, macro: 0.15}`.
 - **Stance values:** `s_i` = +1 / −1 / 0 for POSITIVE / NEGATIVE / NEUTRAL.
