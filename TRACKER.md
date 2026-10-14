@@ -43,7 +43,7 @@
 | P1-03 | Typed API client + mock mode | P1-01, P0-04 | DONE | antigravity | 2026-10-12 22:31 | Typed client for all 13 endpoints; sync-mocks copies fixtures |
 | P1-04 | Route skeletons + loading/error/empty states | P1-02, P1-03 | DONE | antigravity | 2026-10-12 22:44 | 4 routes rendered in mock mode; Loading/Error/Empty states reusable |
 | P3-01 | Overview page: KMI-30 card, basis toggle, table | P1-04 | DONE | claude-code (B-override) | 2026-10-14 10:33 | ?basis= URL toggle; sortable Stocks/ETFs table; Pct formatter (D-43) |
-| P3-02 | Price chart: line/candle, ranges | P1-04 | TODO | | | |
+| P3-02 | Price chart: line/candle, ranges | P1-04 | DONE | claude-code (B-override) | 2026-10-14 10:37 | Client-only lightweight-charts; ranges refetch in browser; candles off when OHLC null |
 | P3-03 | Return bars + vs-KMI-30 overlay | P1-04 | TODO | | | |
 | P3-04 | Wire dashboard to live API | P3-01, P3-02, P3-03, P2-06 | TODO | | | |
 | P5-01 | Quant panel on stock page | P1-04 | TODO | | | |

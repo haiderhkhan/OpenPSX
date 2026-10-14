@@ -3,6 +3,7 @@ import { getSymbolInfo, getPrices, getChanges, getQuant, getVerdict, ApiClientEr
 import type { ApiError } from "@/lib/types";
 import { ErrorState } from "@/components/states";
 import { Disclaimer } from "@/components/Disclaimer";
+import { PriceChart } from "@/components/charts/PriceChart";
 
 interface StockPageProps {
   params: Promise<{ symbol: string }>;
@@ -93,6 +94,7 @@ export default async function StockPage({ params }: StockPageProps) {
       </div>
 
       {pricesRes.error && <ErrorState title="Prices unavailable" message={pricesRes.error.message} />}
+      {prices && <PriceChart initial={prices} />}
 
       {/* Performance Period Cards */}
       {changesRes.error && <ErrorState title="Period changes unavailable" message={changesRes.error.message} />}
