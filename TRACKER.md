@@ -45,7 +45,7 @@
 | P3-01 | Overview page: KMI-30 card, basis toggle, table | P1-04 | DONE | claude-code (B-override) | 2026-10-14 10:33 | ?basis= URL toggle; sortable Stocks/ETFs table; Pct formatter (D-43) |
 | P3-02 | Price chart: line/candle, ranges | P1-04 | DONE | claude-code (B-override) | 2026-10-14 10:37 | Client-only lightweight-charts; ranges refetch in browser; candles off when OHLC null |
 | P3-03 | Return bars + vs-KMI-30 overlay | P1-04 | DONE | claude-code (B-override) | 2026-10-14 10:42 | Recharts M/Q/Y bars, partial faded+*, dashed KMI-30 overlay; stock ?basis= |
-| P3-04 | Wire dashboard to live API | P3-01, P3-02, P3-03, P2-06 | TODO | | | |
+| P3-04 | Wire dashboard to live API | P3-01, P3-02, P3-03, P2-06 | DONE | claude-code (B-override) | 2026-10-14 10:50 | Live on :8000 verified; friendly UPSTREAM message; index shown in points |
 | P5-01 | Quant panel on stock page | P1-04 | TODO | | | |
 | P5-02 | Model card page | P1-04 | TODO | | | |
 | P5-03 | Verdict card + agent rows | P1-04 | TODO | | | |

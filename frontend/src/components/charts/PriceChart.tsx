@@ -31,7 +31,7 @@ const segment = (active: boolean) =>
     active ? "bg-secondary font-semibold text-foreground shadow-xs" : "text-muted-foreground hover:text-foreground"
   }`;
 
-export function PriceChart({ initial }: { initial: Prices }) {
+export function PriceChart({ initial, unit }: { initial: Prices; unit: "PKR" | "points" }) {
   const container = useRef<HTMLDivElement>(null);
   const latestRequest = useRef(0);
   const [prices, setPrices] = useState(initial);
@@ -101,7 +101,7 @@ export function PriceChart({ initial }: { initial: Prices }) {
         <div>
           <h2 id="price-chart-title" className="text-lg font-bold text-foreground">Price</h2>
           <p className="text-xs text-muted-foreground">
-            {prices.adjusted ? "Adjusted for bonus issues and splits" : "Unadjusted"} · PKR
+            {unit === "points" ? "Index level" : prices.adjusted ? "Adjusted for bonus issues and splits" : "Unadjusted"} · {unit}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">

@@ -110,6 +110,7 @@
 - 2026-10-12 · claude-code · G-17 The source ends 2026-09-23: from 2026-09-25 PSX DPS refused the old scraper (`vendor_blocked`, PSXAuthError). Later prices come only through P2-05 manual import.
 - 2026-10-14 · claude-code · G-18 The working thinking choice for `gemini-3.1-flash-lite` is **UNVERIFIED**: no `.env` existed at P6-01, so no live call was made. On the first live call (after H-05), read the INFO line `thinking config for <model>: ...` from `backend.agents.llm` and append the result here.
 - 2026-10-14 · claude-code · G-19 On this machine Git Bash ignores `TZ=Asia/Karachi` (prints UTC, 5 h behind). Take PKT stamps from PowerShell: `[TimeZoneInfo]::ConvertTimeBySystemTimeZoneId((Get-Date), 'Pakistan Standard Time').ToString('yyyy-MM-dd HH:mm')`. Also: `next dev` (re)writes `frontend/AGENTS.md` (Next.js agent notice); commit it rather than deleting it.
+- 2026-10-14 · claude-code (B-override) · G-20 Chart range/frequency switches (PriceChart, ReturnsBars) fetch from the **browser**, not the Next server, so they need CORS: open the dev app at http://localhost:3000 (CORS_ORIGINS lists that, not 127.0.0.1:3000), and P8-03 must add the Vercel origin or those switches show an inline error while first loads still work.
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.

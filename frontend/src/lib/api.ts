@@ -66,10 +66,11 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
         ...options?.headers,
       },
     });
-  } catch (err) {
+  } catch {
+    // Network failure (server down, DNS, CORS): the browser/Node message ("fetch failed") means nothing to a user.
     throw new ApiClientError(503, {
       code: "UPSTREAM",
-      message: err instanceof Error ? err.message : "Network failure connecting to API server",
+      message: "The OPEN PSX data service can't be reached right now. Please try again shortly.",
     });
   }
 
@@ -136,9 +137,8 @@ export async function getSymbolInfo(symbol: string): Promise<SymbolInfo> {
 // 3. GET /api/overview
 export async function getOverview(basis: Basis = "calendar"): Promise<Overview> {
   if (USE_MOCKS) {
-    const data = { ...(overviewMock as Overview) };
-    data.basis = basis;
-    return data;
+    const mock = overviewMock as Overview;
+    return { ...mock, basis, index: { ...mock.index, basis } };
   }
   return request<Overview>(`/api/overview?basis=${encodeURIComponent(basis)}`);
 }

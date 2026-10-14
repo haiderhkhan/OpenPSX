@@ -17,11 +17,11 @@
 - Updated: 2026-10-14 10:22 PKT
 
 ## Track B — antigravity
-- Phase: P1 Frontend shell — DONE; audit fixes B-005…B-011, B-014, B-015 FIXED by claude-code (antigravity quota swap, D-35)
-- Last done: `[B-010]` stock panels fail independently · `[B-011]` Geist font · `[B-014]` README · `[B-015]` About copy + back-fill note
-- Next: P3-01 (Overview page) · open: B-004 (last_date badge + sync-mocks); B-012, B-013 (P9-01, details missing)
-- Blockers: none
-- Updated: 2026-10-14 02:26 PKT
+- Phase: P3 Dashboard — DONE by claude-code (Haider B-override, D-43) → A-P3 audit can start
+- Last done: P3-01 overview · P3-02 price chart · P3-03 return bars + KMI-30 overlay · P3-04 live wiring (5 symbols × 2 bases)
+- Next: P5-01 Quant panel (P5-04 macro card now unblocked) · open: B-004 (ETF last_date badge — affects P3 overview); B-012, B-013
+- Blockers: none · note: frontend/.env.local now NEXT_PUBLIC_USE_MOCKS=false (live :8000)
+- Updated: 2026-10-14 10:50 PKT
 
 ## Human — Haider
 - Now: H-01 (rename + add docs + push) → open both tools

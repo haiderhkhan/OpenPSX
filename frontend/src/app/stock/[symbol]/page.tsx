@@ -111,15 +111,15 @@ export default async function StockPage({ params, searchParams }: StockPageProps
         {lastBar && (
           <div className="text-left sm:text-right">
             <div className="font-mono text-2xl font-bold text-foreground">
-              PKR {lastBar.close.toFixed(2)}
+              {symbolType === "INDEX" ? lastBar.close.toFixed(2) : `PKR ${lastBar.close.toFixed(2)}`}
             </div>
-            <div className="text-xs text-muted-foreground">Adjusted Close</div>
+            <div className="text-xs text-muted-foreground">{symbolType === "INDEX" ? "Index level (points)" : "Adjusted close"}</div>
           </div>
         )}
       </div>
 
       {pricesRes.error && <ErrorState title="Prices unavailable" message={pricesRes.error.message} />}
-      {prices && <PriceChart initial={prices} />}
+      {prices && <PriceChart initial={prices} unit={symbolType === "INDEX" ? "points" : "PKR"} />}
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-lg font-bold text-foreground">Performance</h2>
