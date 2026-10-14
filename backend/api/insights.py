@@ -1,4 +1,4 @@
-"""Insight endpoints 8–11 (SCHEMA.md §4.2). 8–9 live (P4-04), 10 live (P6-06); 11 returns a fixture until P6-07."""
+"""Insight endpoints 8–11 (SCHEMA.md §4.2): 8–9 live since P4-04, 10 since P6-06, 11 since P6-07."""
 from __future__ import annotations
 
 import json
@@ -10,10 +10,11 @@ from fastapi import APIRouter
 
 from backend import config
 from backend.agents import macro as macro_agent
-from backend.api import ApiException, load_fixture
+from backend.api import ApiException
 from backend.api.market import _db
 from backend.db import queries
 from backend.ml.features import FEATURES
+from backend.routing import verdict_router
 from backend.schemas.insights import MacroOutput, ModelCard, QuantOutput, Verdict
 
 log = logging.getLogger(__name__)
@@ -127,4 +128,15 @@ def macro() -> MacroOutput:
 
 @router.get("/verdict/{symbol}")
 def verdict(symbol: str, refresh: bool = False) -> Verdict:
-    return load_fixture("verdict.json", Verdict)
+    """Live verdict (P6-07): STOCK only; `refresh=true` once a minute per symbol. Never 500."""
+    if not config.DB_PATH.exists():
+        raise ApiException(503, "UPSTREAM", "Market database not built yet (run scripts/build_db.py).")
+    try:
+        return verdict_router.get_verdict(symbol, refresh)
+    except verdict_router.NotInScope as exc:
+        raise ApiException(404, "NOT_IN_SCOPE", str(exc)) from exc
+    except verdict_router.RateLimited as exc:
+        raise ApiException(429, "RATE_LIMITED", str(exc)) from exc
+    except Exception as exc:  # the router absorbs LLM/agent failures; anything left is an upstream fault, not a 500
+        log.exception("verdict for %s failed", symbol)
+        raise ApiException(503, "UPSTREAM", "The outlook could not be computed right now.") from exc
