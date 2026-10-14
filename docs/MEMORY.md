@@ -88,6 +88,11 @@
   - `weight` = the raw `AGENT_WEIGHTS` value; the router renormalises.
   - Real-DB template run (AS_OF 2026-09-23): 21 POSITIVE, 8 NEUTRAL, 1 UNAVAILABLE; KMI-30 median P/E 9.89.
 - 2026-10-14 · claude-code · D-47 AUDIT-P4 fixes. B-016: `regime.vol_buckets` takes tercile cut-offs from the rows dated AS_OF only; older-dated rows (ETFs, 2026-08-04) get the bucket their vol falls in (< 3 AS_OF rows → old all-rows rule + warning). Predictions regenerated; model, metrics and SHAP files byte-identical; 3 stocks changed bucket. B-017 handled by disclosure (one `limitations` line when AS_OF is before Friday), not retraining, because the model has no measurable edge (51.75% vs 51.46% baseline) and retraining would change committed metrics on deadline eve.
+- 2026-10-14 · claude-code · D-48 P6-05 news + sentiment (`backend/ingest/news.py`, `scripts/archive_news.py`, `backend/agents/sentiment.py`):
+  - Alias matching: tickers and all-caps aliases (OGDCL, PEL, SNGPL) are case-sensitive; multi-token aliases are case-insensitive; one-word title-case names (Lucky, Meezan, Engro, Mari, Nishat, Hubco…) never match alone (false-positive guard). Recall cost: "Hubco"/"Airlink"/"Sazgar" alone are missed; add an allow-list if coverage needs them.
+  - Window = AS_OF − 30 days … AS_OF inclusive (2026-08-24 … 2026-09-23, matching D-28's manual range); ≤ 10 newest. < 3 headlines → `UNAVAILABLE`, no LLM call, not cached (supersedes §9's "no headlines → NEUTRAL" template; the router excludes it).
+  - Payload = headlines (id, date, title) + n_headlines, window dates, lexicon counts, so ids, dates and counts are grounded. Template reasons cite `[#id]` only, never quote titles (titles may contain banned words).
+  - Scope errors reuse `fundamentals.NotInScope`. Feeds: Dawn business, BR markets, BR business-finance. `--verify-manual` checks MANUAL rows' URLs (D-28): HTTP < 400 and ≥ 60% of the title's 4+-letter words on the page; it only reports.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
@@ -128,6 +133,7 @@
 - 2026-10-14 · claude-code · G-18 The working thinking choice for `gemini-3.1-flash-lite` is **UNVERIFIED**: no `.env` existed at P6-01, so no live call was made. On the first live call (after H-05), read the INFO line `thinking config for <model>: ...` from `backend.agents.llm` and append the result here.
 - 2026-10-14 · claude-code · G-19 On this machine Git Bash ignores `TZ=Asia/Karachi` (prints UTC, 5 h behind). Take PKT stamps from PowerShell: `[TimeZoneInfo]::ConvertTimeBySystemTimeZoneId((Get-Date), 'Pakistan Standard Time').ToString('yyyy-MM-dd HH:mm')`. Also: `next dev` (re)writes `frontend/AGENTS.md` (Next.js agent notice); commit it rather than deleting it.
 - 2026-10-14 · claude-code (B-override) · G-20 Chart range/frequency switches (PriceChart, ReturnsBars) fetch from the **browser**, not the Next server, so they need CORS: open the dev app at http://localhost:3000 (CORS_ORIGINS lists that, not 127.0.0.1:3000), and P8-03 must add the Vercel origin or those switches show an inline error while first loads still work.
+- 2026-10-14 · claude-code · G-21 RSS can't back-fill sentiment. Each feed holds only ~30 items (≈ 3 days): the first archive run (2026-10-14 ~11:35 PKT) stored 76 headlines dated 2026-10-11 … 10-14, none naming a KMI-30 company and all after AS_OF 2026-09-23. So all 30 stocks abstain until manual headlines for 24 Aug – 23 Sep (R-07, D-28) arrive via P2-05 (then run `archive_news.py --verify-manual`), or until AS_OF moves forward and the archive has been run daily.
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.

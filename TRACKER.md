@@ -26,7 +26,7 @@
 | P6-02 | Validators: banned phrases, number grounding | P6-01 | DONE | claude-code | 2026-10-14 10:51 | run_with_validation → (result, LIVE/TEMPLATE); grounding rules D-42, D-44 |
 | P6-03 | Cache: cache.db, midnight PKT expiry, seeds | P6-01 | DONE | claude-code | 2026-10-14 11:07 | get/put/load_seed; TEMPLATE 15 min max; seed key 'seed' (D-45) |
 | P6-04 | Fundamentals agent | P2-06, P6-02, P6-03 | DONE | claude-code | 2026-10-14 11:27 | run(symbol)->AgentResult; NotInScope for ETF/index; conftest cache_db fixture (D-46) |
-| P6-05 | News archive + Sentiment agent | P2-06, P6-02, P6-03 | TODO | | | |
+| P6-05 | News archive + Sentiment agent | P2-06, P6-02, P6-03 | DONE | claude-code | 2026-10-14 11:39 | 76 RSS rows, none in window: all abstain until manual news (G-21) |
 | P6-06 | Macro weekly agent + /api/macro | P2-06, P6-02, P6-03 | DOING | claude-code-2 | 2026-10-14 11:08 | P6-04/P6-05 left to the other session |
 | P6-07 | Verdict router + /api/verdict | P4-04, P6-04, P6-05, P6-06 | TODO | | | |
 | P8-01 | Precompute seed outputs + warm script | P6-07 | TODO | | | |

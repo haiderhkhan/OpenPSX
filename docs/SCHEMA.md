@@ -359,7 +359,7 @@ CREATE INDEX idx_cache_expires ON llm_cache(expires_at);
 |---|---|---|---|---|
 | quant | — (no LLM) | — | — | from §6 stance; reasons = top 3 contributors in words |
 | fundamentals | TTM EPS, P/E (close at AS_OF / TTM EPS) vs KMI-30 median P/E, dividend yield % (TTM DPS / close); EPS growth % and revenue YoY % only when period rows exist (D-26) | stance + 1–3 reasons | 220 | EPS > 0 and P/E ≤ 1.2 × median → POSITIVE; EPS < 0 → NEGATIVE; else NEUTRAL |
-| sentiment | ≤ 10 matched headlines (id, date, title) from the last 30 days ≤ AS_OF | stance + reasons citing `[#id]` | 220 | lexicon score (`backend/agents/lexicon.py`): sum > 0 → POSITIVE, < 0 → NEGATIVE; no headlines → NEUTRAL "no recent coverage" |
+| sentiment | ≤ 10 newest matched headlines (id, date, title) dated AS_OF − 30 days … AS_OF (inclusive), + counts and window dates | stance + reasons citing `[#id]` | 220 | lexicon score (`backend/agents/lexicon.py`): sum > 0 → POSITIVE, < 0 → NEGATIVE, else NEUTRAL; **< 3 headlines → abstain: `UNAVAILABLE`, no LLM call** ("no recent coverage", D-28, D-48) |
 | macro | policy rate + 12w change, CPI YoY, PKR/USD + 4w change | stance + brief (≤ 2 sentences) | 260 | rate falling and CPI falling → POSITIVE; rate rising or PKR down > 2% in 4w → NEGATIVE; else NEUTRAL |
 | verdict_summary | label, confidence, agent stances + first reason each | 2 sentences | 120 | "Overall outlook: {label} ({confidence}% confidence). {n_agree} of {n_active} signals agree." |
 
