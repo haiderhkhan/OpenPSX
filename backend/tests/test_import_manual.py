@@ -109,6 +109,23 @@ def test_news_dedupes_on_url_and_uses_the_symbol_column(db: Path, tmp_path: Path
     assert _query(db, "SELECT symbols FROM news WHERE url = ?", url) == [('["LUCK"]',)]
 
 
+def test_one_article_listed_under_two_symbols_becomes_one_row_for_both(db: Path, tmp_path: Path) -> None:
+    """R-06 lists the Lundali-1 article once under OGDC and once under MARI; the fixture DB has no MARI, so MEBL
+    stands in. The import must keep one row tagged with both symbols, and sentiment must see it under each."""
+    url = "https://www.brecorder.com/news/40438614"
+    title = '"OGDCL, partner-backed well starts gas production in Sindh"'
+    path = _csv(tmp_path, "symbol,published_at,source,title,url\n"
+                          f"OGDC,2026-09-09,BR,{title},{url}\n"
+                          f"MEBL,2026-09-09,BR,{title},{url}\n")
+    result = im.import_file("news", path, db)
+    assert result["errors"] == [] and result["counts"] == {("MEBL", "new"): 1, ("OGDC", "new"): 1}
+    assert _query(db, "SELECT COUNT(*), MAX(symbols) FROM news WHERE url = ?", url) == [(1, '["MEBL", "OGDC"]')]
+    from backend.ingest import news
+    with closing(sqlite3.connect(db)) as conn:
+        assert [h["date"] for s in ("OGDC", "MEBL") for h in news.select_headlines(conn, s, "2026-10-09")] == \
+            ["2026-09-09", "2026-09-09"]
+
+
 def test_news_rejects_bad_source_and_url(db: Path, tmp_path: Path) -> None:
     path = _csv(tmp_path, "published_at,source,title,url\n2026-09-10,PROFIT,T,https://x.pk/a\n"
                           "2026-09-10,BR,T2,not-a-link\n")
