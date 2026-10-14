@@ -29,7 +29,7 @@
 | P6-05 | News archive + Sentiment agent | P2-06, P6-02, P6-03 | DONE | claude-code | 2026-10-14 11:39 | 76 RSS rows, none in window: all abstain until manual news (G-21) |
 | P6-06 | Macro weekly agent + /api/macro | P2-06, P6-02, P6-03 | DONE | claude-code | 2026-10-14 23:47 | reassigned from claude-code-2; /api/macro live; W42 NEUTRAL template (D-50) |
 | P6-07 | Verdict router + /api/verdict | P4-04, P6-04, P6-05, P6-06 | DONE | claude-code | 2026-10-14 23:56 | /api/verdict live; ETF/index 404; refresh 429; P6 done → A-P6 (D-51) |
-| P8-01 | Precompute seed outputs + warm script | P6-07 | TODO | | | |
+| P8-01 | Precompute seed outputs + warm script | P6-07 | DONE | claude-code | 2026-10-15 00:56 | Seed 30 verdicts all LIVE; loads at startup as CACHED (D-54) |
 | P8-02 | Deploy backend to Render | P8-01, H-07 | TODO | | | |
 | P8-03 | Deploy frontend to Vercel + CORS | P8-02, P3-04 | TODO | | | |
 | P8-04 | Local backup launcher (PowerShell) | P8-01 | TODO | | | |

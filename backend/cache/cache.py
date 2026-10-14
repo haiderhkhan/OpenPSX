@@ -108,6 +108,17 @@ def put(
         conn.execute("INSERT OR REPLACE " + _INSERT, row)
 
 
+def drop(statuses: tuple[str, ...], symbol: str | None = None) -> int:
+    """Delete rows with these stored statuses (one symbol, or all); return the count. P8-01 uses it so a
+    precompute run neither reuses a 15-min TEMPLATE nor an older seed (stored as CACHED)."""
+    marks = ",".join("?" * len(statuses))
+    sql, args = f"DELETE FROM llm_cache WHERE status IN ({marks})", list(statuses)
+    if symbol is not None:
+        sql, args = sql + " AND symbol = ?", args + [symbol]
+    with closing(_connect()) as conn, conn:
+        return conn.execute(sql, args).rowcount
+
+
 def load_seed(path: Path) -> int:
     """Insert each `{symbol: Verdict}` of a seed file unless an unexpired row exists; return rows inserted.
 
