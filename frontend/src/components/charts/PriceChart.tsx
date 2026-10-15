@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import type { IChartApi } from "lightweight-charts";
+import type { IChartApi, TickMarkType as TickMark, Time } from "lightweight-charts";
 import { ApiClientError, getPrices } from "@/lib/api";
 import type { Prices, Range } from "@/lib/types";
 
 const RANGES: Range[] = ["3M", "6M", "1Y", "3Y", "ALL"];
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 type Mode = "line" | "candle";
 
 function subscribeTheme(callback: () => void) {
@@ -50,7 +51,7 @@ export function PriceChart({ initial, unit }: { initial: Prices; unit: "PKR" | "
     let chart: IChartApi | null = null;
     let cancelled = false;
 
-    import("lightweight-charts").then(({ createChart, ColorType, LineSeries, CandlestickSeries }) => {
+    import("lightweight-charts").then(({ createChart, ColorType, LineSeries, CandlestickSeries, TickMarkType }) => {
       if (cancelled) return;
       const up = token("--positive");
       const down = token("--negative");
@@ -60,7 +61,18 @@ export function PriceChart({ initial, unit }: { initial: Prices; unit: "PKR" | "
         grid: { vertLines: { visible: false }, horzLines: { color: token("--border") } },
         rightPriceScale: { borderVisible: false },
         // fitContent() can run before the container reaches its final width; keep the fitted range on resize.
-        timeScale: { borderVisible: false, lockVisibleTimeRangeOnResize: true },
+        timeScale: {
+          borderVisible: false,
+          lockVisibleTimeRangeOnResize: true,
+          // A day tick otherwise reads as a bare "2" between month names; show "2 Jun". Other ticks keep the default.
+          tickMarkFormatter: (time: Time, type: TickMark) => {
+            if (type !== TickMarkType.DayOfMonth) return null;
+            // Bars use "YYYY-MM-DD" strings; the library may also hand back a BusinessDay object.
+            const [, month, day] = typeof time === "string" ? time.split("-").map(Number)
+              : typeof time === "object" ? [time.year, time.month, time.day] : [0, 0, 0];
+            return month ? `${day} ${MONTHS[month - 1]}` : null;
+          },
+        },
       });
       if (shownMode === "candle") {
         chart

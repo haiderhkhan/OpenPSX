@@ -78,6 +78,7 @@ export interface OverviewRow {
   type: SymbolType;
   sector: string | null;
   last_close: number;
+  last_date: string; // effective date = min(AS_OF_DATE, last close): earlier for ETFs (SCHEMA §1, D-24)
   mom: number | null;
   qoq: number | null;
   ytd: number | null;

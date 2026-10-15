@@ -35,6 +35,17 @@ export function VerdictCard({ initial }: Props) {
 
   const isNeutral = verdict.label === "NEUTRAL";
   const strength = isNeutral || verdict.confidence === null ? "Mixed signals" : `${formatShare(verdict.confidence)} confidence`;
+  // Counting rows, not maths: the same n_agree / n_active the router uses (§9). UNAVAILABLE = abstained.
+  const active = verdict.agents.filter((a) => a.status !== "UNAVAILABLE");
+  const nAgree = active.filter((a) => a.stance === verdict.label).length;
+  const nAbstained = verdict.agents.length - active.length;
+  // ponytail: mirrors CONF_CAP_* in backend/config.py for display only; the API applies the caps.
+  const capNote =
+    active.length < 3
+      ? "Confidence is capped at 50% because fewer than 3 signals are active."
+      : active.some((a) => a.status === "TEMPLATE")
+        ? "Confidence is capped at 60% because a signal used its template fallback."
+        : "Confidence is capped at 95%, at 60% if any signal falls back to a template, and at 50% with fewer than 3 active signals.";
 
   return (
     <section aria-labelledby="verdict-heading" className="flex flex-col rounded-xl border border-border bg-card p-6 shadow-xs">
@@ -57,6 +68,13 @@ export function VerdictCard({ initial }: Props) {
         <StanceChip stance={verdict.label} />
         <span className={`text-sm font-semibold ${isNeutral ? "text-muted-foreground" : "text-foreground"}`}>{strength}</span>
       </div>
+      <p className="mt-2 text-xs text-muted-foreground">
+        <span className="font-semibold text-foreground">
+          {nAgree} of {active.length} active signals agree
+        </span>
+        {nAbstained > 0 && ` · ${nAbstained} abstained (not counted)`}
+        {!isNeutral && <span className="mt-0.5 block">{capNote}</span>}
+      </p>
 
       {notice && (
         <p role="status" className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200">

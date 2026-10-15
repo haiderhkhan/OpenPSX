@@ -109,6 +109,14 @@ export default async function StockPage({ params, searchParams }: StockPageProps
           <p className="mt-1 text-sm text-muted-foreground">
             Price data as of {lastBar?.date ?? "—"}
           </p>
+          {/* ETFs keep their own last date (D-24): say so plainly when it is earlier than the market date. */}
+          {lastBar && health && lastBar.date < health.as_of_date && (
+            <p role="note" className="mt-2 max-w-xl rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200">
+              {upper}&apos;s prices end on <span className="font-mono">{lastBar.date}</span>, before the market data date (
+              <span className="font-mono">{health.as_of_date}</span>). Every figure on this page, including the quant model, is
+              as of <span className="font-mono">{lastBar.date}</span>.
+            </p>
+          )}
         </div>
 
         {lastBar && (

@@ -17,7 +17,10 @@ export function AgentRow({ agent }: { agent: AgentResult }) {
         <span className="text-sm font-medium text-foreground">{AGENT_LABEL[agent.agent]}</span>
         <div className="flex items-center gap-2">
           {abstained ? (
-            <span className="text-xs text-muted-foreground">Abstained</span>
+            // Sentiment abstains only when it finds fewer than 3 headlines (D-28); the reason line says how many.
+            <span className="text-xs text-muted-foreground">
+              {agent.agent === "sentiment" ? "Insufficient news" : "Abstained"}
+            </span>
           ) : (
             <StanceChip stance={agent.stance} size="sm" />
           )}

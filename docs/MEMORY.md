@@ -166,6 +166,9 @@
   - Built pages make no external requests (fonts are self-hosted), so the browser needs only localhost.
   - Backend offline, simulated with a dead `HTTPS_PROXY`: seeded verdicts come back CACHED; a `refresh=true` verdict falls back to templates in ~5 s; every endpoint returns 200.
   - Online run on 2026-10-15: 43 s from launch to browser; `/`, `/stock/OGDC`, `/stock/HBLTETF`, `/model` and `/about` all 200.
+- 2026-10-15 · claude-code · G-26 P9-01 UX pass:
+  - `VerdictCard.tsx` repeats the §9 confidence caps (50% / 60% / 95%) in plain words for display. **If `CONF_CAP_*` in `backend/config.py` change, update `capNote` too.** The "N of M active signals agree" line counts agent rows itself, so it can't drift.
+  - Headless Edge sometimes logs `SyntaxError: Identifier 'AssistantLoadState' has already been declared`. This is Edge's own injected script, not ours: there are 0 hits in `.next/static` or `node_modules`. Ignore it in console walks.
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.

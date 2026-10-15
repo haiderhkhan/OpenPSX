@@ -47,9 +47,10 @@ function sortRows(rows: OverviewRow[], key: SortKey, desc: boolean): OverviewRow
 interface OverviewTableProps {
   rows: OverviewRow[];
   etfsEnabled: boolean;
+  asOfDate: string;
 }
 
-export function OverviewTable({ rows, etfsEnabled }: OverviewTableProps) {
+export function OverviewTable({ rows, etfsEnabled, asOfDate }: OverviewTableProps) {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>("STOCK");
   const [sort, setSort] = useState<{ key: SortKey; desc: boolean }>({ key: "symbol", desc: false });
@@ -141,7 +142,13 @@ export function OverviewTable({ rows, etfsEnabled }: OverviewTableProps) {
                   <td className="hidden max-w-xs truncate px-4 py-3 text-xs text-muted-foreground md:table-cell">
                     {row.name}
                   </td>
-                  <td className="px-4 py-3 text-right font-mono tabular-nums">{row.last_close.toFixed(2)}</td>
+                  <td className="px-4 py-3 text-right font-mono tabular-nums">
+                    {row.last_close.toFixed(2)}
+                    {/* ETFs end earlier than AS_OF (D-24): the row's own date, so its changes are not misread. */}
+                    {row.last_date !== asOfDate && (
+                      <div className="text-[10px] font-normal text-muted-foreground">as of {row.last_date}</div>
+                    )}
+                  </td>
                   <td className="px-4 py-3 text-right"><Pct value={row.mom} /></td>
                   <td className="hidden px-4 py-3 text-right sm:table-cell"><Pct value={row.qoq} /></td>
                   <td className="px-4 py-3 text-right"><Pct value={row.ytd} /></td>

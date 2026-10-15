@@ -54,8 +54,8 @@
 | P7-02 | /api/chat answer composer | P7-01, P6-02, P6-03 | DONE | claude-code (B-override) | 2026-10-15 07:38 | /api/chat live: LIVE→CACHED, TEMPLATE, REFUSED, ADVICE; 503 not 500 |
 | P7-03 | /api/transcribe via Groq Whisper | P0-04 | DONE | claude-code (B-override) | 2026-10-15 07:51 | live + 13 tests; real voice needs Haider's GROQ_API_KEY (D-57) |
 | P7-04 | Chat UI + mic | P1-04, P7-03 | DONE | claude-code (B-override) | 2026-10-15 07:46 | floating panel, 10 chips, facts+badge+disclaimer; mic→transcribe ok |
-| P9-01 | UX hardening pass (live data) | P3-04, P5-01, P5-02, P5-03, P5-04, P7-04 | TODO | | | |
-| P9-02 | About page + README + architecture image | P1-04 | TODO | | | |
+| P9-01 | UX hardening pass (live data) | P3-04, P5-01, P5-02, P5-03, P5-04, P7-04 | DONE | claude-code (B-override) | 2026-10-15 15:57 | Zero-error walk 1440+375 (prod build); agree count, cap, ETF as-of, B-024 |
+| P9-02 | About page + README + architecture image | P1-04 | DONE | claude-code (B-override) | 2026-10-15 15:57 | README rewritten (honest 51.7%), About mirrors it with architecture.svg |
 | P9-03 | Demo rehearsal on deployed URL | P8-03, P9-01 | TODO | | | |
 
 ## Gate — Thu 15 Oct 16:00–18:00 PKT

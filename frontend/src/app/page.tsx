@@ -56,7 +56,7 @@ export default async function OverviewPage({ searchParams }: OverviewPageProps) 
               message={`The API returned no KMI-30 or ETF rows for ${overview.as_of_date}.`}
             />
           ) : (
-            <OverviewTable rows={overview.rows} etfsEnabled={etfsEnabled} />
+            <OverviewTable rows={overview.rows} etfsEnabled={etfsEnabled} asOfDate={overview.as_of_date} />
           )}
         </>
       )}
