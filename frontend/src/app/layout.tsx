@@ -13,7 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 import { Header, Footer } from "@/components/shell";
-import { getAsOfDate } from "@/lib/api";
+import { ChatWidget } from "@/components/chat/ChatWidget";
+import { getHealth } from "@/lib/api";
 
 // Every route reads the live API per request; never prerender build-time data.
 export const dynamic = "force-dynamic";
@@ -29,7 +30,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const asOfDate = await getAsOfDate();
+  // One health call: the as-of date for the header/footer and the voice flag for the chat mic (no date when the API is down).
+  const health = await getHealth().catch(() => null);
+  const asOfDate = health?.as_of_date;
 
   return (
     <html
@@ -41,6 +44,7 @@ export default async function RootLayout({
         <Header asOfDate={asOfDate} />
         <main className="flex-1 w-full">{children}</main>
         <Footer asOfDate={asOfDate} />
+        <ChatWidget voiceEnabled={health?.features.voice ?? false} />
       </body>
     </html>
   );

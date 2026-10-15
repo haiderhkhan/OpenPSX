@@ -1,7 +1,11 @@
 import type { Stance, Status } from "@/lib/types";
 
-// Where a piece of text came from (SCHEMA §4: status). Shown wherever LLM text appears.
-const STATUS_STYLE: Record<Status, { className: string; title: string }> = {
+// Where a piece of text came from (SCHEMA §4: status; chat adds REFUSED). Shown wherever LLM text appears.
+const STATUS_STYLE: Record<Status | "REFUSED", { className: string; title: string }> = {
+  REFUSED: {
+    className: "border-border bg-muted text-muted-foreground",
+    title: "Outside what OPEN PSX covers: no data or model was used",
+  },
   LIVE: {
     className: "border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-200",
     title: "Written by the AI model from the numbers shown",
@@ -20,7 +24,7 @@ const STATUS_STYLE: Record<Status, { className: string; title: string }> = {
   },
 };
 
-export function StatusBadge({ status, className = "" }: { status: Status; className?: string }) {
+export function StatusBadge({ status, className = "" }: { status: Status | "REFUSED"; className?: string }) {
   const style = STATUS_STYLE[status];
   return (
     <span
