@@ -1,94 +1,73 @@
 # OPEN PSX
 
-**AI-powered market education for Pakistan's Shariah-compliant equities.**
+**Education-first market intelligence for Pakistan's Shariah-compliant equities: the 30 KMI-30 stocks and 9 PSX-listed ETFs.**
 
-OPEN PSX helps retail investors understand the KMI-30 stocks and PSX-listed ETFs. It combines a machine-learning quant model with three AI analyst agents, and each stock gets a plain-language **Positive / Negative outlook** with a confidence score and the reasoning behind it. Outlooks are educational, not trading instructions. The goal is to teach users *why* a stock looks the way it does.
+OPEN PSX explains how a stock has moved and what the signals behind it say. A machine-learning quant model and three AI analyst agents feed a Python router. The router gives each stock a **POSITIVE / NEGATIVE / NEUTRAL** outlook, a confidence score, the number of signals that agree, and the reasoning. Every number comes from Python, and every AI sentence is checked against those numbers. Outlooks are educational, never trading instructions.
 
-> 🏆 Entry for the **4th International AI Championship (AI Showdown)** by AIEF, held at FAST-NUCES Lahore. Category: **AI in Fintech**.
-
-> 🚧 **Status: active development.** The backend is being migrated from an earlier prototype ([PSX War Room](#prior-work)). See the [Roadmap](#roadmap) for what is built and what is planned.
+> Entry for the **4th AIEF AI Championship**, category **AI in Fintech**.
 
 ---
 
 ## Why
 
-Most retail investors in Pakistan get stock opinions from WhatsApp groups and tips, often without any data behind them. Institutional research is paywalled, and what is public rarely covers Shariah-compliant stocks in a beginner-friendly way.
+Most retail investors in Pakistan get stock opinions from WhatsApp groups and tips, often with no data behind them. Institutional research is paywalled. What is public rarely covers Shariah-compliant stocks in a beginner-friendly way.
 
-OPEN PSX makes the analysis transparent. Every outlook shows which signals agreed, which disagreed, and how confident the system is. Users learn to read the market rather than follow it.
-
----
-
-## How it works
-
-```mermaid
-flowchart LR
-    DB[(Market DB<br/>prices · KMI-30 · dividends<br/>macro · fundamentals)]
-    RSS[RSS News Archive<br/>Dawn · Business Recorder]
-
-    DB --> Q[Quant<br/>ML model]
-    DB --> M[Macro Agent<br/>weekly run]
-    DB --> F[Fundamentals Agent<br/>Gemini]
-    RSS --> S[Sentiment Agent<br/>Gemini]
-
-    Q --> AR{Agent Router}
-    M --> AR
-    F --> AR
-    S --> AR
-
-    AR --> O[Outlook<br/>Positive / Negative<br/>+ confidence]
-    O --> C[(Daily Cache)]
-    C --> UI[Next.js Dashboard]
-
-    U([User: text or voice]) --> W[Whisper STT]
-    W --> CR{Chatbot Router}
-    U --> CR
-    CR --> C
-    CR --> DB
-    CR --> UI
-```
-
-### The four analysts
-
-| Analyst | Type | What it does |
-|---|---|---|
-| **Quant** | ML model | Predicts next-week return direction, volatility / risk level, and market regime. Backtest accuracy and SHAP feature importance are shown to the user. |
-| **Macro** | AI agent (weekly) | Reads the policy rate, CPI, and PKR/USD. Runs once a week and serves the same view all week. |
-| **Fundamentals** | AI agent (live) | Interprets EPS, P/E, and revenue trends for the selected stock. |
-| **Sentiment / News** | AI agent (live) | Scores recent headlines from Dawn and Business Recorder. |
-
-### The two routers
-
-- **Agent Router.** Merges the four analysts into one verdict. Confidence combines the ML model's output with how strongly the agents agree, and conflicting or low-quality signals are capped or excluded.
-- **Chatbot Router.** Sends each user question to the right data or agent output. Anything outside scope (KMI-30 stocks, PSX ETFs, Quant and Macro outputs, price data) gets a clear "can't answer that" response.
+OPEN PSX makes the analysis transparent. It shows which signals agree, which disagree and which abstain, how confident the system is, and how weak the model's edge really is. Users learn to read the market, not to follow tips.
 
 ---
 
-## Codebase knowledge graph
+## Architecture
 
-An auto-generated map of the codebase (modules, key functions, and how they connect), built with Graphify.
+![OPEN PSX system architecture](docs/architecture.svg)
 
-- [View live graph](https://haiderhkhan.github.io/OpenPSX/) (interactive, opens in browser)
-- [Graph report](graphify-out/GRAPH_REPORT.md)
-
-> Generated from `backend/`, `scripts/` and `frontend/src/`. Refreshed at the final release tag.
+- **The offline pipeline** builds a read-only SQLite database with prices, KMI-30 membership, corporate actions, fundamentals, macro series and news, then trains the model. The outputs are committed to git.
+- **The FastAPI backend** reads only that database and never scrapes at request time.
+- **The LLM gateway** is the only code that talks to Gemini. It caches answers until midnight PKT, fails over between keys, forces JSON output and validates every reply. If a call fails, a deterministic template answers instead.
 
 ---
 
 ## Features
 
 **Dashboard**
-- Coverage: all **KMI-30** constituents plus all **PSX-listed ETFs**
-- YoY, QoQ, MoM, and YTD change, with a toggle between **calendar year** and **Pakistan fiscal year (Jul–Jun)**
-- Price line and candlestick charts, % change bars, and a stock vs KMI-30 overlay
+- KMI-30 index card, plus a sortable table of all stocks and ETFs.
+- MoM, QoQ, YTD and YoY change on either a **calendar-year** or a **Pakistan fiscal-year (Jul–Jun)** basis.
+- Price line and candlestick charts, return bars, and a stock vs KMI-30 overlay.
+- All prices are adjusted for bonus shares and splits. These are price returns: cash dividends are not added back.
+
+**ML Quant model**
+- A pooled LightGBM classifier predicts next-week direction. It also reports a volatility bucket and the market regime.
+- It is evaluated walk-forward over 12,799 out-of-sample predictions.
+- Walk-forward accuracy is **51.7%**, against **51.5%** for simply repeating last week's direction: essentially no edge. The model page states this plainly, with accuracy by year, SHAP drivers and every known limitation.
+
+**Three AI agents + one Python verdict router**
+
+| Signal | Type | Weight | Reads |
+|---|---|---|---|
+| Quant | ML model | 40% | price, volatility and KMI-30 features |
+| Fundamentals | Gemini agent | 25% | EPS, P/E against the KMI-30 median, dividend yield |
+| Sentiment | Gemini agent | 20% | recent headlines; **abstains when it has fewer than 3** |
+| Macro | Gemini agent, weekly | 15% | policy rate, CPI, PKR/USD |
+
+- **Weights.** The router drops abstaining signals and renormalises the weights of the rest.
+- **The outlook card.** It shows the label and how many signals agree (for example, "1 of 3 signals agree").
+- **Confidence.** It is capped at 60% when any agent fell back to its template, at 50% when fewer than 3 signals are active, and at 95% overall.
+- **NEUTRAL.** It is shown as "Mixed signals", with no confidence figure.
+- **ETFs and the index** get quant output only, with no outlook card.
 
 **Chatbot**
-- Ask in text or **by voice** (Whisper speech-to-text, English)
-- Each question is answered on its own, grounded only in OPEN PSX data
+- Ask by typing or **by voice** (Groq Whisper, English).
+- **Routing.** Python routes each question to a fact source: price, change, quant, outlook, macro, model or compare. The AI then phrases those facts and nothing else.
+- **Refusals.** Questions outside scope (crypto, other stocks, "should I buy…") get a fixed refusal or the no-advice template.
+- **No memory.** The chatbot keeps no history: each question stands alone.
 
 **Built for a free tier**
-- Agent outputs are generated on first request and **cached until midnight**, so repeat questions cost no tokens
-- If the Gemini quota runs out, the system falls back to **deterministic template answers** instead of failing
-- Output guardrails reject trade instructions and price-target language, with one corrective retry per agent
+- AI output is cached until midnight PKT, so a repeated question costs no tokens.
+- A verdict seed for all 30 stocks ships in the repo, so the demo works with no network.
+- **Status badges.** Every AI sentence carries one:
+  - **LIVE**: written by the AI from the numbers shown;
+  - **CACHED**: the same AI text, reused from today's cache;
+  - **TEMPLATE**: deterministic fallback;
+  - **UNAVAILABLE**: the signal abstained.
 
 ---
 
@@ -96,78 +75,86 @@ An auto-generated map of the codebase (modules, key functions, and how they conn
 
 | Layer | Tools |
 |---|---|
-| Backend | Python, FastAPI |
-| Frontend | Next.js |
-| LLM | Google Gemini (free tier) |
-| ML | scikit-learn / gradient boosting, SHAP |
-| Speech | Whisper via a hosted API (e.g. Groq) |
-| Data | SQLite, multi-source historical data, RSS news archive |
+| Backend | Python 3.11, FastAPI, SQLite, pandas |
+| ML | LightGBM, SHAP contributions, walk-forward backtest |
+| LLM | Google Gemini Flash-Lite (free tier), JSON schema output |
+| Speech | Groq Whisper (`whisper-large-v3-turbo`) |
+| Frontend | Next.js 16 (App Router), React 19, Tailwind CSS v4, Recharts, lightweight-charts |
+| Hosting | Render (API), Vercel (web) |
 
 ---
 
-## Project structure
+## Run it locally (Windows PowerShell)
 
-```
-OpenPSX/
-├── backend/
-│   ├── agents/          # specialist agents, output schema, router (moderator), model config
-│   └── data/            # data access, news feed, fixtures (temporary)
-├── _legacy_reference/   # original Streamlit prototype, kept for reference only
-├── COPIED_FROM_V1.md    # migration log: what was reused and what changes next
-├── .env.example
-└── LICENSE
-```
+You need Python 3.11, Node.js 20 or newer, and git.
 
----
-
-## Getting started
-
-> The backend is mid-migration. Setup steps below will be finalized along with `requirements.txt`.
-
-```bash
+```powershell
 git clone https://github.com/haiderhkhan/OpenPSX.git
 cd OpenPSX
-cp .env.example .env     # then add your GEMINI_API_KEY
+py -3.11 -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+Copy-Item .env.example .env   # optional: add GEMINI_API_KEYS and GROQ_API_KEY
+powershell -ExecutionPolicy Bypass -File scripts\run_local.ps1
 ```
 
-Run all backend modules from the repository root so the `backend.*` imports resolve.
+`run_local.ps1` does five things:
+1. Starts the API on http://127.0.0.1:8000.
+2. Writes `frontend/.env.local` if it is missing.
+3. Installs the frontend dependencies and builds the frontend.
+4. Serves the frontend on http://localhost:3000.
+5. Opens the browser.
+
+**Offline use.** Add `-SkipBuild` to reuse the last build with Wi-Fi off; `next/font` needs the network to build.
+- With no Gemini key, outlooks come from the committed seed and other AI text comes from templates.
+- With no Groq key, the mic is hidden.
+
+**Run the pieces yourself:**
+
+```powershell
+.venv\Scripts\python -m uvicorn backend.main:app --reload --port 8000   # API docs at /docs
+.venv\Scripts\python -m pytest -q                                       # offline tests: LLM mocked
+cd frontend; npm install; npm run dev                                   # http://localhost:3000
+```
+
+**Configuration.** All configuration is environment variables, documented in `.env.example` and `frontend/.env.example`. Keys live only in `.env`, which git ignores.
 
 ---
 
-## Roadmap
+## Data notes
 
-- [x] Reuse and refactor agent layer from the prototype (schema, router, macro, fundamentals)
-- [x] New repo structure with `backend.*` package imports
-- [ ] Update output schema to Positive / Negative labels and education-friendly wording
-- [ ] Replace mock data with the new SQLite market database
-- [ ] RSS news archive (Dawn, Business Recorder)
-- [ ] Quant ML model with backtest and SHAP explanations
-- [ ] Agent Router: confidence from ML output plus agent agreement
-- [ ] Daily cache and quota-exhausted fallback
-- [ ] FastAPI endpoints
-- [ ] Next.js dashboard (KMI-30 + ETFs, period-change views, charts)
-- [ ] Chatbot with Whisper voice input
-- [ ] Deployment, plus a local backup for the live demo
+- **Data is frozen** at **2026-09-23** (the as-of date shown on every page). Nothing after that date is used.
+- **ETF prices end on 2026-08-04**, so ETF pages show that date as their own as-of date.
+- **The KMI-30 index before 2026-04-27** is an equal-weight reconstruction from its members, not official closes.
+- **The model is trained on today's KMI-30 members only.** Stocks that left the index are missing, so the results carry survivorship bias.
 
 ---
 
-## Prior work
+## Project layout
 
-OPEN PSX builds on **PSX War Room**, an earlier prototype of mine that covered three stocks with a Streamlit interface and OpenAI Agents SDK specialists. OPEN PSX keeps the strongest ideas from that prototype (strict output contracts, data injection instead of tool-calling, and moderator-style aggregation). It expands coverage to the full KMI-30 and PSX ETFs, adds an ML quant model, and replaces the UI with a FastAPI + Next.js stack.
+```
+backend/     FastAPI app: api/, agents/ (LLM gateway + 3 agents), routing/ (verdict + chat), ml/, voice/, tests/
+frontend/    Next.js app: src/app (pages), src/components, src/lib/api.ts
+scripts/     offline pipeline: build data, train, weekly macro, precompute, warm, run_local.ps1
+data/        openpsx.db (committed, read-only), models/, macro/, precomputed/ verdict seed
+docs/        PRD, architecture, schema, rules, phases, decisions log
+```
+
+[`graphify-out/GRAPH_REPORT.md`](graphify-out/GRAPH_REPORT.md) is an auto-generated map of the code.
 
 ---
 
 ## Disclaimer
 
-OPEN PSX is an **educational tool**. Its outlooks are educational, not trading instructions or investment advice, and they make no price predictions. Market data may be delayed or incomplete. Always do your own research or consult a licensed financial advisor before making investment decisions.
+OPEN PSX is an **educational tool**. Its outlooks are generated by models and AI from historical data. They are not investment advice, not a signal to trade any security, and not price predictions. Market data may be delayed or incomplete. Do your own research, or consult a licensed financial adviser, before making any investment decision.
 
 ---
 
 ## Author
 
-**Haider Hasan Khan**, BS Accounting & Finance, FAST-NUCES Lahore
-
+**Haider Hasan Khan**, BS Accounting & Finance, FAST-NUCES Lahore ·
 [GitHub](https://github.com/haiderhkhan) · [LinkedIn](https://linkedin.com/in/haider-hasan-khan-hh1100114)
+
+Built with Claude Code and Antigravity as coding agents; Claude Code on the web audited every phase.
 
 ## License
 
