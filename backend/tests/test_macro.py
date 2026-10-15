@@ -158,14 +158,14 @@ def test_api_serves_the_newest_file(rows: Path, client, monkeypatch: pytest.Monk
     macro.write(macro.generate(use_llm=False).model_copy(update={"week": "2026-W40"}))
     (macro.MACRO_DIR / "macro_2026-W99.json").write_text("{broken", encoding="utf-8")  # unreadable: skipped
     body = client.get("/api/macro").json()
-    assert (body["week"], body["status"], body["stance"]) == ("2026-W42", "LIVE", "NEGATIVE")
+    assert (body["week"], body["status"], body["stance"]) == ("2026-W42", "CACHED", "NEGATIVE")  # B-025
 
 
 def test_api_keeps_last_weeks_file_while_as_of_is_unchanged(rows: Path, client, monkeypatch) -> None:
     FakeLLM(monkeypatch, {"stance": "NEGATIVE", "brief": "Policy rate 11.0%."})
     macro.write(macro.generate())  # the W42 file
     monkeypatch.setattr(macro, "_now", lambda: datetime(2026, 10, 20, 9, 0, tzinfo=config.TZ))  # W43, same AS_OF
-    assert client.get("/api/macro").json()["status"] == "LIVE"
+    assert client.get("/api/macro").json()["status"] == "CACHED"
     with closing(sqlite3.connect(rows)) as conn, conn:
         conn.execute("UPDATE meta SET value = '2026-10-16' WHERE key = 'as_of_date'")  # the data moved on
     body = client.get("/api/macro").json()

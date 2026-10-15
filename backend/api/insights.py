@@ -120,7 +120,7 @@ def model_card() -> ModelCard:
 def macro() -> MacroOutput:
     """The newest weekly macro file, else the template computed now (P6-06). Never 500."""
     try:
-        return macro_agent.current()
+        return m.model_copy(update={"status": "CACHED"}) if (m := macro_agent.current()).status == "LIVE" else m  # B-025: a stored file is this agent's cache
     except Exception as exc:  # no DB / unreadable DB: an UNAVAILABLE brief, not a 500
         log.warning("macro unavailable: %s", exc)
         return macro_agent.unavailable("Macro indicators are unavailable right now.")
