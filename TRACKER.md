@@ -51,7 +51,7 @@
 | P5-03 | Verdict card + agent rows | P1-04 | DONE | claude-code (B-override) | 2026-10-15 02:08 | NEUTRAL='Mixed signals'; badges; refresh+429; no card for ETF/index |
 | P5-04 | Macro card on overview | P3-01 | DONE | claude-code (B-override) | 2026-10-15 02:15 | week, stance, 4 indicators (null shows —), brief, badge; build ok |
 | P7-01 | Chat router: aliases, intents, scope gate | P2-06, P4-04, P6-01 | DONE | claude-code (B-override) | 2026-10-15 07:34 | 36 tests: 10 demo Qs, scope, advice, good luck vs LUCK (D-56) |
-| P7-02 | /api/chat answer composer | P7-01, P6-02, P6-03 | TODO | claude-code (B-override) | | reassigned: Antigravity unavailable (D-55) |
+| P7-02 | /api/chat answer composer | P7-01, P6-02, P6-03 | DONE | claude-code (B-override) | 2026-10-15 07:38 | /api/chat live: LIVE→CACHED, TEMPLATE, REFUSED, ADVICE; 503 not 500 |
 | P7-03 | /api/transcribe via Groq Whisper | P0-04 | TODO | claude-code (B-override) | | reassigned: Antigravity unavailable (D-55) |
 | P7-04 | Chat UI + mic | P1-04, P7-03 | TODO | claude-code (B-override) | | reassigned: Antigravity unavailable (D-55) |
 | P9-01 | UX hardening pass (live data) | P3-04, P5-01, P5-02, P5-03, P5-04, P7-04 | TODO | | | |

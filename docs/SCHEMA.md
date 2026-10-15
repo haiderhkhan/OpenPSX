@@ -420,6 +420,7 @@ CREATE INDEX idx_cache_expires ON llm_cache(expires_at);
    - `VERDICT` is skipped when the text says "model view": "What drives the model's view on MEBL?" is `QUANT`.
    - `PRICE` / `CHANGE` / `VERDICT` with no symbol: "market" or "index" means `KMI30` (not for `VERDICT`); otherwise `OUT_OF_SCOPE`.
    - When the intent LLM call fails or answers outside the enum, the intent is `CHANGE` (price + period changes).
+   - P7-02: the `chat_answer` cache payload also holds the facts, so a cached answer never outlives a change in its numbers. `HELP` answers are the template only (no LLM call). A service that declines (e.g. no verdict for an ETF) returns its message as a `TEMPLATE` answer with no facts.
 
 ## 11. Environment variables and feature flags
 **Backend** (`.env`, documented in `.env.example`):
