@@ -76,7 +76,7 @@ function ProbabilityBar({ pUp }: { pUp: number }) {
     <div className="mt-5">
       <div className="flex items-baseline justify-between text-xs">
         <span className="text-muted-foreground">Model probability (next week)</span>
-        <span className="font-mono text-sm font-semibold text-foreground">{pct} higher</span>
+        <span className="font-mono text-sm font-semibold text-foreground">{pct} chance of a higher close</span>
       </div>
       <div
         className="relative mt-2 h-2.5 overflow-hidden rounded-full bg-muted"
