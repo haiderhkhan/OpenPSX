@@ -24,7 +24,15 @@ export function AgentRow({ agent }: { agent: AgentResult }) {
           ) : (
             <StanceChip stance={agent.stance} size="sm" />
           )}
-          <StatusBadge status={agent.status} />
+          {/* Quant reasons are Python text built from SHAP, not LLM output (B-026). */}
+          <StatusBadge
+            status={agent.status}
+            title={
+              agent.agent === "quant" && !abstained
+                ? "Computed by the Python ML model from the numbers shown; no AI-written text"
+                : undefined
+            }
+          />
         </div>
       </div>
       <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{agent.reasons[0] ?? "—"}</p>

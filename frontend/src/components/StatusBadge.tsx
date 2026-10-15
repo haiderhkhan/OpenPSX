@@ -24,11 +24,19 @@ const STATUS_STYLE: Record<Status | "REFUSED", { className: string; title: strin
   },
 };
 
-export function StatusBadge({ status, className = "" }: { status: Status | "REFUSED"; className?: string }) {
+export function StatusBadge({
+  status,
+  className = "",
+  title,
+}: {
+  status: Status | "REFUSED";
+  className?: string;
+  title?: string;
+}) {
   const style = STATUS_STYLE[status];
   return (
     <span
-      title={style.title}
+      title={title ?? style.title}
       className={`inline-flex items-center rounded border px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide ${style.className} ${className}`}
     >
       {status}
