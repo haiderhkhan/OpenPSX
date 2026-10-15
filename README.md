@@ -6,6 +6,8 @@ OPEN PSX explains how a stock has moved and what the signals behind it say. A ma
 
 > Entry for the **4th AIEF AI Championship**, category **AI in Fintech**.
 
+**Code graph:** https://haiderhkhan.github.io/OpenPSX/
+
 ---
 
 ## Why
