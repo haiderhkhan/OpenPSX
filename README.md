@@ -139,7 +139,7 @@ data/        openpsx.db (committed, read-only), models/, macro/, precomputed/ ve
 docs/        PRD, architecture, schema, rules, phases, decisions log
 ```
 
-[`graphify-out/GRAPH_REPORT.md`](graphify-out/GRAPH_REPORT.md) is an auto-generated map of the code.
+**[Interactive code graph](https://haiderhkhan.github.io/OpenPSX/)** (GitHub Pages) and [`graphify-out/GRAPH_REPORT.md`](graphify-out/GRAPH_REPORT.md) are auto-generated maps of the code.
 
 ---
 
