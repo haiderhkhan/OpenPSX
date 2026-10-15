@@ -5,6 +5,7 @@ import json
 import sqlite3
 from contextlib import closing
 
+import httpx
 import pytest
 from fastapi.testclient import TestClient
 from pydantic import BaseModel
@@ -69,7 +70,12 @@ def test_fixture_validates_and_round_trips(name: str) -> None:
 
 @pytest.mark.parametrize(("method", "path", "kwargs", "model"), ENDPOINTS, ids=[e[1] for e in ENDPOINTS])
 def test_endpoint_returns_valid_contract(client: TestClient, method: str, path: str, kwargs: dict,
-                                         model: type[BaseModel]) -> None:
+                                         model: type[BaseModel], monkeypatch: pytest.MonkeyPatch) -> None:
+    if path == "/api/transcribe":  # live since P7-03: stand in for Groq (tests run offline)
+        from backend.voice import transcribe as voice
+        monkeypatch.setattr(config, "GROQ_API_KEY", "test-key")
+        monkeypatch.setattr(voice.httpx, "post", lambda url, **kw: httpx.Response(
+            200, json={"text": "How has OGDC done this year?", "duration": 1.5}, request=httpx.Request("POST", url)))
     response = client.request(method, path, **kwargs)
     assert response.status_code == 200, response.text
     model.model_validate(response.json())

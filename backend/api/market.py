@@ -65,7 +65,8 @@ def _changeset(code: str, series: periods.Series, effective: date, basis: Basis)
 def health() -> Health:
     return Health(status="ok", as_of_date=config.get_as_of_date(), version=VERSION, llm_enabled=config.LLM_ENABLED,
                   features=Features(etfs=config.FEATURE_ETFS, macro_llm=config.FEATURE_MACRO_LLM,
-                                    fiscal_toggle=config.FEATURE_FISCAL_TOGGLE, voice=config.FEATURE_VOICE))
+                                    fiscal_toggle=config.FEATURE_FISCAL_TOGGLE,
+                                    voice=config.FEATURE_VOICE and bool(config.GROQ_API_KEY)))  # no key → mic hidden
 
 
 @router.get("/universe")

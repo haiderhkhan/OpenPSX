@@ -19,11 +19,11 @@
 - Updated: 2026-10-15 01:00 PKT
 
 ## Track B — antigravity (Antigravity unavailable: claude-code B-override, D-55)
-- Phase: P5 Insights UI DONE (lint/tsc/build clean) → A-P5 audit can start · P3 DONE (D-43)
-- Last done: P5-03 verdict card · P5-01 quant panel · P5-02 model card · P5-04 macro card (live :8000)
-- Next: P7-01 → P7-02 → P7-04 → P7-03 (voice drops first if short: FEATURE_VOICE=false, mic hidden)
-- Blockers: none · open: B-004, B-012, B-013 · shared badges in frontend/src/components/StatusBadge.tsx
-- Updated: 2026-10-15 02:16 PKT
+- Phase: P7 Chatbot + voice DONE → A-P7 audit can start · P5 DONE → A-P5 · P3 DONE (D-43)
+- Last done: P7-01 router (36 tests, D-56) · P7-02 /api/chat · P7-04 chat panel + mic · P7-03 /api/transcribe (D-57)
+- Next: nothing in Track B · P8-05 now unblocked once P8-03 (deploy) is done
+- Blockers: voice needs a real GROQ_API_KEY (.env has the placeholder → Groq 401; mic answers "unavailable")
+- Updated: 2026-10-15 07:52 PKT
 
 ## Human — Haider
 - Now: H-01 (rename + add docs + push) → open both tools

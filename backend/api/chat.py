@@ -1,4 +1,4 @@
-"""Chat + voice endpoints 12–13 (SCHEMA.md §4.2). /chat live since P7-02; /transcribe is the P0-04 stub until P7-03."""
+"""Chat + voice endpoints 12–13 (SCHEMA.md §4.2): /chat since P7-02, /transcribe (Groq Whisper) since P7-03."""
 from __future__ import annotations
 
 import logging
@@ -6,9 +6,10 @@ import logging
 from fastapi import APIRouter, File, UploadFile
 
 from backend import config
-from backend.api import ApiException, load_fixture
+from backend.api import ApiException
 from backend.routing import chat_answer
 from backend.schemas.chat import ChatAnswer, ChatRequest, Transcription
+from backend.voice import transcribe as voice
 
 log = logging.getLogger(__name__)
 router = APIRouter(tags=["chat"])
@@ -30,4 +31,6 @@ def chat(body: ChatRequest) -> ChatAnswer:
 
 @router.post("/transcribe")
 def transcribe(audio: UploadFile = File(...)) -> Transcription:
-    return load_fixture("transcribe.json", Transcription)
+    """Multipart `audio` (webm/ogg/wav/mp3/m4a, ≤ 10 MB) → text. Flag off → 403; Groq failure → 503."""
+    data = audio.file.read(voice.MAX_BYTES + 1)  # one byte over the cap is enough to reject it
+    return voice.transcribe(data, audio.content_type, audio.filename)
