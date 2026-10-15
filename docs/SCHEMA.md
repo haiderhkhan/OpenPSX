@@ -412,6 +412,14 @@ CREATE INDEX idx_cache_expires ON llm_cache(expires_at);
    - `ADVICE_REQUEST` → advice template plus `VERDICT` facts.
    - `OUT_OF_SCOPE` → scope refusal, with `status: "REFUSED"`.
 7. **Cache key:** `chat_answer|normalised question|as_of_date`.
+8. **Implementation details (D-56).**
+   - `AMBIGUOUS_TICKERS` = `LUCK GAL PPL`. The alias `Lucky` is also an English word, so it matches only when capitalised.
+   - Aliases match longest first, and a matched span is consumed: "Meezan Pakistan ETF" is `MZNPETF`, not also `MEBL`.
+   - Unknown tickers are uppercase words of 3+ letters (so "I" and "US" never count). An all-caps question has none.
+   - Rule keywords also list the plurals that whole-word matching would miss (returns, changes, prices, predictions, drivers, baselines).
+   - `VERDICT` is skipped when the text says "model view": "What drives the model's view on MEBL?" is `QUANT`.
+   - `PRICE` / `CHANGE` / `VERDICT` with no symbol: "market" or "index" means `KMI30` (not for `VERDICT`); otherwise `OUT_OF_SCOPE`.
+   - When the intent LLM call fails or answers outside the enum, the intent is `CHANGE` (price + period changes).
 
 ## 11. Environment variables and feature flags
 **Backend** (`.env`, documented in `.env.example`):
