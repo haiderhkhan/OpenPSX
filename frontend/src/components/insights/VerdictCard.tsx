@@ -6,7 +6,7 @@ import type { Verdict } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Disclaimer } from "@/components/Disclaimer";
 import { StanceChip, StatusBadge, formatShare } from "@/components/StatusBadge";
-import { AgentRow } from "@/components/insights/AgentRow";
+import { AGENT_LABEL, AgentRow } from "@/components/insights/AgentRow";
 
 type Props = { initial: Verdict };
 
@@ -38,7 +38,7 @@ export function VerdictCard({ initial }: Props) {
   // Counting rows, not maths: the same n_agree / n_active the router uses (§9). UNAVAILABLE = abstained.
   const active = verdict.agents.filter((a) => a.status !== "UNAVAILABLE");
   const nAgree = active.filter((a) => a.stance === verdict.label).length;
-  const nAbstained = verdict.agents.length - active.length;
+  const abstained = verdict.agents.filter((a) => a.status === "UNAVAILABLE");
   // ponytail: mirrors CONF_CAP_* in backend/config.py for display only; the API applies the caps.
   const capNote =
     active.length < 3
@@ -64,17 +64,21 @@ export function VerdictCard({ initial }: Props) {
         </Button>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-3">
+      {/* B-030: agreement sits next to the chip at body size, so "POSITIVE" is never read without "1 of 3". */}
+      <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
         <StanceChip stance={verdict.label} />
         <span className={`text-sm font-semibold ${isNeutral ? "text-muted-foreground" : "text-foreground"}`}>{strength}</span>
-      </div>
-      <p className="mt-2 text-xs text-muted-foreground">
-        <span className="font-semibold text-foreground">
-          {nAgree} of {active.length} active signals agree
+        <span className="text-sm font-semibold text-foreground" data-testid="verdict-agreement">
+          {nAgree} of {active.length} agents agree
         </span>
-        {nAbstained > 0 && ` · ${nAbstained} abstained (not counted)`}
-        {!isNeutral && <span className="mt-0.5 block">{capNote}</span>}
-      </p>
+      </div>
+      {abstained.map((a) => (
+        <p key={a.agent} className="mt-2 text-sm text-foreground" data-testid="verdict-abstained">
+          <span className="font-semibold">{AGENT_LABEL[a.agent]} abstained</span>
+          {a.reasons[0] ? `: ${a.reasons[0]}` : " (not counted)"}
+        </p>
+      ))}
+      {!isNeutral && <p className="mt-2 text-xs text-muted-foreground">{capNote}</p>}
 
       {notice && (
         <p role="status" className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200">

@@ -1,7 +1,7 @@
 import type { AgentResult } from "@/lib/types";
 import { StanceChip, StatusBadge, formatShare } from "@/components/StatusBadge";
 
-const AGENT_LABEL: Record<AgentResult["agent"], string> = {
+export const AGENT_LABEL: Record<AgentResult["agent"], string> = {
   quant: "ML Quant",
   fundamentals: "Fundamentals",
   sentiment: "News sentiment",
