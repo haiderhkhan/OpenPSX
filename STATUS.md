@@ -11,17 +11,17 @@
 
 ## Track A — claude-code
 - Phase: P8 Deploy in progress · host = GitHub Codespaces (backend, public port 8000) + Vercel (frontend), D-58
-- Last done: P8-02 repo prep (devcontainer, scripts/run_codespace.sh, docs/CODESPACES.md) · P8-03 prep: tunnel header (D-59), live-mode build passes
-- Last: B-028 fixed (placeholder Groq key → mic hidden) · honesty audit → B-029 (LOW), B-030 (MEDIUM), Track B UX
+- Last done: B-030 fixed (agree count next to the chip, abstained agents named; 375 + 1440 px checked) · tunnel header opt-in, default off (D-60)
+- Last: CODESPACES.md §4 first live test · P8-02 repo prep (D-58) · B-028 fixed · lint/tsc/build/pytest green
 - Next: P8-02 Done-when once Haider sends the Codespaces URL + warm.py output → then P8-03 (Vercel env + CORS_ORIGINS)
 - Blockers: Haider: Codespaces secrets + start the Codespace · waiting: R-05-macro.md · open: B-020, G-22
-- Updated: 2026-10-17 19:05 PKT
+- Updated: 2026-10-17 19:10 PKT
 
 ## Track B — antigravity (Antigravity unavailable: claude-code B-override, D-55)
 - Phase: P7 Chatbot + voice DONE → A-P7 audit can start · P5 DONE → A-P5 · P3 DONE (D-43)
 - Last done: P7-01 router (36 tests, D-56) · P7-02 /api/chat · P7-04 chat panel + mic · P7-03 /api/transcribe (D-57)
 - Next: nothing in Track B · P8-05 now unblocked once P8-03 (deploy) is done
-- Blockers: voice needs a real GROQ_API_KEY; the placeholder now hides the mic (B-028 fixed) · open UX: B-029, B-030
+- Blockers: voice needs a real GROQ_API_KEY; the placeholder now hides the mic (B-028 fixed) · B-030 fixed · open UX: B-029
 - Updated: 2026-10-15 07:52 PKT
 
 ## Human — Haider
