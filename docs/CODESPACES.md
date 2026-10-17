@@ -67,4 +67,11 @@ Set `NEXT_PUBLIC_API_BASE=https://<name>-8000.app.github.dev` (no trailing slash
    2. In **Network**, filter `api/`, open `/stock/OGDC` and ask the chat a question.
    3. Every `/api/…` request should be `200`, with `access-control-allow-origin` in its response headers.
    4. The **Console** should show no CORS errors.
-   - A CORS error together with an HTML response from `github.dev` means GitHub's page is intercepting fetches. Log it in `BUGS.md` and use the local backup (P8-04) for the demo.
+   - A CORS error together with an HTML response from `github.dev` means GitHub's page is intercepting fetches. Try §4 (c) first; if that fails too, log it in `BUGS.md` and use the local backup (P8-04) for the demo.
+
+## 4. First live test (Haider, after P8-03 deploys)
+1. Open the Vercel URL in a **private window, signed out of GitHub**, then press F12 → **Network**, filter `api/`, and tick "Disable cache".
+2. Load the overview (`/`), then one stock page (`/stock/OGDC`).
+3. (a) Click a few `/api/…` rows → **Response**: each must be JSON (`{"…`), not HTML (`<!DOCTYPE html>`).
+4. (b) The **Console** must show no CORS errors, and the response headers must include `access-control-allow-origin: https://<vercel-domain>`.
+5. (c) If any response is HTML: Vercel → Settings → Environment Variables → `NEXT_PUBLIC_TUNNEL_SKIP_HEADER=true` → **Redeploy**, then repeat steps 1–4.
