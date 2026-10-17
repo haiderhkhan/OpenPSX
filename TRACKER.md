@@ -30,7 +30,7 @@
 | P6-06 | Macro weekly agent + /api/macro | P2-06, P6-02, P6-03 | DONE | claude-code | 2026-10-14 23:47 | reassigned from claude-code-2; /api/macro live; W42 NEUTRAL template (D-50) |
 | P6-07 | Verdict router + /api/verdict | P4-04, P6-04, P6-05, P6-06 | DONE | claude-code | 2026-10-14 23:56 | /api/verdict live; ETF/index 404; refresh 429; P6 done → A-P6 (D-51) |
 | P8-01 | Precompute seed outputs + warm script | P6-07 | DONE | claude-code | 2026-10-15 00:56 | Seed 30 verdicts all LIVE; loads at startup as CACHED (D-54) |
-| P8-02 | Deploy backend to Codespaces (was Render, D-58) | P8-01, H-07 | DOING | claude-code | 2026-10-17 18:35 | repo ready: devcontainer + run_codespace.sh + docs/CODESPACES.md; waits on Haider: secrets, start Codespace, public /api/health |
+| P8-02 | Deploy backend to Codespaces (was Render, D-58) | P8-01, H-07 | DOING | claude-code | 2026-10-17 19:05 | repo ready (devcontainer, run_codespace.sh, CODESPACES.md); P8-03 prep done, awaiting Codespaces URL + warm.py output |
 | P8-03 | Deploy frontend to Vercel + CORS | P8-02, P3-04 | TODO | | | |
 | P8-04 | Local backup launcher (PowerShell) | P8-01 | DONE | claude-code | 2026-10-15 01:31 | run_local.ps1 [-SkipBuild offline]; 43 s to browser; offline via seed (G-25) |
 | P8-05 | Production smoke test | P8-03, P7-02 | TODO | | | |

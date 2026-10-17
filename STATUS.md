@@ -10,19 +10,18 @@
 **Deployed URLs:** frontend _tbd_ · backend _tbd_
 
 ## Track A — claude-code
-- Phase: P6 Agents + verdict DONE (exit criteria hold) → A-P6 audit can start · P2 DONE → A-P2 can run
-- Last done: P6-06 macro (D-50, reassigned) + P6-07 verdict router, /api/verdict live (D-51); real verdicts NEUTRAL in template mode
-- Last: P8-04 local launcher scripts/run_local.ps1 (offline: -SkipBuild, G-25) · P8-01 seed 30 LIVE (D-54) · B-021/022/023 fixed
-- Note: P5 + P7 built by claude-code (D-55) → A-P5, A-P7 can run · P8-05 now waits only on P8-03 (deploy)
-- Next: P8-02 BLOCKED on H-07 (Render account + Blueprint); render.yaml + .python-version 3.11 pushed (G-24)
-- Blockers: H-07 · waiting: R-05-macro.md (after it: macro import, retrain, re-run precompute) · open: B-020, G-22
-- Updated: 2026-10-15 01:00 PKT
+- Phase: P8 Deploy in progress · host = GitHub Codespaces (backend, public port 8000) + Vercel (frontend), D-58
+- Last done: P8-02 repo prep (devcontainer, scripts/run_codespace.sh, docs/CODESPACES.md) · P8-03 prep: tunnel header (D-59), live-mode build passes
+- Last: B-028 fixed (placeholder Groq key → mic hidden) · honesty audit → B-029 (LOW), B-030 (MEDIUM), Track B UX
+- Next: P8-02 Done-when once Haider sends the Codespaces URL + warm.py output → then P8-03 (Vercel env + CORS_ORIGINS)
+- Blockers: Haider: Codespaces secrets + start the Codespace · waiting: R-05-macro.md · open: B-020, G-22
+- Updated: 2026-10-17 19:05 PKT
 
 ## Track B — antigravity (Antigravity unavailable: claude-code B-override, D-55)
 - Phase: P7 Chatbot + voice DONE → A-P7 audit can start · P5 DONE → A-P5 · P3 DONE (D-43)
 - Last done: P7-01 router (36 tests, D-56) · P7-02 /api/chat · P7-04 chat panel + mic · P7-03 /api/transcribe (D-57)
 - Next: nothing in Track B · P8-05 now unblocked once P8-03 (deploy) is done
-- Blockers: voice needs a real GROQ_API_KEY (.env has the placeholder → Groq 401; mic answers "unavailable")
+- Blockers: voice needs a real GROQ_API_KEY; the placeholder now hides the mic (B-028 fixed) · open UX: B-029, B-030
 - Updated: 2026-10-15 07:52 PKT
 
 ## Human — Haider
