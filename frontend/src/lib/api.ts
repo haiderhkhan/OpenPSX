@@ -50,6 +50,20 @@ export class ApiClientError extends Error implements ApiError {
 const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === "true";
 const API_BASE = (process.env.NEXT_PUBLIC_API_BASE ?? "http://127.0.0.1:8000").replace(/\/+$/, "");
 
+// D-59: a Codespaces backend (*.app.github.dev) gets the dev-tunnel header that skips GitHub's
+// anti-phishing page. It makes every GET a CORS preflight. NEXT_PUBLIC_TUNNEL_SKIP_HEADER=false turns it off.
+function tunnelHeaders(): Record<string, string> {
+  if (process.env.NEXT_PUBLIC_TUNNEL_SKIP_HEADER === "false") return {};
+  try {
+    return new URL(API_BASE).hostname.endsWith(".app.github.dev")
+      ? { "X-Tunnel-Skip-AntiPhishing-Page": "true" }
+      : {};
+  } catch {
+    return {}; // relative or malformed API_BASE
+  }
+}
+const TUNNEL_HEADERS = tunnelHeaders();
+
 // Scope is the server's call (404 NOT_IN_SCOPE); the client only normalises.
 function normalizeSymbol(symbol: string): string {
   return symbol.trim().toUpperCase();
@@ -63,6 +77,7 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
       ...options,
       headers: {
         Accept: "application/json",
+        ...TUNNEL_HEADERS,
         ...options?.headers,
       },
     });

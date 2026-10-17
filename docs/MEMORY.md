@@ -117,6 +117,12 @@
   - Unused but kept: `render.yaml`, `.python-version`. Haider's `Dockerfile` / `.dockerignore` stay uncommitted.
   - Checked locally (TestClient, 2026-10-17): with `CORS_ORIGINS` set, the preflight from the allowed origin returns 200 with `access-control-allow-origin`, and an origin with a trailing slash returns 400 `Disallowed CORS origin`.
   - Not yet verified inside a real Codespace: the visibility command run from within the Codespace, and whether GitHub's public-port warning page affects cross-origin `fetch`. `docs/CODESPACES.md` §3 is the test.
+- 2026-10-17 · claude-code (B-override) · D-59 Interstitial mitigation (Haider's request):
+  - `frontend/src/lib/api.ts` adds `X-Tunnel-Skip-AntiPhishing-Page: true` to every request when the `NEXT_PUBLIC_API_BASE` host ends in `.app.github.dev`. No other host gets it.
+  - Kill switch: `NEXT_PUBLIC_TUNNEL_SKIP_HEADER=false` (in `frontend/.env.example`), applied at build time.
+  - Backend unchanged: `main.py` already has `allow_headers=["*"]`. `test_health.py` asserts the preflight with that header is 200 from an allowed origin and 400 from an unlisted one.
+  - Microsoft dev-tunnels security docs (read 2026-10-17): the page is also skipped for non-GET requests and when `Accept` lacks `text/html`, which our `Accept: application/json` already satisfies. The header is a backup and turns every GET into a preflight.
+  - Unverified on a real Codespace.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
