@@ -123,6 +123,7 @@
   - Backend unchanged: `main.py` already has `allow_headers=["*"]`. `test_health.py` asserts the preflight with that header is 200 from an allowed origin and 400 from an unlisted one.
   - Microsoft dev-tunnels security docs (read 2026-10-17): the page is also skipped for non-GET requests and when `Accept` lacks `text/html`, which our `Accept: application/json` already satisfies. The header is a backup and turns every GET into a preflight.
   - Unverified on a real Codespace.
+- 2026-10-17 · claude-code (B-override) · D-60 Tunnel header now **opt-in** (Haider): `api.ts` sends it only when `NEXT_PUBLIC_TUNNEL_SKIP_HEADER === "true"`; unset or `false` → no header. `frontend/.env.example` defaults to `false`. (Changing only the example would not have mattered: Vercel never reads it, and D-59's code treated unset as on.) Reason: the docs say `Accept: application/json` already skips the page, and the header costs a preflight per GET. Turn it on only if the first live test (`docs/CODESPACES.md` §4) shows the HTML page reaching `fetch`.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.

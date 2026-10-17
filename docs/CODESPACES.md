@@ -39,13 +39,13 @@ From the CLI, run `gh secret set GEMINI_API_KEYS --user --repos haiderhkhan/Open
 **If the Codespace is unusable**, fall back to `scripts/run_local.ps1` on the laptop (P8-04).
 
 ## 3. Verifying cross-origin fetch (Vercel → Codespace)
-**Anti-phishing header (D-59, UNVERIFIED against a real Codespace).**
-- When `NEXT_PUBLIC_API_BASE`'s host ends in `.app.github.dev`, `frontend/src/lib/api.ts` adds `X-Tunnel-Skip-AntiPhishing-Page: true` to every API call, transcribe included.
+**Anti-phishing header (D-59, D-60: OFF by default; UNVERIFIED against a real Codespace).**
+- Only with `NEXT_PUBLIC_TUNNEL_SKIP_HEADER=true` on Vercel, and only when `NEXT_PUBLIC_API_BASE`'s host ends in `.app.github.dev`, does `frontend/src/lib/api.ts` add `X-Tunnel-Skip-AntiPhishing-Page: true` to every API call, transcribe included. Unset or `false` → no header.
   - Microsoft's dev-tunnels docs list this header as one way to skip the warning page.
   - The same docs say the page is also skipped for any non-GET request and any request whose `Accept` doesn't contain `text/html`. Ours sends `Accept: application/json`, so the header is belt-and-braces.
 - Cost: a custom header makes every GET a CORS preflight (one extra round trip per URL, cached 10 min).
 - The backend allows it: `allow_headers=["*"]`. Tested in `backend/tests/test_health.py`.
-- **If the preflight breaks** (Console: CORS error on `OPTIONS`), set `NEXT_PUBLIC_TUNNEL_SKIP_HEADER=false` on Vercel and redeploy. No code change is needed.
+- Turn it on only if the first live test (§4) shows a fetch getting the HTML warning page. If the preflight then breaks (Console: CORS error on `OPTIONS`), set it back to `false` and redeploy. No code change is needed.
 - To remove it for good, delete `tunnelHeaders()` and `TUNNEL_HEADERS` in `api.ts`.
 
 Set `NEXT_PUBLIC_API_BASE=https://<name>-8000.app.github.dev` (no trailing slash) and `NEXT_PUBLIC_USE_MOCKS=false` on Vercel, then redeploy. `NEXT_PUBLIC_*` values are baked in at build time.
