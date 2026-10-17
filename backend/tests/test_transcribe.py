@@ -30,6 +30,19 @@ class FakePost:
         return httpx.Response(self.outcome[0], json=self.outcome[1], request=httpx.Request("POST", url))
 
 
+@pytest.mark.parametrize(("raw", "expected"), [("your-groq-key", ""), ("", ""), ("gsk_real", "gsk_real")])
+def test_placeholder_key_counts_as_unset(monkeypatch: pytest.MonkeyPatch, raw: str, expected: str) -> None:
+    monkeypatch.setenv("GROQ_API_KEY", raw)  # B-028: the placeholder must hide the mic, not show it
+    assert config._secret("GROQ_API_KEY") == expected
+
+
+def test_no_key_hides_mic_and_refuses_cleanly(client, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(config, "GROQ_API_KEY", "")
+    assert client.get("/api/health").json()["features"]["voice"] is False
+    res = post(client)
+    assert res.status_code == 503 and res.json()["error"]["code"] == "UPSTREAM"
+
+
 def post(client, audio=AUDIO):
     return client.post("/api/transcribe", files={"audio": audio})
 

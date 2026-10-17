@@ -20,6 +20,12 @@ def _str(name: str, default: str) -> str:
     return os.getenv(name, default).strip()
 
 
+def _secret(name: str) -> str:
+    """A key, with the `.env.example` placeholder (`your-...`) treated as unset (B-028)."""
+    value = _str(name, "")
+    return "" if value.lower().startswith("your-") else value
+
+
 def _list(name: str, default: str = "") -> list[str]:
     return [item.strip() for item in os.getenv(name, default).split(",") if item.strip()]
 
@@ -46,7 +52,7 @@ def _path(name: str, default: str) -> Path:
 # --- Environment (SCHEMA.md §11) ---
 GEMINI_API_KEYS: list[str] = _list("GEMINI_API_KEYS")
 GEMINI_MODEL: str = _str("GEMINI_MODEL", "gemini-3.1-flash-lite")  # R-04 §1
-GROQ_API_KEY: str = _str("GROQ_API_KEY", "")
+GROQ_API_KEY: str = _secret("GROQ_API_KEY")
 GROQ_WHISPER_MODEL: str = _str("GROQ_WHISPER_MODEL", "whisper-large-v3-turbo")  # confirm via R-04
 LLM_ENABLED: bool = _bool("LLM_ENABLED", True)
 LLM_DAILY_CALL_LIMIT: int = _int("LLM_DAILY_CALL_LIMIT", 200)  # R-04 §2 starting value
