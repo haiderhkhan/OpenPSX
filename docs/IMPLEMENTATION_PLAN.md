@@ -539,9 +539,13 @@ Track B owns these backend files from now on (R-03). Use the `.venv` at the repo
   - `warm.py <base_url>` pings `/api/health`, `/api/overview` and 3 stock pages' endpoints, and prints timings.
 - **Done when:** the seed contains 30 verdicts (any status), it loads on startup, and `warm.py` runs locally.
 
-### P8-02 · Deploy backend to Render
+### P8-02 · Deploy backend to GitHub Codespaces (was Render, D-58)
 - **Depends:** P8-01, H-07 · **Est:** 60 min
-- **Files:** `render.yaml`, `.python-version`, `docs/MEMORY.md` (append URL), `STATUS.md` (URLs line)
+- **Host changed (D-58):** Render → GitHub Codespaces with public port 8000. Runbook: `docs/CODESPACES.md`.
+  - Files now: `.devcontainer/devcontainer.json`, `scripts/run_codespace.sh`, `docs/CODESPACES.md`, `docs/ARCHITECTURE.md` §9, `docs/MEMORY.md`, `STATUS.md`.
+  - Keys are Codespaces secrets.
+  - The Render "Do" below is history. "Done when" still applies, with the Codespace start-and-wake time in place of the cold-start time.
+- **Files (Render, historical):** `render.yaml`, `.python-version`, `docs/MEMORY.md` (append URL), `STATUS.md` (URLs line)
 - **Do:**
   - Render web service:
     - build `pip install -r requirements.txt`;

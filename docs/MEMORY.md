@@ -112,6 +112,11 @@
 - 2026-10-15 · claude-code (B-override) · D-55 Haider override (2026-10-15 01:40 PKT): Antigravity is unavailable, so Track B's P5 (P5-01…P5-04) and P7 (P7-01…P7-04) go to claude-code for the rest of the sprint, done one after the other in this session (no parallel session): P5-03, P5-01, P5-02, P5-04, then P7-01, P7-02, P7-04, P7-03. Built against the live API on :8000 (`NEXT_PUBLIC_USE_MOCKS=false`); mocks only for the P5-03 POSITIVE / NEUTRAL / TEMPLATE variant checks. Drop rule: P7-03 voice goes first (`FEATURE_VOICE=false`, mic hidden). Track B rows carry owner `claude-code (B-override)` (as D-43).
 - 2026-10-15 · claude-code (B-override) · D-56 P7-01 chat router (`backend/routing/chat_router.py`): SCHEMA §10 as written, plus the details now listed in §10 item 8. Ambiguous tickers `LUCK GAL PPL` and the alias `Lucky` need capitals. Aliases match longest first. Unknown tickers need 3+ uppercase letters (all-caps questions are exempt). Plural keywords are listed. `VERDICT` is skipped for "model view" (the quant model). "market"/"index" = KMI30 for PRICE/CHANGE. The intent LLM fallback goes through `run_with_validation`, cached under `chat_intent`; its template is `CHANGE`. Facts call the endpoint functions themselves (`market.*`, `insights.*`), so a chat number always equals the page number.
 - 2026-10-15 · claude-code (B-override) · D-57 P7-03 voice (`backend/voice/transcribe.py`): multipart `audio` ≤ 10 MB, accepted by base content type, else by file extension. Chrome sends `audio/webm;codecs=opus` named "blob", and that upload goes out as `speech.webm`. Posted to Groq with `language=en`, `response_format=verbose_json` (gives `duration`). Any upstream error → 503 `UPSTREAM`, flag off → 403 `FEATURE_OFF`, bad type or too big → 400. `/api/health` `features.voice` = `FEATURE_VOICE` AND a non-empty `GROQ_API_KEY` (a P2-06 file, changed so the mic hides itself when no key is set). Real smoke 2026-10-15 07:5x: Groq answered 401 because `.env` still holds the `.env.example` placeholder `your-groq-key` → needs Haider's real key (console.groq.com → API Keys) in `.env` and on Render, or `FEATURE_VOICE=false`.
+- 2026-10-17 · claude-code · D-58 P8-02 host (Haider's decision): the backend runs in **GitHub Codespaces** with a public forwarded port; the frontend stays on Vercel. Replaces D-11's Render (Render and HF Docker Spaces both need a card now).
+  - Files: `.devcontainer/devcontainer.json` (`mcr.microsoft.com/devcontainers/python:3.11-bookworm` + the `github-cli` feature, `forwardPorts [8000]`, recommended `secrets`) and `scripts/run_codespace.sh` (uvicorn 0.0.0.0:8000, then `gh codespace ports visibility 8000:public -c $CODESPACE_NAME`, falling back to a Ports-tab hint). Runbook: `docs/CODESPACES.md`.
+  - Unused but kept: `render.yaml`, `.python-version`. Haider's `Dockerfile` / `.dockerignore` stay uncommitted.
+  - Checked locally (TestClient, 2026-10-17): with `CORS_ORIGINS` set, the preflight from the allowed origin returns 200 with `access-control-allow-origin`, and an origin with a trailing slash returns 400 `Disallowed CORS origin`.
+  - Not yet verified inside a real Codespace: the visibility command run from within the Codespace, and whether GitHub's public-port warning page affects cross-origin `fetch`. `docs/CODESPACES.md` §3 is the test.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
@@ -169,6 +174,11 @@
 - 2026-10-15 · claude-code · G-26 P9-01 UX pass:
   - `VerdictCard.tsx` repeats the §9 confidence caps (50% / 60% / 95%) in plain words for display. **If `CONF_CAP_*` in `backend/config.py` change, update `capNote` too.** The "N of M active signals agree" line counts agent rows itself, so it can't drift.
   - Headless Edge sometimes logs `SyntaxError: Identifier 'AssistantLoadState' has already been declared`. This is Edge's own injected script, not ours: there are 0 hits in `.next/static` or `node_modules`. Ignore it in console walks.
+- 2026-10-17 · claude-code · G-27 Codespaces facts behind D-58 (GitHub docs read 2026-10-17):
+  - A Codespaces secret is exported as an env var only when the Codespace starts. After a change, stop and start it.
+  - The idle timeout defaults to 30 min (5–240). Changing it affects only Codespaces created afterwards. Terminal input or output resets it; port traffic alone doesn't (uvicorn's access log does).
+  - Private or org ports fail cross-origin preflight (community #15351), so the port must be public.
+  - `devcontainer.json` has no port-visibility key, hence the `gh` call in the script.
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.

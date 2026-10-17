@@ -176,16 +176,22 @@ Rough budget: one live verdict = 3 agent calls + 1 summary = 4 calls (macro come
 ```mermaid
 flowchart LR
   gh["GitHub<br/>haiderhkhan/OpenPSX main"] -->|"auto deploy"| vercel["Vercel<br/>root: frontend/"]
-  gh -->|"auto deploy"| render["Render web service<br/>uvicorn backend.main:app"]
-  vercel -->|"NEXT_PUBLIC_API_BASE"| render
-  render --> files[("committed artifacts<br/>openpsx.db, models, macro, seed")]
-  render --> gemini[("Gemini")]
-  render --> groq[("Groq")]
+  gh -->|"git pull, manual start"| cs["GitHub Codespace<br/>scripts/run_codespace.sh<br/>uvicorn :8000, port public"]
+  vercel -->|"NEXT_PUBLIC_API_BASE"| cs
+  cs --> files[("committed artifacts<br/>openpsx.db, models, macro, seed")]
+  cs --> gemini[("Gemini")]
+  cs --> groq[("Groq")]
   laptop["Local backup<br/>scripts/run_local.ps1"] -.->|"same code, same data"| files
 ```
-- **Render (free):** idles to sleep (cold start on the next request) and its disk is ephemeral. Health check path is `/api/health`. Python is pinned to 3.11. Keys are set as env vars in the dashboard.
-- **Vercel:** root directory `frontend/`. Env vars: `NEXT_PUBLIC_API_BASE` (Render URL) and `NEXT_PUBLIC_USE_MOCKS=false`.
-- **CORS:** `CORS_ORIGINS` = localhost + the Vercel production URL.
+- **Backend: GitHub Codespaces (D-58).** Render and HF Spaces were dropped: both now need a card.
+  - `.devcontainer/devcontainer.json` gives Python 3.11, the gh CLI, and `pip install -r requirements.txt` on create.
+  - `bash scripts/run_codespace.sh` starts uvicorn on 8000 and makes the port **public**. A private port redirects to GitHub sign-in, which fails CORS preflight.
+  - The URL is `https://<codespace>-8000.app.github.dev`.
+  - Keys come from Codespaces user secrets (env vars).
+  - The Codespace stops after its idle timeout (max 240 min), so it is started by hand before a demo. Runbook: `docs/CODESPACES.md`.
+  - `render.yaml` and `.python-version` stay in the repo, unused.
+- **Vercel:** root directory `frontend/`. Env vars: `NEXT_PUBLIC_API_BASE` (the Codespace URL) and `NEXT_PUBLIC_USE_MOCKS=false`.
+- **CORS:** `CORS_ORIGINS` = the Vercel production URL + localhost, as a Codespaces secret. The origin must match exactly; otherwise preflight returns 400 `Disallowed CORS origin`.
 
 ## 10. Development workflow (two agents + cloud auditor)
 ```mermaid

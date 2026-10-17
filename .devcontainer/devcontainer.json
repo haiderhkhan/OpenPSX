@@ -1,0 +1,19 @@
+// P8-02: GitHub Codespace that runs the OPEN PSX backend. Start it with `bash scripts/run_codespace.sh`.
+// Keys are Codespaces secrets (env vars), never files; see docs/CODESPACES.md.
+{
+  "name": "OPEN PSX backend",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": { "label": "OPEN PSX API", "onAutoForward": "silent" }
+  },
+  "postCreateCommand": "pip install -r requirements.txt",
+  "secrets": {
+    "GEMINI_API_KEYS": { "description": "Comma-separated Gemini API keys, tried in failover order." },
+    "GROQ_API_KEY": { "description": "Groq key for Whisper voice input (optional: no key hides the mic)." },
+    "CORS_ORIGINS": { "description": "Comma-separated allowed origins, e.g. https://<project>.vercel.app,http://localhost:3000 (no trailing slash)." }
+  }
+}
