@@ -85,15 +85,15 @@ At each checkpoint, Haider (or whichever agent is active) compares `TRACKER.md` 
 2. **A large-cap stock page.** Candles → return bars → overlay vs KMI-30.
 3. **Quant panel.** Probability, volatility bucket, regime, top drivers. *Explainable, not a black box.*
 4. **Model page.** Walk-forward accuracy vs baselines. *We show the honest number.*
-5. **Verdict card.** Four agents, agreement and confidence, then "Refresh live" for one stock. *Python decides; the LLM only explains.*
+5. **Verdict card.** Four agents, agreement and confidence, then "Refresh live" for OGDC. *Python decides; the LLM only explains.* A live refresh takes about 5–20 s; a Gemini 503 costs one 2 s retry. After it, the button rests for a minute (the API allows one refresh a minute per stock).
 6. **Chat by voice.** "What is the market regime right now?" Then "How has <stock> done this fiscal year?"
 7. **Guardrails.** "Should I buy <stock>?" → education framing. "What about Tesla?" → scope refusal.
 8. **Resilience (live, ≈ 60 s; always the last step).** *If the AI goes down, the numbers stay.* Checked against the local backend on 2026-10-20 (FIX-03):
    1. In the **OPEN PSX backend :8000** window: `Ctrl+C`, then `$env:LLM_ENABLED = 'false'; .venv\Scripts\python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000`. The frontend keeps running.
-   2. Reload `/stock/OGDC`: the seeded outlook still shows (POSITIVE 24%, badges CACHED). *Precomputed outlooks survive an outage.*
-   3. Click **Refresh live**: the fundamentals row and the summary turn **TEMPLATE**. The summary reads "Overall outlook: NEUTRAL (no confidence figure for a neutral reading). 1 of 3 signals agree." *Template evidence counts half (§9 k = 0.5), so the outlook gets more cautious instead of guessing.* A second click within a minute shows the rate-limit notice.
-   4. Chat "How has OGDC done this year?": the answer comes back **TEMPLATE**, with the same numbers as the page.
-   5. Show the architecture image. Afterwards: `Ctrl+C`, `$env:LLM_ENABLED = 'true'`, and the same uvicorn line. For 15 min after this, a refresh can still show a cached TEMPLATE fundamentals row; plain page reads are back on the seed at once.
+   2. Open `/stock/HUBC`, **not** the stock refreshed in step 5: that one keeps today's LIVE fundamentals row until midnight, so only its summary would change (P9-03 rehearsal, G-30). The seeded outlook still shows (POSITIVE 23%, badges CACHED). *Precomputed outlooks survive an outage.*
+   3. Click **Refresh live**: the fundamentals row and the summary turn **TEMPLATE**, and the outlook becomes NEUTRAL: "Overall outlook: NEUTRAL (no confidence figure for a neutral reading). 1 of 3 signals agree." *Template evidence counts half (§9 k = 0.5), so the outlook gets more cautious instead of guessing.*
+   4. Chat "How has HUBC done this year?" (a question not asked earlier today, or it comes back CACHED): the answer is **TEMPLATE**, with the same numbers as the page.
+   5. Show the architecture image. Afterwards: `Ctrl+C`, `$env:LLM_ENABLED = 'true'`, and the same uvicorn line. For 15 min after this, a refresh of HUBC can still show the cached TEMPLATE fundamentals row; plain page reads are back on the seed at once.
 
 Scripted chat questions (for the checklist):
 - What is the market regime right now?

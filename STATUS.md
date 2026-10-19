@@ -18,11 +18,12 @@
 - Updated: 2026-10-17 19:10 PKT
 
 ## Track B — antigravity (Antigravity unavailable: claude-code B-override, D-55)
-- Phase: P7 Chatbot + voice DONE → A-P7 audit can start · P5 DONE → A-P5 · P3 DONE (D-43)
-- Last done: P7-01 router (36 tests, D-56) · P7-02 /api/chat · P7-04 chat panel + mic · P7-03 /api/transcribe (D-57)
-- Next: nothing in Track B · P8-05 now unblocked once P8-03 (deploy) is done
-- Blockers: voice needs a real GROQ_API_KEY; the placeholder now hides the mic (B-028 fixed) · B-030 fixed · open UX: B-029
-- Updated: 2026-10-15 07:52 PKT
+- Phase: P9: P9-01 + P9-02 second pass DONE · P9-03 local rehearsal done (2 clean runs), BLOCKED on P8-03 for the deployed rerun
+- Last done: NEUTRAL + ETF-date wording, mobile as-of, period cards, contributor units (D-62) · README/About baselines + limits · B-032
+- §5 verified locally: stock/ETF/model pages, fiscal toggle, chat 10 Qs + refusal + advice, LLM_ENABLED=false, disclaimer, README + svg
+- Not verified: Vercel URL, API host health, voice (needs GROQ key, B-035), `run_local.ps1` itself (rehearsed via uvicorn + next start)
+- Next: P9-03 on the deployed URL after P8-03 → A-P9 → G-01
+- Updated: 2026-10-20 00:41 PKT
 
 ## Human — Haider
 - Now: H-01 (rename + add docs + push) → open both tools

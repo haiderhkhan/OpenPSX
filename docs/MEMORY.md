@@ -190,6 +190,11 @@
   - `devcontainer.json` has no port-visibility key, hence the `gh` call in the script.
 - 2026-10-20 · claude-code · G-28 FIX-03 resilience check (local :8000, `LLM_ENABLED=false` as a process env var, which beats `.env`): a plain verdict read still serves the seed (CACHED); `?refresh=true` → fundamentals + summary TEMPLATE, and OGDC drops POSITIVE 24% → NEUTRAL (TEMPLATE k = 0.5, §9); chat → TEMPLATE; macro file → CACHED. The verdict key hashes `llm_enabled`, but the **fundamentals** key doesn't: its TEMPLATE row (15 min) is reused after LLM is switched back on. So run the resilience step last (PHASES §6 step 8).
 - 2026-10-20 · claude-code (B-override) · G-29 Console/375 walks without Playwright or the devtools MCP: a scratchpad Node 24 script drives `chrome.exe --headless=new --remote-debugging-port` over CDP (Node's global `WebSocket`), collecting `Runtime.consoleAPICalled` / `exceptionThrown` / `Log.entryAdded` plus elements wider than the viewport. Gotchas: `Page.captureScreenshot` with `captureBeyondViewport` blanks every Recharts chart (ResponsiveContainer re-measures mid-capture), so grow the viewport with `Emulation.setDeviceMetricsOverride`, wait ~1 s, then capture. Git Bash rewrites a `/stock/OGDC` argument into a Windows path: prefix `MSYS_NO_PATHCONV=1`.
+- 2026-10-20 · claude-code · G-30 P9-03 local rehearsal (two runs, 1440 then 375; `demo.mjs` drives PHASES §6 over CDP like G-29):
+  - The fundamentals cache key ignores `LLM_ENABLED`, so a stock refreshed live today keeps its LIVE fundamentals row until midnight. The resilience step must use a stock not refreshed in step 5 (HUBC; B-034).
+  - Rehearsing step 8 twice within 15 min shows the TEMPLATE outlook already at 8.2, because the LLM-off verdict is cached 15 min. Leave 15 min, or use another stock.
+  - Gemini 503s were frequent tonight (2 of ~16 live calls), and FIX-02's retry saved both. One 503 took ~40 s to arrive, hence B-033's 15 s request timeout (`llm.REQUEST_TIMEOUT_MS`; a timeout is not retried).
+  - Both runs: 0 console errors (after B-032), all 12 chat questions answered; cached repeats return in 0.3 s, live ones in 3–10 s.
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.

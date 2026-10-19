@@ -59,7 +59,7 @@
 | P7-04 | Chat UI + mic | P1-04, P7-03 | DONE | claude-code (B-override) | 2026-10-15 07:46 | floating panel, 10 chips, facts+badge+disclaimer; mic→transcribe ok |
 | P9-01 | UX hardening pass (live data) | P3-04, P5-01, P5-02, P5-03, P5-04, P7-04 | DONE | claude-code (B-override) | 2026-10-20 00:21 | pass 2: 0 errors prod 1440+375; NEUTRAL, ETF date, B-019/027/029 (D-62) |
 | P9-02 | About page + README + architecture image | P1-04 | DONE | claude-code (B-override) | 2026-10-20 00:33 | pass 2: both baselines, 6 data limits, host-neutral SVG + README |
-| P9-03 | Demo rehearsal on deployed URL | P8-03, P9-01 | TODO | | | |
+| P9-03 | Demo rehearsal on deployed URL | P8-03, P9-01 | BLOCKED | claude-code (B-override) | 2026-10-20 00:41 | local rehearsal done; repeat on deployed URL after P8-03 |
 
 ## Gate — Thu 15 Oct 16:00–18:00 PKT
 | ID | Task | Depends | Status | Owner | Updated | Note |

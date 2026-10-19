@@ -10,18 +10,26 @@ import { AGENT_LABEL, AgentRow } from "@/components/insights/AgentRow";
 
 type Props = { initial: Verdict };
 
+const REFRESH_COOLDOWN_MS = 60_000; // backend REFRESH_INTERVAL (verdict_router.py): one ?refresh=true per minute per stock
+
 // The verdict for one KMI-30 stock (SCHEMA §4.2 endpoint 11). Every number comes from the API (R-18);
 // the page renders this card for STOCK symbols only.
 export function VerdictCard({ initial }: Props) {
   const [verdict, setVerdict] = useState(initial);
   const [isLoading, setIsLoading] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [isCoolingDown, setIsCoolingDown] = useState(false);
 
   async function handleRefresh() {
     setIsLoading(true);
     setNotice(null);
     try {
       setVerdict(await getVerdict(verdict.symbol, true));
+      // B-032: the API allows one refresh a minute per stock; hold the button instead of sending a request that
+      // would get 429 (the browser logs every 4xx response as a console error).
+      setIsCoolingDown(true);
+      setNotice("Refreshed. Live refresh is available again in a minute.");
+      setTimeout(() => setIsCoolingDown(false), REFRESH_COOLDOWN_MS);
     } catch (err) {
       if (err instanceof ApiClientError && err.error.code === "RATE_LIMITED") {
         setNotice("Live refresh is limited to once a minute per stock. The outlook below is still current.");
@@ -59,7 +67,7 @@ export function VerdictCard({ initial }: Props) {
             Data as of <span className="font-mono">{verdict.as_of_date}</span>
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isLoading}>
+        <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isLoading || isCoolingDown}>
           {isLoading ? "Refreshing…" : "Refresh live"}
         </Button>
       </div>
