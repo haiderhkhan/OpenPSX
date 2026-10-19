@@ -38,8 +38,16 @@ OPEN PSX makes the analysis transparent. It shows which signals agree, which dis
 
 **ML Quant model**
 - A pooled LightGBM classifier predicts next-week direction. It also reports a volatility bucket and the market regime.
-- It is evaluated walk-forward over 12,799 out-of-sample predictions.
-- Walk-forward accuracy is **51.7%**, against **51.5%** for simply repeating last week's direction: essentially no edge. The model page states this plainly, with accuracy by year, SHAP drivers and every known limitation.
+- It is evaluated walk-forward (expanding window, retrained every 13 weeks) over 12,799 out-of-sample predictions, trained through 2026-09-18.
+- **The honest result: essentially no edge.**
+
+  | | Accuracy |
+  |---|---|
+  | This model (out of sample) | **51.7%** (balanced 52.0%, AUC 0.522) |
+  | Baseline: repeat last week's direction | 51.5% |
+  | Baseline: always the more common direction | 48.8% |
+
+  Accuracy by year ranges from 44.6% (2019) to 53.9% (2022), with no consistent edge. KMI-30 features carry about half of the top SHAP weight, so the signal is mostly market-wide. The model page shows all of this, with SHAP drivers and every known limitation. The quant signal therefore enters the outlook at a strength equal to its own confidence, |2p − 1|, which is close to zero for a near coin-flip.
 
 **Three AI agents + one Python verdict router**
 
@@ -53,13 +61,14 @@ OPEN PSX makes the analysis transparent. It shows which signals agree, which dis
 - **Weights.** The router drops abstaining signals and renormalises the weights of the rest.
 - **The outlook card.** It shows the label and how many signals agree (for example, "1 of 3 signals agree").
 - **Confidence.** It is capped at 60% when any agent fell back to its template, at 50% when fewer than 3 signals are active, and at 95% overall.
-- **NEUTRAL.** It is shown as "Mixed signals", with no confidence figure.
-- **ETFs and the index** get quant output only, with no outlook card.
+- **NEUTRAL.** It is shown as "Mixed signals", with no confidence figure, and a plain line saying the signals did not add up to a clear positive or negative reading.
+- **ETFs** get prices and the quant model; **the KMI-30 index** is the benchmark. Neither gets an outlook card.
+- **Resilience.** `LLM_ENABLED=false` is a kill switch. Every page keeps working on the committed seed and deterministic templates, and template evidence counts half, so outlooks get more cautious instead of guessing. The live demo steps are in `docs/PHASES.md` §6 step 8.
 
 **Chatbot**
 - Ask by typing or **by voice** (Groq Whisper, English).
 - **Routing.** Python routes each question to a fact source: price, change, quant, outlook, macro, model or compare. The AI then phrases those facts and nothing else.
-- **Refusals.** Questions outside scope (crypto, other stocks, "should I buy…") get a fixed refusal or the no-advice template.
+- **Refusals.** Questions outside scope (crypto, other stocks) get a fixed refusal; a question asking what to trade gets the no-advice template followed by the facts.
 - **No memory.** The chatbot keeps no history: each question stands alone.
 
 **Built for a free tier**
@@ -82,7 +91,7 @@ OPEN PSX makes the analysis transparent. It shows which signals agree, which dis
 | LLM | Google Gemini Flash-Lite (free tier), JSON schema output |
 | Speech | Groq Whisper (`whisper-large-v3-turbo`) |
 | Frontend | Next.js 16 (App Router), React 19, Tailwind CSS v4, Recharts, lightweight-charts |
-| Hosting | Render (API), Vercel (web) |
+| Hosting | Vercel (web) + a free-tier Python host for the API (being finalised); the full app also runs on one laptop with `scripts/run_local.ps1` |
 
 ---
 
@@ -122,12 +131,20 @@ cd frontend; npm install; npm run dev                                   # http:/
 
 ---
 
-## Data notes
+## Data limitations
 
-- **Data is frozen** at **2026-09-23** (the as-of date shown on every page). Nothing after that date is used.
-- **ETF prices end on 2026-08-04**, so ETF pages show that date as their own as-of date.
-- **The KMI-30 index before 2026-04-27** is an equal-weight reconstruction from its members, not official closes.
-- **The model is trained on today's KMI-30 members only.** Stocks that left the index are missing, so the results carry survivorship bias.
+- **Frozen data.** Everything is as of **2026-09-23**, the as-of date shown on every page; nothing after that date is used. The PSX data source stopped serving the old scraper on 2026-09-25.
+- **ETFs end earlier.** ETF prices end on **2026-08-04**, so ETF rows and pages say "Older data" and every ETF figure, including the quant model, is as of that date.
+- **KMI-30 index back-fill.** Index values before **2026-04-27** are an equal-weight reconstruction from today's 30 members, chain-linked to the first real close. They are not official index closes.
+- **Prices are only partly adjusted.**
+  - There is no official corporate-action feed. Bonus issues and splits are inferred from one-day moves beyond ±25% (9 events).
+  - Cash dividends are not adjusted, so returns are price returns, not total returns.
+  - 23 one-day drops of 11–25% were left unadjusted, because they may be dividends; they await official verification.
+- **Survivorship bias.** The model is trained on today's KMI-30 members and listed ETFs only. Stocks that left the index or were delisted are missing, which flatters any backtest.
+- **Thin side data.**
+  - Macro history has one reading per series, so the four macro features are left out of the model.
+  - No stock yet has the 3 in-window headlines that sentiment needs, so the sentiment signal abstains on every outlook.
+  - Fundamentals are one trailing-twelve-month snapshot (2026-07-31).
 
 ---
 

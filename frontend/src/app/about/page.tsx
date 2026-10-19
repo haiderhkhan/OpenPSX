@@ -65,9 +65,14 @@ export default async function AboutPage() {
           <li>A Python router drops abstaining signals, renormalises the weights and shows how many signals agree.</li>
           <li>
             Confidence is capped at 60% when any agent used its template fallback, at 50% when fewer than 3 signals are
-            active, and at 95% overall. NEUTRAL shows as &ldquo;Mixed signals&rdquo; with no confidence.
+            active, and at 95% overall. NEUTRAL shows as &ldquo;Mixed signals&rdquo; with no confidence: the signals did
+            not add up to a clear positive or negative reading.
           </li>
-          <li>ETFs and the KMI-30 index get the quant model only, with no outlook card.</li>
+          <li>ETFs get prices and the quant model; the KMI-30 index is the benchmark. Neither gets an outlook card.</li>
+          <li>
+            If the AI is switched off or unavailable, every page keeps working on precomputed outlooks and fixed templates,
+            and template evidence counts half, so outlooks get more cautious instead of guessing.
+          </li>
         </ul>
       </section>
 
@@ -75,12 +80,31 @@ export default async function AboutPage() {
         <h2 className="text-base font-bold text-foreground">Honest limits</h2>
         <ul className="mt-3 list-disc space-y-1 pl-5 text-xs text-muted-foreground">
           <li>
-            Walk-forward accuracy is 51.7%, against 51.5% for repeating last week&apos;s direction: essentially no edge.
-            See the Model page for the full card.
+            <span className="font-semibold text-foreground">No real edge.</span> Walk-forward accuracy is 51.7% over 12,799
+            out-of-sample predictions, against 51.5% for repeating last week&apos;s direction and 48.8% for always choosing
+            the more common direction. See the Model page for the full card.
           </li>
-          <li>Data is frozen at {asOfDate}. ETF prices end earlier than stock prices, so each ETF page shows its own date.</li>
-          <li>Prices are adjusted for bonus shares and splits; returns are price returns without cash dividends.</li>
-          <li>KMI-30 index values before 27 Apr 2026 are an equal-weight reconstruction from its members.</li>
+          <li>
+            <span className="font-semibold text-foreground">Frozen data.</span> Everything is as of {asOfDate ?? "the as-of date"};
+            ETF prices end earlier (2026-08-04), so ETF pages say &ldquo;Older data&rdquo; and show their own date.
+          </li>
+          <li>
+            <span className="font-semibold text-foreground">KMI-30 back-fill.</span> Index values before 2026-04-27 are an
+            equal-weight reconstruction from its members, not official closes.
+          </li>
+          <li>
+            <span className="font-semibold text-foreground">Partly adjusted prices.</span> Bonus issues and splits are
+            inferred from price breaks (there is no official corporate-action feed), and cash dividends are not adjusted, so
+            returns are price returns.
+          </li>
+          <li>
+            <span className="font-semibold text-foreground">Survivorship bias.</span> The model is trained on today&apos;s
+            KMI-30 members only; stocks that left the index are missing.
+          </li>
+          <li>
+            <span className="font-semibold text-foreground">Thin side data.</span> No stock yet has the 3 recent headlines
+            that sentiment needs, so it abstains everywhere; macro history is too short to train on.
+          </li>
           <li>The chatbot answers each question on its own, from OPEN PSX data only, and keeps no history.</li>
         </ul>
       </section>
@@ -89,7 +113,7 @@ export default async function AboutPage() {
         <h2 className="text-base font-bold text-foreground">Built with</h2>
         <p className="mt-2">
           Python 3.11 · FastAPI · SQLite · LightGBM + SHAP · Google Gemini Flash-Lite · Groq Whisper · Next.js 16 ·
-          React 19 · Tailwind CSS v4 · Render + Vercel. Built by Haider Hasan Khan (FAST-NUCES Lahore) with Claude Code
+          React 19 · Tailwind CSS v4 · Vercel. Built by Haider Hasan Khan (FAST-NUCES Lahore) with Claude Code
           and Antigravity as coding agents.
         </p>
       </section>
