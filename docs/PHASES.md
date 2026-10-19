@@ -88,7 +88,12 @@ At each checkpoint, Haider (or whichever agent is active) compares `TRACKER.md` 
 5. **Verdict card.** Four agents, agreement and confidence, then "Refresh live" for one stock. *Python decides; the LLM only explains.*
 6. **Chat by voice.** "What is the market regime right now?" Then "How has <stock> done this fiscal year?"
 7. **Guardrails.** "Should I buy <stock>?" → education framing. "What about Tesla?" → scope refusal.
-8. **Resilience.** Mention the kill switch, the templates and the zero-cost free-tier design. Show the architecture image.
+8. **Resilience (live, ≈ 60 s; always the last step).** *If the AI goes down, the numbers stay.* Checked against the local backend on 2026-10-20 (FIX-03):
+   1. In the **OPEN PSX backend :8000** window: `Ctrl+C`, then `$env:LLM_ENABLED = 'false'; .venv\Scripts\python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000`. The frontend keeps running.
+   2. Reload `/stock/OGDC`: the seeded outlook still shows (POSITIVE 24%, badges CACHED). *Precomputed outlooks survive an outage.*
+   3. Click **Refresh live**: the fundamentals row and the summary turn **TEMPLATE**. The summary reads "Overall outlook: NEUTRAL (no confidence figure for a neutral reading). 1 of 3 signals agree." *Template evidence counts half (§9 k = 0.5), so the outlook gets more cautious instead of guessing.* A second click within a minute shows the rate-limit notice.
+   4. Chat "How has OGDC done this year?": the answer comes back **TEMPLATE**, with the same numbers as the page.
+   5. Show the architecture image. Afterwards: `Ctrl+C`, `$env:LLM_ENABLED = 'true'`, and the same uvicorn line. For 15 min after this, a refresh can still show a cached TEMPLATE fundamentals row; plain page reads are back on the seed at once.
 
 Scripted chat questions (for the checklist):
 - What is the market regime right now?

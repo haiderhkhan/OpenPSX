@@ -187,6 +187,7 @@
   - The idle timeout defaults to 30 min (5–240). Changing it affects only Codespaces created afterwards. Terminal input or output resets it; port traffic alone doesn't (uvicorn's access log does).
   - Private or org ports fail cross-origin preflight (community #15351), so the port must be public.
   - `devcontainer.json` has no port-visibility key, hence the `gh` call in the script.
+- 2026-10-20 · claude-code · G-28 FIX-03 resilience check (local :8000, `LLM_ENABLED=false` as a process env var, which beats `.env`): a plain verdict read still serves the seed (CACHED); `?refresh=true` → fundamentals + summary TEMPLATE, and OGDC drops POSITIVE 24% → NEUTRAL (TEMPLATE k = 0.5, §9); chat → TEMPLATE; macro file → CACHED. The verdict key hashes `llm_enabled`, but the **fundamentals** key doesn't: its TEMPLATE row (15 min) is reused after LLM is switched back on. So run the resilience step last (PHASES §6 step 8).
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.
