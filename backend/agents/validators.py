@@ -86,6 +86,34 @@ def ungrounded_numbers(text: str, payload: Any) -> list[str]:
     return bad
 
 
+# --- Agent claims (verdict summary, FIX-01) ---
+_AGENT_WORDS = {"quant": r"quant", "fundamentals": r"fundamental", "sentiment": r"sentiment|news", "macro": r"macro"}
+_STANCE = re.compile(r"\b(positive|negative|neutral)\b", re.IGNORECASE)
+_CLAUSE = re.compile(r"[.;,]|\b(?:and|while|but|whereas|though|although|despite)\b", re.IGNORECASE)
+_OVERALL = re.compile(r"\b(outlook|overall|label)\b", re.IGNORECASE)
+
+
+def agent_claim_errors(text: str, agents: list[dict]) -> list[str]:
+    """Clauses that give one signal a stance other than its payload stance, or any stance to an UNAVAILABLE one.
+
+    ponytail: clause-level heuristic. A clause naming two signals or two stances, or the overall outlook, is
+    skipped rather than judged: it trades missed errors for few false rejections.
+    """
+    by_name = {a.get("agent"): a for a in agents if isinstance(a, dict)}
+    errs = []
+    for clause in _CLAUSE.split(text):
+        named = [n for n, w in _AGENT_WORDS.items() if re.search(rf"\b({w})", clause, re.IGNORECASE)]
+        stances = {s.upper() for s in _STANCE.findall(clause)}
+        if len(named) != 1 or len(stances) != 1 or _OVERALL.search(clause) or named[0] not in by_name:
+            continue
+        a, stance = by_name[named[0]], stances.pop()
+        if a.get("status") == "UNAVAILABLE":
+            errs.append(f"the {named[0]} signal is UNAVAILABLE in the input; do not give it a stance")
+        elif a.get("stance") != stance:
+            errs.append(f"the {named[0]} signal is {a.get('stance')} in the input, not {stance}")
+    return errs
+
+
 # --- JSON schema (the subset the agents use) ---
 # ponytail: hand-rolled subset (type/enum/required/properties/additionalProperties/items/min/max);
 # add the jsonschema package if a prompt needs $ref, oneOf or patterns.
@@ -132,9 +160,13 @@ def schema_errors(value: Any, schema: dict, path: str = "$") -> list[str]:
 
 # --- All checks ---
 def validation_errors(result: Any, payload: Any, schema: dict | None = None) -> list[str]:
-    """Every §7 violation in `result` (empty list = valid). Numbers are grounded on `payload`."""
+    """Every §7 violation in `result` (empty list = valid). Numbers are grounded on `payload`; a payload with an
+    `agents` list (the verdict summary) also has each agent's claimed stance checked against it."""
     errs = schema_errors(result, schema) if schema else []
+    agents = payload.get("agents") if isinstance(payload, dict) else None
     for text in (v for v in _walk(result) if isinstance(v, str)):
+        if isinstance(agents, list):
+            errs += agent_claim_errors(text, agents)
         if len(text) > MAX_TEXT_CHARS:
             errs.append(f"text longer than {MAX_TEXT_CHARS} characters")
         if hits := banned_phrases(text):

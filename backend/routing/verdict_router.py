@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 
 ROUTER_VERSION = "router-v1"
 SUMMARY_AGENT = "verdict_summary"
-SUMMARY_PROMPT_VERSION = "vsum-v2"
+SUMMARY_PROMPT_VERSION = "vsum-v3"
 SUMMARY_PROMPT = Path(__file__).resolve().parents[1] / "agents" / "prompts" / "verdict_summary.md"
 SUMMARY_MAX_TOKENS = 120
 REFRESH_INTERVAL = timedelta(minutes=1)
@@ -125,12 +125,11 @@ def _safe(agent: str, run) -> AgentResult:
 
 # --- Summary ---
 def summary_payload(symbol: str, as_of: str, combined: dict) -> dict:
-    """Every number the summary may write: label stats and each agent's stance, weight and first reason."""
-    p = {"symbol": symbol, "as_of_date": as_of, "label": combined["label"], "score": combined["score"],
-         "agreement_pct": round(combined["agreement"] * 100), "n_agree": combined["n_agree"],
+    """Only the facts the summary may state (FIX-01): label, agree counts, confidence and each agent's stance and
+    status. No reasons, score or weights, so any cause or other figure fails grounding or the agent-claim check."""
+    p = {"symbol": symbol, "as_of_date": as_of, "label": combined["label"], "n_agree": combined["n_agree"],
          "n_active": combined["n_active"],
-         "agents": [{"agent": a.agent, "stance": a.stance, "status": a.status, "weight_pct": round(a.weight * 100),
-                     "reason": a.reasons[0]} for a in combined["agents"]]}
+         "agents": [{"agent": a.agent, "stance": a.stance, "status": a.status} for a in combined["agents"]]}
     if combined["confidence"] is not None:
         p["confidence_pct"] = round(combined["confidence"] * 100)
     return p
@@ -198,7 +197,7 @@ def get_verdict(symbol: str, refresh: bool = False) -> Verdict:
         macro_out = _macro_output()
         inputs = _inputs(conn, row, as_of, quant_row, macro_out)
 
-    key = ("verdict", code, as_of, ROUTER_VERSION, config.GEMINI_MODEL, inputs)
+    key = ("verdict", code, as_of, f"{ROUTER_VERSION}+{SUMMARY_PROMPT_VERSION}", config.GEMINI_MODEL, inputs)
     if not refresh:
         for k in (key, ("verdict", code, as_of, cache.SEED, cache.SEED, {})):  # live key, then the seed
             if hit := cache.get(*k):

@@ -324,6 +324,8 @@ interface Transcription { text: string; duration_s: number | null }
   - "Rounding to the precision written" means `|payload − text| ≤ 0.5 × 10^−decimals`.
 - On a violation: 1 retry with the error appended (`payload["previous_error"]`), then the template. An `LLMError` (kill switch, quota, outage) goes straight to the template.
 
+**Agent claims (FIX-01, D-61):** when the payload has an `agents` list (the verdict summary), each clause that names exactly one agent (`quant`, `fundamental…`, `sentiment`/`news`, `macro`) and exactly one stance word must match that agent's payload stance, and an `UNAVAILABLE` agent may get no stance. Clauses about the overall outlook, or naming two agents or two stances, are skipped.
+
 ## 8. Cache — `data/cache.db`
 ```sql
 CREATE TABLE llm_cache (
@@ -361,7 +363,7 @@ CREATE INDEX idx_cache_expires ON llm_cache(expires_at);
 | fundamentals | TTM EPS, P/E (close at AS_OF / TTM EPS) vs KMI-30 median P/E, dividend yield % (TTM DPS / close); EPS growth % and revenue YoY % only when period rows exist (D-26) | stance + 1–3 reasons | 220 | EPS > 0 and P/E ≤ 1.2 × median → POSITIVE; EPS < 0 → NEGATIVE; else NEUTRAL |
 | sentiment | ≤ 10 newest matched headlines (id, date, title) dated AS_OF − 30 days … AS_OF (inclusive), + counts and window dates | stance + reasons citing `[#id]` | 220 | lexicon score (`backend/agents/lexicon.py`): sum > 0 → POSITIVE, < 0 → NEGATIVE, else NEUTRAL; **< 3 headlines → abstain: `UNAVAILABLE`, no LLM call** ("no recent coverage", D-28, D-48) |
 | macro | policy rate + 12w change, CPI YoY, PKR/USD + 4w change | stance + brief (≤ 2 sentences) | 260 | rate falling and CPI falling → POSITIVE; rate rising or PKR down > 2% in 4w → NEGATIVE; else NEUTRAL |
-| verdict_summary | label, confidence, agent stances + first reason each | 2 sentences | 120 | "Overall outlook: {label} ({confidence}% confidence). {n_agree} of {n_active} signals agree." |
+| verdict_summary | label, confidence, n_agree / n_active, agent stance + status each (no reasons, FIX-01) | 2 sentences | 120 | "Overall outlook: {label} ({confidence}% confidence). {n_agree} of {n_active} signals agree." |
 
 - **Agent statuses (D-46):** a cache hit is `CACHED` only if the stored result was `LIVE`; a cached `TEMPLATE` stays `TEMPLATE`. Missing input data (e.g. no TTM EPS) gives `UNAVAILABLE` with no LLM call. Fundamentals P/E and the KMI-30 median use only EPS > 0.
 

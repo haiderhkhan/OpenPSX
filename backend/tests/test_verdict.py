@@ -217,3 +217,32 @@ def test_prompts_forbid_causes_not_in_the_payload(name: str) -> None:
     text = (config.ROOT / "backend" / "agents" / "prompts" / f"{name}.md").read_text(encoding="utf-8")
     assert "Do not state causes, drivers or reasons that are not in the payload." in text
     assert "drives" not in text  # the old summary prompt asked "what drives it"
+
+
+# --- FIX-01: the summary sees only the facts it may state; its prompt version is part of the cache key ---
+def test_summary_payload_holds_no_reasons_score_or_weights() -> None:
+    res = vr.combine([ag("quant", "NEGATIVE", conf=0.02), ag("fundamentals", "POSITIVE"),
+                      ag("sentiment", "NEUTRAL", "UNAVAILABLE"), ag("macro", "NEUTRAL", "TEMPLATE")])
+    p = vr.summary_payload("OGDC", AS_OF, res)
+    assert set(p) == {"symbol", "as_of_date", "label", "n_agree", "n_active", "agents", "confidence_pct"}
+    assert all(set(a) == {"agent", "stance", "status"} for a in p["agents"])
+
+
+def test_a_summary_inventing_an_agent_view_falls_back_to_the_template(env: Path, monkeypatch) -> None:
+    fake = FakeLLM(monkeypatch)
+
+    def generate(agent, *args):  # sentiment abstains on the fixture DB, yet this summary gives it a view
+        return {"summary": "The outlook is mixed. Sentiment is POSITIVE."} if agent == "verdict_summary" \
+            else fake(agent, *args)
+
+    monkeypatch.setattr(llm, "generate_json", generate)
+    v = vr.get_verdict("OGDC")
+    assert v.summary_status == "TEMPLATE" and v.summary.startswith("Overall outlook: ")
+
+
+def test_bumping_the_summary_version_misses_the_cache(env: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    FakeLLM(monkeypatch)
+    assert vr.get_verdict("OGDC").summary_status == "LIVE"
+    assert vr.get_verdict("OGDC").summary_status == "CACHED"
+    monkeypatch.setattr(vr, "SUMMARY_PROMPT_VERSION", "vsum-next")
+    assert vr.get_verdict("OGDC").summary_status == "LIVE"  # recomputed, not served from the old key

@@ -145,3 +145,50 @@ def test_llm_error_goes_straight_to_template(exc: llm.LLMError) -> None:
 def test_llm_error_on_retry_falls_back_to_template() -> None:
     call = Script(_out("Rose 12%."), llm.QuotaExhausted("429"))
     assert v.run_with_validation(call, PAYLOAD, _template, SCHEMA) == (TEMPLATE, "TEMPLATE")
+
+
+# --- FIX-01: a verdict summary may state only the agent views and figures in its payload ---
+SUMMARY = {"symbol": "OGDC", "as_of_date": "2026-09-23", "label": "POSITIVE", "n_agree": 1, "n_active": 3,
+           "confidence_pct": 24,
+           "agents": [{"agent": "quant", "stance": "NEGATIVE", "status": "LIVE"},
+                      {"agent": "fundamentals", "stance": "POSITIVE", "status": "LIVE"},
+                      {"agent": "sentiment", "stance": "NEUTRAL", "status": "UNAVAILABLE"},
+                      {"agent": "macro", "stance": "NEUTRAL", "status": "CACHED"}]}
+SUMMARY_SCHEMA = {"type": "object", "properties": {"summary": {"type": "string"}}, "required": ["summary"]}
+
+
+@pytest.mark.parametrize("text", [
+    "The outlook is POSITIVE with 24% confidence, as 1 of 3 active signals agree. "
+    "Fundamentals is POSITIVE, quant is NEGATIVE and macro is NEUTRAL; sentiment is unavailable.",
+    # real seeded wording (vsum-v2): two stances in one clause is skipped, not judged
+    "The outlook is POSITIVE with 24% confidence, as 1 of 3 active signals agree. Fundamentals supports this with "
+    "a positive trailing EPS, while quant is negative due to volatility and sentiment is unavailable.",
+    "The overall outlook is POSITIVE even though quant is NEGATIVE.",
+])
+def test_truthful_summary_passes(text: str) -> None:
+    assert v.validation_errors({"summary": text}, SUMMARY, SUMMARY_SCHEMA) == []
+
+
+@pytest.mark.parametrize("text, error", [
+    ("The outlook is POSITIVE with 24% confidence. Sentiment is POSITIVE.", "sentiment signal is UNAVAILABLE"),
+    ("The outlook is POSITIVE with 24% confidence. News coverage is neutral.", "sentiment signal is UNAVAILABLE"),
+    ("The outlook is POSITIVE with 24% confidence. The quant signal is POSITIVE.", "quant signal is NEGATIVE"),
+    ("The outlook is POSITIVE with 24% confidence. Macro is negative.", "macro signal is NEUTRAL"),
+    ("The outlook is POSITIVE with 24% confidence, as P/E of 6.8 is low.", "['6.8']"),  # a figure not in the payload
+    ("The outlook is POSITIVE with 72% confidence.", "['72%']"),
+])
+def test_summary_with_an_absent_agent_view_or_figure_is_rejected(text: str, error: str) -> None:
+    errs = v.validation_errors({"summary": text}, SUMMARY, SUMMARY_SCHEMA)
+    assert any(error in e for e in errs), errs
+
+
+def test_absent_agent_view_falls_back_to_the_template() -> None:
+    bad = {"summary": "The outlook is POSITIVE with 24% confidence. Sentiment is POSITIVE."}
+    call = Script(bad, bad)
+    out = v.run_with_validation(call, SUMMARY, lambda p: {"summary": "Template."}, SUMMARY_SCHEMA)
+    assert out == ({"summary": "Template."}, "TEMPLATE")
+    assert "UNAVAILABLE" in call.payloads[1]["previous_error"]
+
+
+def test_agent_claims_are_only_checked_against_an_agents_list() -> None:
+    assert v.validation_errors(_out("Sentiment is POSITIVE."), PAYLOAD, SCHEMA) == []  # no `agents` in the payload
