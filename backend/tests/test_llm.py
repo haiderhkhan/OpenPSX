@@ -135,6 +135,28 @@ def test_5xx_retry_comes_before_key_failover(fake, sleeps) -> None:
     assert sleeps == [2.0]
 
 
+def test_client_times_out_each_request(monkeypatch: pytest.MonkeyPatch) -> None:
+    from google import genai
+
+    seen: dict = {}
+    monkeypatch.setattr(genai, "Client", lambda **kw: seen.update(kw) or SimpleNamespace())
+    llm._client.cache_clear()
+    try:
+        llm._client("k")
+    finally:
+        llm._client.cache_clear()
+    assert seen["http_options"].timeout == llm.REQUEST_TIMEOUT_MS == 15_000  # B-033
+
+
+def test_timeout_is_not_retried_and_falls_back(fake, sleeps) -> None:
+    import httpx
+
+    log = fake(k1=httpx.ReadTimeout("slow"), k2='{"label": "x"}')
+    with pytest.raises(llm.LLMUnavailable, match="ReadTimeout"):
+        _gen()
+    assert _keys(log) == ["k1"] and sleeps == []  # B-033: no retry, no failover; the caller's template answers
+
+
 def test_5xx_retry_is_refused_at_the_daily_limit(fake, sleeps, monkeypatch: pytest.MonkeyPatch) -> None:
     log = fake(k1=_seq(DOWN, '{"label": "x"}'))
     monkeypatch.setattr(config, "LLM_DAILY_CALL_LIMIT", 1)

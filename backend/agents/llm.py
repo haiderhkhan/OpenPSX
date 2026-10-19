@@ -21,6 +21,9 @@ log = logging.getLogger(__name__)
 
 TEMPERATURE = 0.2
 RETRY_DELAY_S = 2.0  # one retry after a 5xx overload (G-23); never on 400 / 429
+# B-033: live 503s took ~40 s to arrive (a 47 s verdict refresh on 2026-10-20); normal calls take ≤ 10 s. A timed-out
+# request is not retried: it raises LLMUnavailable and the caller's template answers.
+REQUEST_TIMEOUT_MS = 15_000
 
 
 class LLMError(RuntimeError):
@@ -43,7 +46,7 @@ class LLMUnavailable(LLMError):
 def _client(key: str) -> Any:
     from google import genai  # lazy: no client (or key check) at import time
 
-    return genai.Client(api_key=key)
+    return genai.Client(api_key=key, http_options=types.HttpOptions(timeout=REQUEST_TIMEOUT_MS))
 
 
 # --- Daily call counter (PKT day) ---
