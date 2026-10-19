@@ -35,7 +35,7 @@
 | P8-04 | Local backup launcher (PowerShell) | P8-01 | DONE | claude-code | 2026-10-15 01:31 | run_local.ps1 [-SkipBuild offline]; 43 s to browser; offline via seed (G-25) |
 | P8-05 | Production smoke test | P8-03, P7-02 | TODO | | | |
 | FIX-01 | Verdict summary: payload-only facts + agent-claim validator | P6-07 | DONE | claude-code | 2026-10-19 23:55 | vsum-v3, key includes it; seed unchanged until precompute (D-61) |
-| FIX-02 | llm.py: one short retry on 503/UNAVAILABLE before failover | P6-01 | TODO | | | |
+| FIX-02 | llm.py: one short retry on 503/UNAVAILABLE before failover | P6-01 | DONE | claude-code | 2026-10-19 23:59 | retry already in 81cfa27 (D-53); added retry→429 failover test |
 | FIX-03 | Resilience demo: live TEMPLATE path + PHASES §6 steps | P8-04 | TODO | | | |
 
 ## Track B — antigravity

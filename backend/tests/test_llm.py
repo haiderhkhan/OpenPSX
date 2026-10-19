@@ -128,6 +128,13 @@ def test_5xx_twice_raises_unavailable_without_failover(fake, sleeps) -> None:
     assert sleeps == [2.0]
 
 
+def test_5xx_retry_comes_before_key_failover(fake, sleeps) -> None:
+    log = fake(k1=_seq(DOWN, QUOTA), k2='{"label": "x"}')  # FIX-02: retry the same key first, then fail over on 429
+    assert _gen() == {"label": "x"}
+    assert _keys(log) == ["k1", "k1", "k2"]
+    assert sleeps == [2.0]
+
+
 def test_5xx_retry_is_refused_at_the_daily_limit(fake, sleeps, monkeypatch: pytest.MonkeyPatch) -> None:
     log = fake(k1=_seq(DOWN, '{"label": "x"}'))
     monkeypatch.setattr(config, "LLM_DAILY_CALL_LIMIT", 1)
