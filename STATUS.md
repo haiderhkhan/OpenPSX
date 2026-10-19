@@ -10,12 +10,12 @@
 **Deployed URLs:** frontend _tbd_ · backend _tbd_
 
 ## Track A — claude-code
-- Phase: P8 Deploy in progress · host = GitHub Codespaces (backend, public port 8000) + Vercel (frontend), D-58
-- Last done: B-030 fixed (agree count next to the chip, abstained agents named; 375 + 1440 px checked) · tunnel header opt-in, default off (D-60)
-- Last: CODESPACES.md §4 first live test · P8-02 repo prep (D-58) · B-028 fixed · lint/tsc/build/pytest green
-- Next: P8-02 Done-when once Haider sends the Codespaces URL + warm.py output → then P8-03 (Vercel env + CORS_ORIGINS)
-- Blockers: Haider: Codespaces secrets + start the Codespace · waiting: R-05-macro.md · open: B-020, G-22
-- Updated: 2026-10-17 19:10 PKT
+- Phase: P8 deploy ON HOLD (Haider is choosing the host; P8-02/03/05 untouched) · FIX-01/02/03 DONE 2026-10-20
+- Last done: FIX-01 vsum-v3 + agent-claim validator (D-61) · FIX-02 retry-before-failover test · FIX-03 LLM-off demo steps · B-033 15 s Gemini timeout
+- Next: P8-02 → P8-03 → P8-05 once the host is decided; then P9-03 on the deployed URL
+- Blockers: Haider: host · R-05 macro / R-07 headlines not in docs/research yet · decide B-031 (seed regen) · open: B-020, B-031, G-22
+- pytest 360 passed · lint/tsc/build green
+- Updated: 2026-10-20 00:41 PKT
 
 ## Track B — antigravity (Antigravity unavailable: claude-code B-override, D-55)
 - Phase: P9: P9-01 + P9-02 second pass DONE · P9-03 local rehearsal done (2 clean runs), BLOCKED on P8-03 for the deployed rerun
