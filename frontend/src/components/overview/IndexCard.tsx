@@ -2,12 +2,35 @@ import Link from "next/link";
 import type { ChangeSet } from "@/lib/types";
 import { Pct } from "./Pct";
 
+// Plain words first, the table's abbreviation second, so a first-time reader learns both.
 const PERIODS = [
-  { key: "mom", label: "MoM" },
-  { key: "qoq", label: "QoQ" },
-  { key: "ytd", label: "YTD" },
-  { key: "yoy", label: "YoY" },
+  { key: "mom", label: "1 month (MoM)" },
+  { key: "qoq", label: "3 months (QoQ)" },
+  { key: "ytd", label: "Year to date (YTD)" },
+  { key: "yoy", label: "1 year (YoY)" },
 ] as const;
+
+// The four period changes of one symbol, as the API sent them (R-18): shared by the index card and stock pages.
+export function PeriodChanges({ changes, className = "" }: { changes: ChangeSet; className?: string }) {
+  return (
+    <dl className={`grid grid-cols-2 gap-4 sm:grid-cols-4 ${className}`}>
+      {PERIODS.map(({ key, label }) => {
+        const change = changes[key];
+        return (
+          <div key={key} className="rounded-lg bg-muted/40 p-3">
+            <dt className="text-xs text-muted-foreground">{label}</dt>
+            <dd className="mt-1 text-base font-semibold">
+              <Pct value={change.pct} />
+            </dd>
+            <dd className="mt-0.5 font-mono text-[11px] text-muted-foreground">
+              {change.base_date ? `since ${change.base_date}` : "no base date"}
+            </dd>
+          </div>
+        );
+      })}
+    </dl>
+  );
+}
 
 export function IndexCard({ index }: { index: ChangeSet }) {
   // Every Change shares end_value = last close on or before AS_OF (SCHEMA §5); take the first one present.
@@ -34,22 +57,7 @@ export function IndexCard({ index }: { index: ChangeSet }) {
         </div>
       </div>
 
-      <dl className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {PERIODS.map(({ key, label }) => {
-          const change = index[key];
-          return (
-            <div key={key} className="rounded-lg bg-muted/40 p-3">
-              <dt className="text-xs text-muted-foreground">{label}</dt>
-              <dd className="mt-1 text-base font-semibold">
-                <Pct value={change.pct} />
-              </dd>
-              <dd className="mt-0.5 font-mono text-[11px] text-muted-foreground">
-                {change.base_date ? `since ${change.base_date}` : "no base date"}
-              </dd>
-            </div>
-          );
-        })}
-      </dl>
+      <PeriodChanges changes={index} className="mt-6" />
     </section>
   );
 }

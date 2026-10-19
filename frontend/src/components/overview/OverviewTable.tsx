@@ -59,6 +59,8 @@ export function OverviewTable({ rows, etfsEnabled, asOfDate }: OverviewTableProp
   const counts = { STOCK: rows.filter((r) => r.type === "STOCK").length, ETF: rows.filter((r) => r.type === "ETF").length };
   const visible = sortRows(rows.filter((r) => r.type === activeTab), sort.key, sort.desc);
   const tabs: Tab[] = etfsEnabled ? ["STOCK", "ETF"] : ["STOCK"];
+  // ETFs end before AS_OF (D-24): name the date(s) once above the table, not only per row.
+  const olderDates = [...new Set(visible.map((r) => r.last_date).filter((d) => d !== asOfDate))];
 
   const handleSort = (key: SortKey, numeric: boolean) =>
     setSort((s) => (s.key === key ? { key, desc: !s.desc } : { key, desc: numeric }));
@@ -84,6 +86,14 @@ export function OverviewTable({ rows, etfsEnabled, asOfDate }: OverviewTableProp
           </button>
         ))}
       </div>
+
+      {olderDates.length > 0 && (
+        <p role="note" className="border-b border-border bg-amber-50 px-4 py-2 text-xs text-amber-900 dark:bg-amber-950 dark:text-amber-200">
+          <span className="font-semibold">Older data:</span> our {activeTab === "ETF" ? "ETF" : ""} prices in this tab end on{" "}
+          <span className="font-mono">{olderDates.join(", ")}</span>, so these closes and changes are measured to that
+          date, not to <span className="font-mono">{asOfDate}</span>.
+        </p>
+      )}
 
       {visible.length === 0 ? (
         <EmptyState
@@ -171,6 +181,10 @@ export function OverviewTable({ rows, etfsEnabled, asOfDate }: OverviewTableProp
           </table>
         </div>
       )}
+      <p className="border-t border-border px-4 py-2 text-[11px] text-muted-foreground">
+        MoM = 1 month · QoQ = 3 months · YTD = year to date (calendar or fiscal, per the toggle) · YoY = 1 year. Price
+        changes on adjusted closes; tap a symbol for its page.
+      </p>
     </section>
   );
 }

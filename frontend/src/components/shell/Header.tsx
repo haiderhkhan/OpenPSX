@@ -61,12 +61,14 @@ export function Header({ asOfDate }: HeaderProps) {
         </div>
       </div>
 
+      {/* B-029: the data-freeze date stays visible on phones, not only inside the closed menu. */}
+      <div className="border-t border-border/60 px-4 py-1 text-[11px] text-muted-foreground md:hidden" data-testid="header-as-of-mobile">
+        Data as of <time className="font-mono font-medium text-foreground">{displayDate}</time>
+      </div>
+
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="border-t border-border bg-background px-4 py-3 md:hidden">
-          <div className="mb-2 text-xs text-muted-foreground">
-            Data as of <span className="font-mono font-medium text-foreground">{displayDate}</span>
-          </div>
           <Suspense fallback={<div className="h-16 w-32" />}>
             <Nav className="flex-col items-start gap-1" onItemClick={() => setMobileMenuOpen(false)} />
           </Suspense>

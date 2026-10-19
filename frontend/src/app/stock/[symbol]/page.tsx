@@ -19,6 +19,7 @@ import { BasisToggle } from "@/components/BasisToggle";
 import { PriceChart } from "@/components/charts/PriceChart";
 import { ReturnsBars } from "@/components/charts/ReturnsBars";
 import { CompareChart } from "@/components/charts/CompareChart";
+import { PeriodChanges } from "@/components/overview/IndexCard";
 
 interface StockPageProps {
   params: Promise<{ symbol: string }>;
@@ -112,8 +113,9 @@ export default async function StockPage({ params, searchParams }: StockPageProps
           {/* ETFs keep their own last date (D-24): say so plainly when it is earlier than the market date. */}
           {lastBar && health && lastBar.date < health.as_of_date && (
             <p role="note" className="mt-2 max-w-xl rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200">
-              {upper}&apos;s prices end on <span className="font-mono">{lastBar.date}</span>, before the market data date (
-              <span className="font-mono">{health.as_of_date}</span>). Every figure on this page, including the quant model, is
+              <span className="font-semibold">Older data:</span> our price data for {upper} ends on{" "}
+              <span className="font-mono">{lastBar.date}</span> (the source has no later prices for it), while the rest of the market data runs to{" "}
+              <span className="font-mono">{health.as_of_date}</span>. Every figure on this page, including the ML Quant model, is
               as of <span className="font-mono">{lastBar.date}</span>.
             </p>
           )}
@@ -139,62 +141,8 @@ export default async function StockPage({ params, searchParams }: StockPageProps
 
       {/* Performance Period Cards */}
       {changesRes.error && <ErrorState title="Period changes unavailable" message={changesRes.error.message} />}
-      {changes && (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <div className="rounded-lg border border-border bg-card p-4">
-            <div className="text-xs text-muted-foreground">MoM Change</div>
-            <div className="mt-1 font-mono text-lg font-bold">
-              {changes.mom.pct !== null ? (
-                <span className={changes.mom.pct >= 0 ? "text-positive" : "text-negative"}>
-                  {changes.mom.pct >= 0 ? "+" : ""}
-                  {changes.mom.pct.toFixed(2)}%
-                </span>
-              ) : (
-                "—"
-              )}
-            </div>
-          </div>
-          <div className="rounded-lg border border-border bg-card p-4">
-            <div className="text-xs text-muted-foreground">QoQ Change</div>
-            <div className="mt-1 font-mono text-lg font-bold">
-              {changes.qoq.pct !== null ? (
-                <span className={changes.qoq.pct >= 0 ? "text-positive" : "text-negative"}>
-                  {changes.qoq.pct >= 0 ? "+" : ""}
-                  {changes.qoq.pct.toFixed(2)}%
-                </span>
-              ) : (
-                "—"
-              )}
-            </div>
-          </div>
-          <div className="rounded-lg border border-border bg-card p-4">
-            <div className="text-xs text-muted-foreground">YTD Change</div>
-            <div className="mt-1 font-mono text-lg font-bold">
-              {changes.ytd.pct !== null ? (
-                <span className={changes.ytd.pct >= 0 ? "text-positive" : "text-negative"}>
-                  {changes.ytd.pct >= 0 ? "+" : ""}
-                  {changes.ytd.pct.toFixed(2)}%
-                </span>
-              ) : (
-                "—"
-              )}
-            </div>
-          </div>
-          <div className="rounded-lg border border-border bg-card p-4">
-            <div className="text-xs text-muted-foreground">YoY Change</div>
-            <div className="mt-1 font-mono text-lg font-bold">
-              {changes.yoy.pct !== null ? (
-                <span className={changes.yoy.pct >= 0 ? "text-positive" : "text-negative"}>
-                  {changes.yoy.pct >= 0 ? "+" : ""}
-                  {changes.yoy.pct.toFixed(2)}%
-                </span>
-              ) : (
-                "—"
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* B-019: the shared Pct formatter (0.00% is neutral, not green) plus each period's base date. */}
+      {changes && <PeriodChanges changes={changes} />}
 
       <div className={`grid grid-cols-1 gap-8 ${compareRes ? "lg:grid-cols-2" : ""}`}>
         {returnsRes.error && <ErrorState title="Period returns unavailable" message={returnsRes.error.message} />}
@@ -211,6 +159,13 @@ export default async function StockPage({ params, searchParams }: StockPageProps
         {/* Outlook: KMI-30 stocks only (verdictRes is null for ETFs and the index) */}
         {verdictRes?.error && <ErrorState title="Outlook unavailable" message={verdictRes.error.message} />}
         {verdict && <VerdictCard initial={verdict} />}
+        {symbolType !== "STOCK" && (
+          <p role="note" className="rounded-xl border border-dashed border-border p-6 text-sm text-muted-foreground lg:self-start">
+            {symbolType === "ETF"
+              ? "No four-signal outlook for ETFs: fundamentals, news and macro outlooks cover the KMI-30 stocks only. ETFs get the price history and the ML Quant model."
+              : "No ML Quant view or outlook for the index itself: those cover individual stocks. The KMI-30 is the benchmark every stock page compares against."}
+          </p>
+        )}
       </div>
     </div>
   );

@@ -95,6 +95,18 @@ function ProbabilityBar({ pUp }: { pUp: number }) {
   );
 }
 
+// B-027: each feature's unit, from backend/ml/features.py FEATURES. Formatting only; values come from the API.
+const FEATURE_UNIT: Record<string, string> = {
+  ret_1w: "%", ret_4w: "%", ret_12w: "%", ret_26w: "%", vol_4w: "%", vol_12w: "%", dist_ma50: "%",
+  dist_ma200: "%", drawdown_52w: "%", idx_ret_4w: "%", idx_ret_12w: "%", policy_rate: "%", cpi_yoy: "%",
+  pkr_usd_chg_4w: "%", rel_strength_12w: " pp", policy_rate_chg_12w: " pp",
+};
+
+function formatFeature(c: Contributor): string {
+  if (c.feature === "is_etf") return c.value ? "Yes" : "No";
+  return `${c.value.toFixed(2)}${FEATURE_UNIT[c.feature] ?? ""}`;
+}
+
 function ContributorBar({ c, maxAbs }: { c: Contributor; maxAbs: number }) {
   const width = `${(Math.abs(c.shap) / maxAbs) * 50}%`; // half the track per side
   const raises = c.shap >= 0;
@@ -102,7 +114,7 @@ function ContributorBar({ c, maxAbs }: { c: Contributor; maxAbs: number }) {
     <li className="text-xs">
       <div className="flex items-baseline justify-between gap-2">
         <span className="text-foreground">
-          {c.label} <span className="font-mono text-muted-foreground">· {c.value}</span>
+          {c.label} <span className="font-mono text-muted-foreground">· {formatFeature(c)}</span>
         </span>
         <span className={`font-mono ${raises ? "text-positive" : "text-negative"}`}>
           {raises ? "+" : ""}

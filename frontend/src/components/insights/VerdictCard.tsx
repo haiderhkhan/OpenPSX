@@ -69,9 +69,16 @@ export function VerdictCard({ initial }: Props) {
         <StanceChip stance={verdict.label} />
         <span className={`text-sm font-semibold ${isNeutral ? "text-muted-foreground" : "text-foreground"}`}>{strength}</span>
         <span className="text-sm font-semibold text-foreground" data-testid="verdict-agreement">
-          {nAgree} of {active.length} agents agree
+          {/* For NEUTRAL, "agree" counted NEUTRAL rows; say so, or "Mixed signals · 2 of 3 agree" reads as a contradiction. */}
+          {nAgree} of {active.length} agents {isNeutral ? "are also NEUTRAL" : "agree"}
         </span>
       </div>
+      {isNeutral && (
+        <p className="mt-2 text-sm text-foreground" data-testid="verdict-neutral-note">
+          Mixed signals means the signals did not add up to a clear positive or negative reading, so no confidence figure is
+          given.
+        </p>
+      )}
       {abstained.map((a) => (
         <p key={a.agent} className="mt-2 text-sm text-foreground" data-testid="verdict-abstained">
           <span className="font-semibold">{AGENT_LABEL[a.agent]} abstained</span>
