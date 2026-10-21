@@ -44,7 +44,7 @@ class FakeLLM:
         monkeypatch.setattr(llm, "generate_json", self)
 
     def __call__(self, agent, prompt_version, system, payload, schema, max_tokens):
-        assert (agent, prompt_version, max_tokens) == ("fundamentals", "fund-v3", 220)
+        assert (agent, prompt_version, max_tokens) == ("fundamentals", "fund-v4", 220)
         assert "stance" in system and "reasons" in system
         self.payloads.append(payload)
         out = self.outcomes.pop(0)
@@ -111,6 +111,29 @@ def test_template_text_passes_the_validators(db: Path) -> None:
             row = conn.execute("SELECT * FROM symbols WHERE symbol = ?", (symbol,)).fetchone()
             payload = fa.build_payload(conn, row, AS_OF)
             assert validation_errors(fa.template(payload), payload, fa.RESPONSE_SCHEMA) == []
+
+
+# --- FIX-05 (B-031): plain-words reasons that state the deciding P/E test first ---
+def test_template_states_the_valuation_test_in_plain_words(db: Path) -> None:
+    with closing(sqlite3.connect(db)) as conn:
+        conn.row_factory = sqlite3.Row
+        payload = fa.build_payload(conn, conn.execute("SELECT * FROM symbols WHERE symbol = 'OGDC'").fetchone(), AS_OF)
+    first = fa.template(payload)["reasons"][0]
+    assert first.startswith(f"The P/E of {payload['pe']:.2f} is ")
+    assert f"valuation limit of {payload['pe_limit']:.2f}, which is 1.2 times the KMI-30 median P/E" in first
+    assert "_" not in first
+
+
+def test_a_reason_with_a_raw_field_name_is_rejected(db: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    leak = lambda p: {"stance": "POSITIVE", "reasons": [f"The P/E is below the pe_limit of {p['pe_limit']}."]}  # noqa: E731
+    fake = FakeLLM(monkeypatch, leak, leak)
+    assert fa.run("OGDC").status == "TEMPLATE"
+    assert "pe_limit" in fake.payloads[1]["previous_error"]
+
+
+def test_prompt_orders_the_valuation_test_first_and_bans_keys() -> None:
+    text = fa.PROMPT.read_text(encoding="utf-8")
+    assert "Apply this rule exactly" in text and "Never write a JSON key or any name with an underscore" in text
 
 
 def test_missing_fundamentals_is_unavailable_without_llm(db: Path, monkeypatch: pytest.MonkeyPatch) -> None:

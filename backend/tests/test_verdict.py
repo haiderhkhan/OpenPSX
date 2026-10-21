@@ -240,9 +240,10 @@ def test_a_summary_inventing_an_agent_view_falls_back_to_the_template(env: Path,
     assert v.summary_status == "TEMPLATE" and v.summary.startswith("Overall outlook: ")
 
 
-def test_bumping_the_summary_version_misses_the_cache(env: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize(("module", "name"), [(vr, "SUMMARY_PROMPT_VERSION"), (fundamentals, "PROMPT_VERSION")])
+def test_bumping_a_prompt_version_misses_the_cache(env: Path, monkeypatch: pytest.MonkeyPatch, module, name) -> None:
     FakeLLM(monkeypatch)
     assert vr.get_verdict("OGDC").summary_status == "LIVE"
     assert vr.get_verdict("OGDC").summary_status == "CACHED"
-    monkeypatch.setattr(vr, "SUMMARY_PROMPT_VERSION", "vsum-next")
-    assert vr.get_verdict("OGDC").summary_status == "LIVE"  # recomputed, not served from the old key
+    monkeypatch.setattr(module, name, "next")
+    assert vr.get_verdict("OGDC").summary_status == "LIVE"  # recomputed, not served from the old key (FIX-05)

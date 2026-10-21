@@ -197,7 +197,10 @@ def get_verdict(symbol: str, refresh: bool = False) -> Verdict:
         macro_out = _macro_output()
         inputs = _inputs(conn, row, as_of, quant_row, macro_out)
 
-    key = ("verdict", code, as_of, f"{ROUTER_VERSION}+{SUMMARY_PROMPT_VERSION}", config.GEMINI_MODEL, inputs)
+    # Every prompt version is in the key, so a prompt bump recomputes today's verdicts too (FIX-05; precompute reads
+    # without refresh). Macro needs none: its whole output is hashed in `inputs`.
+    version = "+".join((ROUTER_VERSION, SUMMARY_PROMPT_VERSION, fundamentals.PROMPT_VERSION, sentiment.PROMPT_VERSION))
+    key = ("verdict", code, as_of, version, config.GEMINI_MODEL, inputs)
     if not refresh:
         for k in (key, ("verdict", code, as_of, cache.SEED, cache.SEED, {})):  # live key, then the seed
             if hit := cache.get(*k):

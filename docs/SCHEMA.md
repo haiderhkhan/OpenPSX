@@ -326,6 +326,8 @@ interface Transcription { text: string; duration_s: number | null }
 
 **Agent claims (FIX-01, D-61):** when the payload has an `agents` list (the verdict summary), each clause that names exactly one agent (`quant`, `fundamental…`, `sentiment`/`news`, `macro`) and exactly one stance word must match that agent's payload stance, and an `UNAVAILABLE` agent may get no stance. Clauses about the overall outlook, or naming two agents or two stances, are skipped.
 
+**Raw field names (FIX-05, B-031):** any snake_case identifier in LLM text (`pe_limit`, `kmi30_median_pe`) is a violation; agents must write plain words.
+
 ## 8. Cache — `data/cache.db`
 ```sql
 CREATE TABLE llm_cache (

@@ -86,6 +86,9 @@ def ungrounded_numbers(text: str, payload: Any) -> list[str]:
     return bad
 
 
+_SNAKE = re.compile(r"\b[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)+\b")  # pe_limit, kmi30_median_pe, dividend_yield_pct
+
+
 # --- Agent claims (verdict summary, FIX-01) ---
 _AGENT_WORDS = {"quant": r"quant", "fundamentals": r"fundamental", "sentiment": r"sentiment|news", "macro": r"macro"}
 _STANCE = re.compile(r"\b(positive|negative|neutral)\b", re.IGNORECASE)
@@ -173,6 +176,8 @@ def validation_errors(result: Any, payload: Any, schema: dict | None = None) -> 
             errs.append(f"banned phrase(s) {hits}: describe the data, never advise or predict prices")
         if missing := ungrounded_numbers(text, payload):
             errs.append(f"number(s) {missing} are not in the input; use only numbers from the input")
+        if keys := _SNAKE.findall(text):  # B-031: a leaked field name ("the pe_limit of 11.87") is never reader text
+            errs.append(f"raw field name(s) {keys}: use plain words, never a JSON key")
     return errs
 
 

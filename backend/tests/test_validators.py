@@ -190,5 +190,10 @@ def test_absent_agent_view_falls_back_to_the_template() -> None:
     assert "UNAVAILABLE" in call.payloads[1]["previous_error"]
 
 
+@pytest.mark.parametrize("text", ["The P/E is below the pe_limit of 6.8.", "See kmi30_median_pe.", "Yield (dividend_yield_pct)."])
+def test_raw_field_names_are_rejected(text: str) -> None:  # B-031
+    assert any("raw field name" in e for e in v.validation_errors(_out(text), PAYLOAD, SCHEMA))
+
+
 def test_agent_claims_are_only_checked_against_an_agents_list() -> None:
     assert v.validation_errors(_out("Sentiment is POSITIVE."), PAYLOAD, SCHEMA) == []  # no `agents` in the payload

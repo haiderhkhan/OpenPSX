@@ -16,7 +16,7 @@ from backend.db import queries
 from backend.schemas.insights import AgentResult
 
 AGENT = "fundamentals"
-PROMPT_VERSION = "fund-v3"
+PROMPT_VERSION = "fund-v4"
 PROMPT = Path(__file__).with_name("prompts") / "fundamentals.md"
 MAX_OUTPUT_TOKENS = 220
 PE_LIMIT_RATIO = 1.2  # template: EPS > 0 and P/E <= 1.2 x KMI-30 median -> POSITIVE
@@ -104,8 +104,10 @@ def template(p: dict) -> dict:
         stance = "NEGATIVE"
     else:
         stance = "NEUTRAL"
-    if pe is not None and med is not None:
-        reasons = [f"P/E of {pe:.2f} against a KMI-30 median of {med:.2f}."]
+    if pe is not None and med is not None:  # B-031: the test that decides the stance, in plain words
+        limit = PE_LIMIT_RATIO * med
+        reasons = [f"The P/E of {pe:.2f} is {'at or below' if pe <= limit else 'above'} the valuation limit of "
+                   f"{limit:.2f}, which is {PE_LIMIT_RATIO} times the KMI-30 median P/E of {med:.2f}."]
     elif eps < 0:
         reasons = [f"Trailing EPS is negative at PKR {eps:.2f}, so P/E is not meaningful."]
     else:
