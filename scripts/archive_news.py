@@ -2,7 +2,7 @@
 
 The only place feeds are fetched (R-16). Re-running is safe: duplicate URLs / (title, time) are skipped.
 Usage:  python scripts/archive_news.py                  fetch, insert, print per-symbol counts
-        python scripts/archive_news.py --verify-manual  check MANUAL rows' URLs resolve + match the title (D-28)
+        python scripts/archive_news.py --verify-manual  check every in-window headline's URL resolves + shows the title (D-28, B-020)
 """
 from __future__ import annotations
 
@@ -66,9 +66,17 @@ def report(conn) -> None:
 
 
 def verify_manual(conn, client: httpx.Client) -> int:
-    """Print MANUAL headlines whose URL fails to resolve or doesn't show the title; return the failure count."""
+    """Print headlines whose URL fails to resolve or doesn't show the title; return the failure count.
+
+    B-020: checks every row sentiment can read (published inside the AS_OF window), whatever its source, because
+    imported curated rows keep their file's DAWN / BR source (D-49); plus MANUAL rows anywhere. RSS rows archived
+    after AS_OF fall outside the window and are skipped.
+    """
+    as_of = conn.execute("SELECT value FROM meta WHERE key = 'as_of_date'").fetchone()[0]
+    start, end = news.window(as_of)
     failures = 0
-    for nid, title, url in conn.execute("SELECT id, title, url FROM news WHERE source = 'MANUAL' ORDER BY id"):
+    for nid, title, url in conn.execute("""SELECT id, title, url FROM news WHERE source = 'MANUAL'
+                                           OR substr(published_at, 1, 10) BETWEEN ? AND ? ORDER BY id""", (start, end)):
         words = [w for w in re.findall(r"[a-z0-9]+", title.lower()) if len(w) >= 4]
         try:
             resp = client.get(url)
@@ -80,7 +88,7 @@ def verify_manual(conn, client: httpx.Client) -> int:
         if not ok:
             failures += 1
             print(f"  FAIL #{nid} ({why}): {title} <{url}>")
-    print(f"manual headlines checked; {failures} failed")
+    print(f"in-window + MANUAL headlines checked ({start} … {end}); {failures} failed")
     return failures
 
 

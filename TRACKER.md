@@ -37,6 +37,9 @@
 | FIX-01 | Verdict summary: payload-only facts + agent-claim validator | P6-07 | DONE | claude-code | 2026-10-19 23:55 | vsum-v3, key includes it; seed unchanged until precompute (D-61) |
 | FIX-02 | llm.py: one short retry on 503/UNAVAILABLE before failover | P6-01 | DONE | claude-code | 2026-10-19 23:59 | retry already in 81cfa27 (D-53); added retry→429 failover test |
 | FIX-03 | Resilience demo: live TEMPLATE path + PHASES §6 steps | P8-04 | DONE | claude-code | 2026-10-20 00:06 | TEMPLATE reachable via Refresh live + chat; no code fix; §6 step 8 (G-28) |
+| FIX-04 | B-020: --verify-manual checks every in-window headline | P6-05 | DONE | claude-code | 2026-10-22 00:05 | 6 R-06 rows checked, 1 wrong URL → B-036 (D-63) |
+| FIX-05 | fund-v4 prompt: plain-words reasons, P/E rule first (B-031) | P6-04 | TODO | | | |
+| FIX-06 | Vercel Python backend feasibility report (no deploy) | P8-01 | TODO | | | |
 
 ## Track B — antigravity
 | ID | Task | Depends | Status | Owner | Updated | Note |
