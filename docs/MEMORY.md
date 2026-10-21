@@ -132,6 +132,12 @@
   - `validators` rejects any snake_case token in LLM text, for every agent. The template's first reason uses the same sentence.
   - The verdict cache key's version slot is now `router-v1+vsum-v3+fund-v4+sent-v2`, so any prompt bump recomputes even today's cached verdicts (precompute reads without refresh).
   - Not yet live: takes effect for the seed only at the single precompute after R-07 + R-05 (Haider, 2026-10-21).
+- 2026-10-22 · claude-code · G-31 FIX-06 Vercel Python feasibility (`docs/VERCEL_FEASIBILITY.md`):
+  - Limits: Python bundles may be 500 MB uncompressed; Vercel offers Python 3.12 (default) / 3.13 / 3.14 only; 4.5 MB request body; Hobby 300 s, 2 GB.
+  - Serving all 13 endpoints never imports lightgbm, sklearn, scipy, feedparser or openpyxl. pandas + numpy load only because `api/insights.py` imports `ml.features.FEATURES`.
+  - Linux py3.12 sizes: full requirements 317 MB, serve + pandas 138 MB, serve only 41 MB.
+  - Suite on 3.12.8: 368 passed. The only serve-time write is `cache.db` → `CACHE_DB_PATH=/tmp/cache.db`.
+  - Biggest unknown: whether the lifespan (seed load) runs on Vercel.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.

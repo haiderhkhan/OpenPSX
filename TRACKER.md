@@ -39,7 +39,7 @@
 | FIX-03 | Resilience demo: live TEMPLATE path + PHASES §6 steps | P8-04 | DONE | claude-code | 2026-10-20 00:06 | TEMPLATE reachable via Refresh live + chat; no code fix; §6 step 8 (G-28) |
 | FIX-04 | B-020: --verify-manual checks every in-window headline | P6-05 | DONE | claude-code | 2026-10-21 23:55 | 6 R-06 rows checked, 1 wrong URL → B-036 (D-63) |
 | FIX-05 | fund-v4 prompt: plain-words reasons, P/E rule first (B-031) | P6-04 | DONE | claude-code | 2026-10-22 00:02 | fund-v4 + snake_case validator; versions in verdict key; awaits precompute (D-64) |
-| FIX-06 | Vercel Python backend feasibility report (no deploy) | P8-01 | DOING | claude-code | 2026-10-22 00:03 | |
+| FIX-06 | Vercel Python backend feasibility report (no deploy) | P8-01 | DONE | claude-code | 2026-10-22 00:10 | fits: 41–317 MB vs 500 MB; no lightgbm at serve time (G-31) |
 | R07-IMPORT-1 | Import verified R-07 headline batch 1 (no build_db, no precompute) | FIX-04 | DONE | claude-code | 2026-10-22 | 2 new rows (OGDC); 2 URL dups skipped; seed regen waits for all R-07 batches + R-05 |
 
 ## Track B — antigravity
