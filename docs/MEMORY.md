@@ -163,6 +163,14 @@
   - Gemini was heavily overloaded (503/504/timeouts). After the script's own outage re-run: 25 of 30 fully LIVE; summaries TEMPLATE for GAL, NML, SNGP, SSGC; ATRL fundamentals TEMPLATE; 108 gateway calls.
   - MIN_HEADLINES=3 cleared by OGDC only (4); ENGROH 2, MARI 1, HUBC 1. Macro is NEUTRAL for all, so no stock has all four agents agreeing.
   - A cold start (LLM off, fresh cache, via root `app.py`) serves the seed as CACHED. Data is frozen from here: bugs only.
+- 2026-10-23 · claude-code · D-70 FIX-13 targeted re-run (Haider reopened the freeze once, Gemini healthy). **Freeze restored after the targeted re-run.**
+  - Only ATRL fundamentals and the GAL/NML/SNGP/SSGC summaries were re-run, via `precompute.run_one` per symbol: expired TEMPLATE rows dropped, LIVE parts reused from cache, max 2 attempts each. Seed and `cache.db` were backed up first.
+  - Results:
+    - ATRL fundamentals TEMPLATE → LIVE; confidence 0.30 → 0.38 (back to its old-seed value).
+    - The 4 summaries are now LIVE (SSGC on its 2nd attempt after a 503).
+    - Labels still 21 POSITIVE / 9 NEUTRAL, 0 flips. Only those 5 seed entries changed.
+    - The seed now has no TEMPLATE part at all (30/30 summaries LIVE).
+  - `openpsx.db` hash unchanged; pytest 375; a cold start serves ATRL CACHED 0.38. ATRL is no longer a TEMPLATE showcase: the fallback demo is the local `LLM_ENABLED=false` step only.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
