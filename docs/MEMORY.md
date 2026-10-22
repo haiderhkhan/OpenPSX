@@ -140,7 +140,7 @@
   - Biggest unknown: whether the lifespan (seed load) runs on Vercel.
 - 2026-10-22 · claude-code · D-65 R07-SOURCES: curated news sources widened from {DAWN, BR} to {DAWN, BR, TRIBUNE, THENEWS, PROFIT} because Dawn/BR alone left 25/30 stocks with zero headlines (R-07 batch 1). Curated headlines count one per distinct event per ticker. Window (30 days to AS_OF) and MIN_HEADLINES=3 unchanged. RSS archiving stays Dawn + BR.
   - Enum lives in `backend/db/schema.sql` (CHECK), `docs/SCHEMA.md`, `scripts/import_manual.py` `NEWS_SOURCES`, and the news template header. The verifier and frontend filter/label nothing by source.
-  - The existing `data/openpsx.db` keeps the old CHECK until the seed regen (`build_db.py`), so importing a TRIBUNE/THENEWS/PROFIT row into it fails until then. Do those imports after the rebuild.
+  - The existing `data/openpsx.db` keeps the old CHECK until it is migrated in place (`scripts/migrate_news_sources.py`, FIX-10; never `build_db.py`, G-22), so importing a TRIBUNE/THENEWS/PROFIT row fails until then. "Seed regen" means `precompute.py` only.
 - 2026-10-22 · claude-code · D-66 FIX-07, supersedes D-65's "until the seed regen (`build_db.py`)" (never run it, G-22):
   - B-036 dropped by removal (Haider): news #93 is deleted from the DB and from `data/manual/news_R-06.csv`. `docs/research/R-06-news.csv` (Haider's) still lists it.
   - The live `news` table was rebuilt in place with the `schema.sql` CHECK (create `news_new` → copy all rows with ids → drop → rename → recreate `idx_news_published`). Result: 83 rows, max id 98, `integrity_check` ok, `journal_mode` delete. TRIBUNE/THENEWS/PROFIT rows now import without a rebuild.

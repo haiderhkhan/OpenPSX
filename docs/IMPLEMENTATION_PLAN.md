@@ -216,7 +216,7 @@ Ask for sources in every prompt. Each saved file must include the date and the s
     - maps source → target for universe symbols + KMI30 only;
     - drops duplicate rows and rows with a non-positive close;
     - logs gaps longer than 5 trading days;
-    - sets `meta` (`as_of_date` per §1, `built_at`, `kmi30_list_date`, `schema_version=1`, `source_note`);
+    - sets `meta` (`as_of_date` per §1, `built_at`, `kmi30_list_date`, `schema_version=2` (news CHECK widened, D-65; was 1), `source_note`);
     - prints a data-quality summary.
   - `connection.py` opens read-only (`mode=ro` URI) for API use and read-write for scripts.
 - **Done when:**

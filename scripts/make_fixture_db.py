@@ -79,7 +79,7 @@ def build(path: Path) -> Path:
                      (AS_OF.isoformat(), json.dumps(contributors), f"{AS_OF.isoformat()}T18:00:00+05:00"))
         conn.executemany("INSERT INTO meta VALUES (?, ?)", [
             ("as_of_date", AS_OF.isoformat()), ("built_at", f"{AS_OF.isoformat()}T18:00:00+05:00"),
-            ("kmi30_list_date", "2026-08-01"), ("schema_version", "1"), ("source_note", "synthetic fixture (seed 42)")])
+            ("kmi30_list_date", "2026-08-01"), ("schema_version", "2"), ("source_note", "synthetic fixture (seed 42)")])
         conn.commit()
     return path
 

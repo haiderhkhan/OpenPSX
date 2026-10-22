@@ -231,7 +231,7 @@ def build(source_dir: Path = SOURCE_DIR, universe_dir: Path = UNIVERSE_DIR, out:
             "built_at": datetime.now(TZ).isoformat(timespec="seconds"),
             "kmi30_list_date": list_date,
             "kmi30_backfilled_before": first_real if backfilled else None,
-            "schema_version": "1",
+            "schema_version": "2",
             "source_note": "psx.db prices_daily + index_daily (KMI30), psx_etfs.db etf_prices, "
                            "macro.db macro_series, psx.db fundamentals snapshot (TTM)",
         })
