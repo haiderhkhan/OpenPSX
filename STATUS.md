@@ -10,12 +10,12 @@
 **Deployed URLs:** frontend _tbd_ · backend _tbd_
 
 ## Track A — claude-code
-- Phase: P8 deploy ON HOLD (Haider is choosing the host; P8-02/03/05 untouched) · FIX-01/02/03 DONE 2026-10-20
-- Last done: FIX-01 vsum-v3 + agent-claim validator (D-61) · FIX-02 retry-before-failover test · FIX-03 LLM-off demo steps · B-033 15 s Gemini timeout
-- Next: P8-02 → P8-03 → P8-05 once the host is decided; then P9-03 on the deployed URL
-- Blockers: Haider: host · R-05 macro / R-07 headlines not in docs/research yet · decide B-031 (seed regen) · open: B-020, B-031, G-22
-- pytest 360 passed · lint/tsc/build green
-- Updated: 2026-10-20 00:41 PKT
+- Phase: DATA FROZEN (2026-10-23): bugs only. Final seed written (FIX-12, D-69): 21 POSITIVE / 9 NEUTRAL, 0 flips
+- Last done: FIX-07..12: B-036 removed, news CHECK, requirements split, Vercel repo side, page-date verify, final precompute
+- Next: Haider imports the repo on Vercel (FIX-09, steps in docs/VERCEL_FEASIBILITY.md) → health + CACHED verdict check → P8-03/05
+- Blockers: Haider: Vercel import + URL · GROQ key (B-035 BLOCKED) · open: B-035
+- pytest 375 passed · lint/tsc/build green (no frontend change since)
+- Updated: 2026-10-23 02:57 PKT
 
 ## Track B — antigravity (Antigravity unavailable: claude-code B-override, D-55)
 - Phase: P9: P9-01 + P9-02 second pass DONE · P9-03 local rehearsal done (2 clean runs), BLOCKED on P8-03 for the deployed rerun

@@ -156,6 +156,13 @@
   - FIX-11: B-036 was a wrong link AND look-ahead. The Rs49bn GHTA report is APP 2026-10-09 (figures to 2026-09-30); R-06 gave it 2026-09-02. `news.select_headlines` filters the stored date correctly, so the gap was verification.
   - `--verify-manual` now compares each row's day with the page's own date (BR JSON-LD `datePublished`, Dawn `article:published_time`, converted to PKT) and fails a mismatch, flagging "after AS_OF". A page with no date passes on the title check alone.
   - Run on 2026-10-23: 7 rows checked (all in-window; no MANUAL rows), 1 failed: #95 (ENGROH), page 2026-09-02 vs ours 09-01, headline `Rs197bn` vs page `Rs19.7bn`. It was corrected to the page in the DB and `data/manual/news_R-06.csv` (supersedes G-32's "left as is"). Re-run: 0 failed, 0 removed.
+- 2026-10-23 · claude-code · D-69 FIX-12 final seed, ONE `precompute.py` run (02:43–02:54 PKT) after the data freeze. No R-07 batch 2+ or R-05 files existed; only R-07 batch 1, already imported.
+  - Labels 21 POSITIVE / 9 NEUTRAL → 21 / 9, **0 flips**. Two confidence changes:
+    - OGDC 0.24 → 0.36: sentiment active, POSITIVE on 4 verified headlines.
+    - ATRL 0.38 → 0.30: fundamentals fell to TEMPLATE after a Gemini 503. Same POSITIVE stance (P/E 6.40 ≤ 11.87); a TEMPLATE view counts at half strength.
+  - Gemini was heavily overloaded (503/504/timeouts). After the script's own outage re-run: 25 of 30 fully LIVE; summaries TEMPLATE for GAL, NML, SNGP, SSGC; ATRL fundamentals TEMPLATE; 108 gateway calls.
+  - MIN_HEADLINES=3 cleared by OGDC only (4); ENGROH 2, MARI 1, HUBC 1. Macro is NEUTRAL for all, so no stock has all four agents agreeing.
+  - A cold start (LLM off, fresh cache, via root `app.py`) serves the seed as CACHED. Data is frozen from here: bugs only.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
