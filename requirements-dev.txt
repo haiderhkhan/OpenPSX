@@ -1,0 +1,8 @@
+-r requirements.txt
+feedparser==6.0.14
+pandas==3.0.6
+numpy==2.4.6
+scikit-learn==1.9.1
+lightgbm==4.7.0
+openpyxl==3.1.5
+pytest==9.1.1

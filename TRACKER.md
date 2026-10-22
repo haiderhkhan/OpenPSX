@@ -43,6 +43,7 @@
 | R07-IMPORT-1 | Import verified R-07 headline batch 1 (no build_db, no precompute) | FIX-04 | DONE | claude-code | 2026-10-22 | 2 new rows (OGDC); 2 URL dups skipped; seed regen waits for all R-07 batches + R-05 |
 | R07-SOURCES | Widen curated news sources; ENGROH EPCL headline | R07-IMPORT-1 | DONE | claude-code | 2026-10-22 | D-65; ENGROH EPCL already in DB (#95), not imported; DB CHECK updates at seed regen |
 | FIX-07 | B-036: drop MEBL row #93; news CHECK to D-65 sources in place | R07-SOURCES | DONE | claude-code | 2026-10-22 14:36 | 83 news rows; verify-manual 0 failed; no build_db (D-66) |
+| FIX-08 | Split requirements: serve-only + requirements-dev.txt; FEATURES pandas-free | FIX-06 | DONE | claude-code | 2026-10-22 14:47 | serve-only py3.12: all routes 200, no pandas loaded (D-67) |
 
 ## Track B — antigravity
 | ID | Task | Depends | Status | Owner | Updated | Note |

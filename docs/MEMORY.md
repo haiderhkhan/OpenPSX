@@ -144,6 +144,12 @@
 - 2026-10-22 · claude-code · D-66 FIX-07, supersedes D-65's "until the seed regen (`build_db.py`)" (never run it, G-22):
   - B-036 dropped by removal (Haider): news #93 is deleted from the DB and from `data/manual/news_R-06.csv`. `docs/research/R-06-news.csv` (Haider's) still lists it.
   - The live `news` table was rebuilt in place with the `schema.sql` CHECK (create `news_new` → copy all rows with ids → drop → rename → recreate `idx_news_published`). Result: 83 rows, max id 98, `integrity_check` ok, `journal_mode` delete. TRIBUNE/THENEWS/PROFIT rows now import without a rebuild.
+- 2026-10-22 · claude-code · D-67 FIX-08 requirements split (Haider), deviates from P0-03's single file:
+  - `requirements.txt` is serve-only: fastapi, uvicorn[standard], pydantic, python-dotenv, python-multipart, google-genai, httpx, tzdata. Render, the devcontainer and Vercel install it unchanged.
+  - `requirements-dev.txt` = `-r requirements.txt` + feedparser, pandas, numpy, scikit-learn, lightgbm, openpyxl, pytest. Use it for tests, `scripts/` and `/phase-audit`.
+  - `FEATURES` moved to the pandas-free `backend/ml/feature_labels.py` (`features.py` re-exports it).
+  - Fresh py3.12.8 venv with `requirements.txt` only: every GET route + chat returned 200, the verdict was CACHED from the seed, and no pandas/numpy/lightgbm/sklearn/scipy/feedparser/openpyxl were loaded.
+  - A Codespace now gets serve deps only. Install `requirements-dev.txt` there before running pytest.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.

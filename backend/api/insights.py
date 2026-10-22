@@ -13,7 +13,7 @@ from backend.agents import macro as macro_agent
 from backend.api import ApiException
 from backend.api.market import _db
 from backend.db import queries
-from backend.ml.features import FEATURES
+from backend.ml.feature_labels import FEATURES  # pandas-free (FIX-08)
 from backend.routing import verdict_router
 from backend.schemas.insights import MacroOutput, ModelCard, QuantOutput, Verdict
 

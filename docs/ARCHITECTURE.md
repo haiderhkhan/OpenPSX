@@ -215,7 +215,7 @@ flowchart LR
 ```
 OpenPSX/
 ├── AGENTS.md  CLAUDE.md  TRACKER.md  STATUS.md  BUGS.md  README.md (P9-02)
-├── .gitignore  .gitattributes  .env.example  requirements.txt  pytest.ini  render.yaml (P8-02)
+├── .gitignore  .gitattributes  .env.example  requirements.txt (serve)  requirements-dev.txt (FIX-08)  pytest.ini  render.yaml (P8-02)
 ├── .claude/commands/         start-task.md  finish-task.md  phase-audit.md
 ├── .agents/workflows/        start-task.md  finish-task.md
 ├── docs/

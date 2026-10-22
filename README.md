@@ -103,7 +103,7 @@ You need Python 3.11, Node.js 20 or newer, and git.
 git clone https://github.com/haiderhkhan/OpenPSX.git
 cd OpenPSX
 py -3.11 -m venv .venv
-.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python -m pip install -r requirements.txt   # serving only; add requirements-dev.txt for tests + pipeline
 Copy-Item .env.example .env   # optional: add GEMINI_API_KEYS and GROQ_API_KEY
 powershell -ExecutionPolicy Bypass -File scripts\run_local.ps1
 ```
@@ -123,6 +123,7 @@ powershell -ExecutionPolicy Bypass -File scripts\run_local.ps1
 
 ```powershell
 .venv\Scripts\python -m uvicorn backend.main:app --reload --port 8000   # API docs at /docs
+.venv\Scripts\python -m pip install -r requirements-dev.txt             # pandas, LightGBM, pytest, …
 .venv\Scripts\python -m pytest -q                                       # offline tests: LLM mocked
 cd frontend; npm install; npm run dev                                   # http://localhost:3000
 ```
