@@ -150,6 +150,12 @@
   - `FEATURES` moved to the pandas-free `backend/ml/feature_labels.py` (`features.py` re-exports it).
   - Fresh py3.12.8 venv with `requirements.txt` only: every GET route + chat returned 200, the verdict was CACHED from the seed, and no pandas/numpy/lightgbm/sklearn/scipy/feedparser/openpyxl were loaded.
   - A Codespace now gets serve deps only. Install `requirements-dev.txt` there before running pytest.
+- 2026-10-23 · claude-code · D-68 FIX-10 DROPPED and FIX-11 redone (Haider: this session owns both):
+  - FIX-10 duplicates FIX-07's applied migration. A fresh build (`schema.sql`, which `build_db.py` and `make_fixture_db.py` both run) produces the same news schema as the live DB; the only difference is SQLite quoting `"news"` after the rename. The D-65 CHECK is everywhere, so nothing was added.
+  - `migrate_news_sources.py` + its test stay as committed by the other session (56d2c84); never run it again. It already ran once and set live `schema_version` 2, which `build_db.py`/`make_fixture_db.py` match.
+  - FIX-11: B-036 was a wrong link AND look-ahead. The Rs49bn GHTA report is APP 2026-10-09 (figures to 2026-09-30); R-06 gave it 2026-09-02. `news.select_headlines` filters the stored date correctly, so the gap was verification.
+  - `--verify-manual` now compares each row's day with the page's own date (BR JSON-LD `datePublished`, Dawn `article:published_time`, converted to PKT) and fails a mismatch, flagging "after AS_OF". A page with no date passes on the title check alone.
+  - Run on 2026-10-23: 7 rows checked (all in-window; no MANUAL rows), 1 failed: #95 (ENGROH), page 2026-09-02 vs ours 09-01, headline `Rs197bn` vs page `Rs19.7bn`. It was corrected to the page in the DB and `data/manual/news_R-06.csv` (supersedes G-32's "left as is"). Re-run: 0 failed, 0 removed.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.

@@ -11,6 +11,7 @@ import json
 import re
 import sys
 from contextlib import closing
+from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +32,7 @@ FEEDS = [
 HEADERS = {"User-Agent": "Mozilla/5.0 (OpenPSX news archiver; educational project)"}
 TIMEOUT = 20
 TITLE_MATCH_SHARE = 0.6  # --verify-manual: share of the title's longer words that must appear on the page
+PAGE_DATE = re.compile(r'(?:"datePublished"\s*:\s*"|article:published_time"\s+content=")([^"]+)"')
 
 
 def fetch_all(client: httpx.Client) -> list[dict]:
@@ -65,6 +67,17 @@ def report(conn) -> None:
         print(f"{s:<9} {total[s]:>8}  {in_window[s]:>9}")
 
 
+def _page_day(html: str) -> str | None:
+    """The article's own publish day in PKT, from BR's JSON-LD `datePublished` or Dawn's `article:published_time`."""
+    if not (m := PAGE_DATE.search(html)):
+        return None
+    try:
+        stamp = datetime.fromisoformat(m.group(1).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return (stamp.astimezone(config.TZ) if stamp.tzinfo else stamp).date().isoformat()
+
+
 def verify_manual(conn, client: httpx.Client) -> int:
     """Print headlines whose URL fails to resolve or doesn't show the title; return the failure count.
 
@@ -75,14 +88,18 @@ def verify_manual(conn, client: httpx.Client) -> int:
     as_of = conn.execute("SELECT value FROM meta WHERE key = 'as_of_date'").fetchone()[0]
     start, end = news.window(as_of)
     failures = 0
-    for nid, title, url in conn.execute("""SELECT id, title, url FROM news WHERE source = 'MANUAL'
-                                           OR substr(published_at, 1, 10) BETWEEN ? AND ? ORDER BY id""", (start, end)):
+    for nid, day, title, url in conn.execute("""SELECT id, substr(published_at, 1, 10), title, url FROM news
+                                                WHERE source = 'MANUAL' OR substr(published_at, 1, 10) BETWEEN ? AND ?
+                                                ORDER BY id""", (start, end)):
         words = [w for w in re.findall(r"[a-z0-9]+", title.lower()) if len(w) >= 4]
         try:
             resp = client.get(url)
             page = resp.text.lower()
             ok = resp.status_code < 400 and (not words or sum(w in page for w in words) / len(words) >= TITLE_MATCH_SHARE)
             why = f"HTTP {resp.status_code}" if resp.status_code >= 400 else "title not on page"
+            # FIX-11 (B-036): the window filter trusts our stored date, so it must be the page's own date.
+            if ok and (page_day := _page_day(resp.text)) and page_day != day:
+                ok, why = False, f"page date {page_day}{' is after AS_OF' if page_day > as_of else ''}, ours {day}"
         except (httpx.HTTPError, TypeError) as exc:  # TypeError: url is NULL
             ok, why = False, type(exc).__name__
         if not ok:

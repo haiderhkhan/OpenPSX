@@ -45,8 +45,8 @@
 | FIX-07 | B-036: drop MEBL row #93; news CHECK to D-65 sources in place | R07-SOURCES | DONE | claude-code | 2026-10-22 14:36 | 83 news rows; verify-manual 0 failed; no build_db (D-66) |
 | FIX-08 | Split requirements: serve-only + requirements-dev.txt; FEATURES pandas-free | FIX-06 | DONE | claude-code | 2026-10-22 14:47 | serve-only py3.12: all routes 200, no pandas loaded (D-67) |
 | FIX-09 | Vercel backend as a 2nd deployment (Render untouched): app.py + vercel.json | FIX-08 | BLOCKED | claude-code | 2026-10-22 14:50 | repo ready; Haider imports after final precompute (ships final seed) |
-| FIX-10 | scripts/migrate_news_sources.py: tested idempotent news CHECK migration + schema_version 2 (asked as FIX-06; FIX-06..09 were taken) | FIX-07 | DONE | claude-code | 2026-10-22 | live DB already migrated (D-66): no-op, 83 rows, schema_version 1→2 |
-| FIX-11 | B-036 is look-ahead leakage (asked as FIX-07); verify all R-06/R-07 rows | FIX-10 | DONE | claude-code | 2026-10-22 | #93 already deleted (FIX-07); B-036 reclassified as look-ahead; 7 rows checked: 6 OK, #95 date+1d & typo |
+| FIX-10 | scripts/migrate_news_sources.py: tested idempotent news CHECK migration + schema_version 2 (asked as FIX-06; FIX-06..09 were taken) | FIX-07 | DROPPED | claude-code | 2026-10-23 02:32 | duplicates FIX-07's applied migration; fresh build = live news schema |
+| FIX-11 | B-036 is look-ahead leakage (asked as FIX-07); verify all R-06/R-07 rows | FIX-10 | DONE | claude-code | 2026-10-23 02:44 | page-date check; 7 checked, #95 corrected, 0 removed (D-68) |
 
 ## Track B — antigravity
 | ID | Task | Depends | Status | Owner | Updated | Note |
