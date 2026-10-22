@@ -40,6 +40,36 @@ FIX-06, 2026-10-22. No deploy yet: this decides **Vercel vs Codespaces** for P8-
 3. **Cold start on stage.** Run `scripts/warm.py` against the backend URL before the pitch; check its timing.
 4. **Python version.** The repo's `.python-version` still says `3.11` (kept from Render, D-58). Vercel doesn't offer 3.11 and falls back to its 3.12 default; change the pin to `3.12` explicitly. 3.12 is verified locally.
 
+## Deploy steps (FIX-09; second deployment, Render untouched)
+
+Repo side is done:
+- root `app.py` (re-exports `backend.main:app`);
+- root `vercel.json` (region `bom1`, `excludeFiles`);
+- serve-only `requirements.txt` (FIX-08).
+
+The bundle is about 41 MB of dependencies plus 10.5 MB of repo files. `.python-version` stays `3.11` for Render; Vercel treats an unsupported version as "use the default" (3.12).
+
+1. vercel.com → Add New → Project → import `haiderhkhan/OpenPSX`. Name it e.g. `openpsx-api`. Leave Root Directory at the repo root; the Framework Preset should say **FastAPI**. Leave Build/Install at their defaults.
+2. Environment variables (Production):
+
+   | Variable | Value |
+   |---|---|
+   | `GEMINI_API_KEYS` | your keys |
+   | `GROQ_API_KEY` | when you have it |
+   | `CACHE_DB_PATH` | `/tmp/cache.db` |
+   | `LLM_ENABLED` | `true` |
+   | `GEMINI_MODEL` | `gemini-3.1-flash-lite` |
+   | `GROQ_WHISPER_MODEL` | `whisper-large-v3-turbo` |
+   | `LLM_DAILY_CALL_LIMIT` | `200` |
+   | `APP_TZ` | `Asia/Karachi` |
+   | `FEATURE_ETFS`, `FEATURE_MACRO_LLM`, `FEATURE_FISCAL_TOGGLE`, `FEATURE_VOICE` | `true` |
+   | `CORS_ORIGINS` | the frontend URL once P8-03 exists (no trailing slash) |
+3. Deploy, then check (the 45-minute timebox starts at step 1):
+   - `curl -s https://<api>.vercel.app/api/health` → `"status":"ok"`
+   - `curl -s https://<api>.vercel.app/api/verdict/HUBC` → `"summary_status":"CACHED"`. That proves the lifespan seed load ran (risk 1). A LIVE/TEMPLATE result means the seed did not load.
+   - `python scripts/warm.py https://<api>.vercel.app` for the cold-start timing.
+4. If it isn't serving both by the end of the timebox: stop, log it in `docs/MEMORY.md`, and use Render/Codespaces.
+
 ## Codespaces fallback (if Vercel fails the timebox)
 
 Already prepared in `docs/CODESPACES.md` (D-58, G-27): public port 8000 via `scripts/run_codespace.sh`. The idle timeout defaults to 30 min (set 240 in GitHub settings before creating the Codespace); port traffic alone doesn't count as activity, but terminal output does, and uvicorn's access log provides it. Run `warm.py` 10 minutes before the pitch.

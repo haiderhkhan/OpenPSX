@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "regions": ["bom1"],
+  "functions": {
+    "app.py": {
+      "excludeFiles": "{frontend/**,docs/**,_legacy_reference/**,backend/tests/**,scripts/**,graphify-out/**,data/manual/**,.claude/**,.agents/**,.devcontainer/**}"
+    }
+  }
+}
