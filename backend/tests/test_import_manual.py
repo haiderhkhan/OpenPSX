@@ -109,6 +109,21 @@ def test_news_dedupes_on_url_and_uses_the_symbol_column(db: Path, tmp_path: Path
     assert _query(db, "SELECT symbols FROM news WHERE url = ?", url) == [('["LUCK"]',)]
 
 
+@pytest.mark.parametrize("source", ["TRIBUNE", "THENEWS", "PROFIT"])
+def test_widened_news_sources_are_accepted(source: str, db: Path, tmp_path: Path) -> None:
+    path = _csv(tmp_path, "published_at,source,title,url,symbol\n"
+                          f"2026-09-02,{source},Engro stake sale,https://x.pk/{source},OGDC\n")
+    assert im.import_file("news", path, db)["errors"] == []
+    assert _query(db, "SELECT source FROM news WHERE url = ?", f"https://x.pk/{source}") == [(source,)]
+
+
+def test_unknown_news_source_is_rejected(db: Path, tmp_path: Path) -> None:
+    path = _csv(tmp_path, "published_at,source,title,url,symbol\n"
+                          "2026-09-02,REUTERS,Engro stake sale,https://x.pk/r,OGDC\n")
+    assert im.import_file("news", path, db)["errors"] != []
+    assert _query(db, "SELECT COUNT(*) FROM news WHERE url = ?", "https://x.pk/r") == [(0,)]
+
+
 def test_one_article_listed_under_two_symbols_becomes_one_row_for_both(db: Path, tmp_path: Path) -> None:
     """R-06 lists the Lundali-1 article once under OGDC and once under MARI; the fixture DB has no MARI, so MEBL
     stands in. The import must keep one row tagged with both symbols, and sentiment must see it under each."""
@@ -127,10 +142,10 @@ def test_one_article_listed_under_two_symbols_becomes_one_row_for_both(db: Path,
 
 
 def test_news_rejects_bad_source_and_url(db: Path, tmp_path: Path) -> None:
-    path = _csv(tmp_path, "published_at,source,title,url\n2026-09-10,PROFIT,T,https://x.pk/a\n"
+    path = _csv(tmp_path, "published_at,source,title,url\n2026-09-10,REUTERS,T,https://x.pk/a\n"
                           "2026-09-10,BR,T2,not-a-link\n")
     errors = im.import_file("news", path, db)["errors"]
-    assert errors[0].startswith("line 2: source 'PROFIT'") and errors[1].startswith("line 3: url")
+    assert errors[0].startswith("line 2: source 'REUTERS'") and errors[1].startswith("line 3: url")
 
 
 def test_macro_may_run_past_as_of_and_defaults_release_date(db: Path, tmp_path: Path) -> None:

@@ -52,7 +52,7 @@ TABLES = {"prices": ("prices_daily", ("symbol", "date")),
 PERIOD_TYPES = {"Q1", "H1", "9M", "FY", "TTM"}
 SERIES = set(build_db.MACRO_SERIES.values())
 ACTIONS = {"CASH_DIVIDEND", "BONUS", "RIGHT", "SPLIT"}
-NEWS_SOURCES = {"DAWN", "BR", "MANUAL"}
+NEWS_SOURCES = {"DAWN", "BR", "TRIBUNE", "THENEWS", "PROFIT", "MANUAL"}  # D-65; RSS archiving stays DAWN + BR
 
 
 class RowError(ValueError):

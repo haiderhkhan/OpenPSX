@@ -15,9 +15,13 @@ OGDC,2026-09-14,BR,OGDC: Tax reversal powers record profit,https://www.brecorder
 ## Dropped / held
 
 - a) OGDC 2026-09-10 BR "OGDCL starts gas production from Lundali-1 well in Sindh" (https://www.brecorder.com/news/40438764/...) — dropped, same event as 2026-09-09.
-- b) ENGROH 2026-09-02 BR "Engro to sell entire EPCL stake to Lotte for Rs19.7bn" (epaper.brecorder.com URL) — held, URL unverified.
+- b) ENGROH 2026-09-02 BR "Engro to sell entire EPCL stake to Lotte for Rs19.7bn" (epaper.brecorder.com URL) — was held (URL unverified); now covered, see "Substitute" below.
 - c) Gemini returned no qualifying headlines for PPL, HUBC, PSO in this window.
 
 ## Import notes
 
 Imported as `data/manual/news_R-07_batch1.csv`. Rows 2026-09-05 and 2026-09-09 already exist in the DB from R-06 (same URL, same symbols), so they are left out of the import file; the other 2 are new.
+
+## Substitute (R07-SOURCES)
+
+ENGROH 2026-09-02 TRIBUNE "Engro to sell 56% stake in EPCL for Rs19.7b" (https://tribune.com.pk/story/2626987/engro-to-sell-56-stake-in-epcl-for-rs197b) — imported as the Tribune substitute; no brecorder.com web article found. **Not imported**: news #95 (R-06, BR 2026-09-01 "Engro to sell entire EPCL stake to Lotte for Rs197bn") already covers the same event, and headlines count one per event per ticker (D-65).

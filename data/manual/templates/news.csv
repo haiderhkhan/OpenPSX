@@ -1,4 +1,4 @@
-# news: published_at YYYY-MM-DD or ISO timestamp (naive = PKT); source DAWN | BR | MANUAL (blank = MANUAL).
+# news: published_at YYYY-MM-DD or ISO timestamp (naive = PKT); source DAWN | BR | TRIBUNE | THENEWS | PROFIT | MANUAL (blank = MANUAL).
 # url required, deduped (a known URL only gets this file's symbols). symbol: tickers, '|'-separated; blank = alias matching.
 # Curated headlines only (R-07, D-28). Import: .venv\Scripts\python scripts/import_manual.py news <file> --dry-run
 published_at,source,title,url,symbol

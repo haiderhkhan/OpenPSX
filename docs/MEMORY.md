@@ -138,6 +138,9 @@
   - Linux py3.12 sizes: full requirements 317 MB, serve + pandas 138 MB, serve only 41 MB.
   - Suite on 3.12.8: 368 passed. The only serve-time write is `cache.db` → `CACHE_DB_PATH=/tmp/cache.db`.
   - Biggest unknown: whether the lifespan (seed load) runs on Vercel.
+- 2026-10-22 · claude-code · D-65 R07-SOURCES: curated news sources widened from {DAWN, BR} to {DAWN, BR, TRIBUNE, THENEWS, PROFIT} because Dawn/BR alone left 25/30 stocks with zero headlines (R-07 batch 1). Curated headlines count one per distinct event per ticker. Window (30 days to AS_OF) and MIN_HEADLINES=3 unchanged. RSS archiving stays Dawn + BR.
+  - Enum lives in `backend/db/schema.sql` (CHECK), `docs/SCHEMA.md`, `scripts/import_manual.py` `NEWS_SOURCES`, and the news template header. The verifier and frontend filter/label nothing by source.
+  - The existing `data/openpsx.db` keeps the old CHECK until the seed regen (`build_db.py`), so importing a TRIBUNE/THENEWS/PROFIT row into it fails until then. Do those imports after the rebuild.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.

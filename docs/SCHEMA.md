@@ -78,7 +78,7 @@ CREATE TABLE macro_series (
 CREATE TABLE news (
   id            INTEGER PRIMARY KEY AUTOINCREMENT,
   published_at  TEXT NOT NULL,                   -- ISO timestamp PKT
-  source        TEXT NOT NULL CHECK (source IN ('DAWN','BR','MANUAL')),
+  source        TEXT NOT NULL CHECK (source IN ('DAWN','BR','TRIBUNE','THENEWS','PROFIT','MANUAL')),
   title         TEXT NOT NULL,
   url           TEXT,
   symbols       TEXT NOT NULL DEFAULT '[]',      -- JSON array of matched symbols
