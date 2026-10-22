@@ -48,7 +48,7 @@ All features are **must-have** for 15 Oct. If we fall behind, features are dropp
 | F8 | **Chatbot** | Scoped Q&A over prices, changes, Quant, verdicts, Macro and the model. Python-first router. Refuses out-of-scope questions; turns advice requests into education. Every question is standalone. | P7 |
 | F9 | **Voice input** | Mic → Groq Whisper (English) → text in the chat box. Replies are text only. | P7 |
 | F10 | **Cost and resilience** | Cache until 00:00 PKT. Failover across Gemini keys. Template answers on quota or validation failure. Kill switch (`LLM_ENABLED`). Precomputed seed for all KMI-30 verdicts. | P6, P8 |
-| F11 | **Deployment** | Vercel (frontend) + Render (backend) + a local backup launcher. | P8 |
+| F11 | **Deployment** | Vercel (frontend + backend, two projects; D-71) + a local backup launcher. | P8 |
 | F12 | **ETF coverage** | ETFs get the dashboard, Quant and chat. No Fundamentals, Sentiment, Macro or verdict. | P2–P7 |
 
 ## 6. Drop order (only if a checkpoint in `PHASES.md` §4 is missed)
@@ -78,14 +78,14 @@ Numbers below are illustrative.
 - Gemini **free tier, Flash-Lite only**; Groq free tier for Whisper. Rate limits apply per Google Cloud project, not per key.
 - Price data is frozen at `AS_OF_DATE` (the PSX data API stopped working). Everything is labelled "as of".
 - 3.5 days, one person, two coding agents working in parallel, 4–6 human hours per day.
-- Render free tier: cold starts after idling and an ephemeral disk. All needed artifacts are committed to git.
+- Vercel functions: cold starts after idling and a read-only disk (only `/tmp` is writable). All needed artifacts are committed to git.
 
 ## 10. Risks
 | Risk | Mitigation |
 |---|---|
 | Gemini quota runs out on demo day | Precomputed seed for all KMI-30 → zero tokens for browsing; live calls only on "Refresh live" or chat; templates; kill switch |
 | ML accuracy ≈ baseline | Show it honestly; pitch explainability and calibration, not prediction magic |
-| Render cold start during the pitch | Run `scripts/warm.py` 2 min before; local backup on the laptop |
+| Backend cold start during the pitch | Run `scripts/warm.py` 2 min before; local backup on the laptop |
 | Two agents collide in one folder | Track ownership, claim protocol, explicit-path commits, union-merged logs |
 | Source DB gaps or bad ticks | Data-quality report in P2-03; manual import (P2-05) |
 | Advice-like language | Banned-phrase validator plus disclaimer on every outlook surface |

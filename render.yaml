@@ -1,3 +1,5 @@
+# NOT DEPLOYED (D-71): Render was never deployed. Vercel is the sole public deploy (app.py + vercel.json,
+# docs/VERCEL_FEASIBILITY.md); the local backup is scripts/run_local.ps1. Kept for reference only.
 # P8-02: Render Blueprint for the OPEN PSX backend (FastAPI, free web service).
 # Python comes from .python-version (3.11 -> latest 3.11 patch). Secrets are entered in the Render
 # dashboard when the Blueprint is created (sync: false), never committed. The disk is ephemeral:

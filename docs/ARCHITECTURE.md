@@ -9,13 +9,13 @@
 3. **As-of everything.** One frozen `AS_OF_DATE` (the last clean price date) governs every query, feature, headline and label.
 4. **Cache-first, quota-safe.** Precomputed seed → cache until midnight PKT → key failover → template.
 5. **Contract-first parallel build.** API shapes are fixed in P0-04, so Track B builds against fixtures while Track A builds the real endpoints.
-6. **Commit the artifacts.** Render's disk is ephemeral, so the DB, model, macro JSON and seed verdicts all ship in git.
+6. **Commit the artifacts.** The serverless disk is read-only and ephemeral (Vercel: only `/tmp` is writable), so the DB, model, macro JSON and seed verdicts all ship in git.
 
 ## 2. System overview
 ```mermaid
 flowchart LR
   user(["User / Judge"]) --> fe["Next.js frontend<br/>Vercel"]
-  fe -->|"REST JSON /api"| api["FastAPI backend<br/>Render"]
+  fe -->|"REST JSON /api"| api["FastAPI backend<br/>Vercel (Python)"]
 
   subgraph BE["Backend"]
     api --> market["Market service<br/>prices, period changes, returns"]
@@ -144,7 +144,7 @@ flowchart LR
   models --> git
   mj --> git
   seed --> git
-  git --> render["Render auto-deploy"]
+  git --> vercelapi["Vercel auto-deploy<br/>(backend + frontend projects)"]
 ```
 
 ## 7. Cost and quota design (Gemini free tier, Flash-Lite)
@@ -168,30 +168,28 @@ Rough budget: one live verdict = 3 agent calls + 1 summary = 4 calls (macro come
 | Groq down / audio too long | `503 UPSTREAM` / `400 BAD_REQUEST`; UI keeps the text box usable |
 | Symbol outside the universe | `NOT_IN_SCOPE` (API) or refusal template (chat) |
 | Missing history for a period | That `Change.pct` is `null`; UI shows "—" |
-| Render cold start | `scripts/warm.py` before the demo; local backup on the laptop |
-| Render restart wipes `cache.db` | Seed reload at startup |
+| Vercel cold start | `scripts/warm.py` before the demo; local backup on the laptop |
+| New instance has an empty `/tmp/cache.db` | Seed reload at startup (lifespan) |
 | Feature dropped | Flag off → endpoint returns `FEATURE_OFF`; UI hides the control |
 
 ## 9. Deployment
 ```mermaid
 flowchart LR
-  gh["GitHub<br/>haiderhkhan/OpenPSX main"] -->|"auto deploy"| vercel["Vercel<br/>root: frontend/"]
-  gh -->|"git pull, manual start"| cs["GitHub Codespace<br/>scripts/run_codespace.sh<br/>uvicorn :8000, port public"]
-  vercel -->|"NEXT_PUBLIC_API_BASE"| cs
-  cs --> files[("committed artifacts<br/>openpsx.db, models, macro, seed")]
-  cs --> gemini[("Gemini")]
-  cs --> groq[("Groq")]
+  gh["GitHub<br/>haiderhkhan/OpenPSX main"] -->|"auto deploy"| vercel["Vercel frontend<br/>root: frontend/"]
+  gh -->|"auto deploy"| api["Vercel backend<br/>root: repo root, app.py<br/>Python 3.12, region bom1"]
+  vercel -->|"NEXT_PUBLIC_API_BASE"| api
+  api --> files[("committed artifacts<br/>openpsx.db, models, macro, seed")]
+  api --> gemini[("Gemini")]
   laptop["Local backup<br/>scripts/run_local.ps1"] -.->|"same code, same data"| files
 ```
-- **Backend: GitHub Codespaces (D-58).** Render and HF Spaces were dropped: both now need a card.
-  - `.devcontainer/devcontainer.json` gives Python 3.11, the gh CLI, and `pip install -r requirements.txt` on create.
-  - `bash scripts/run_codespace.sh` starts uvicorn on 8000 and makes the port **public**. A private port redirects to GitHub sign-in, which fails CORS preflight.
-  - The URL is `https://<codespace>-8000.app.github.dev`.
-  - Keys come from Codespaces user secrets (env vars).
-  - The Codespace stops after its idle timeout (max 240 min), so it is started by hand before a demo. Runbook: `docs/CODESPACES.md`.
-  - `render.yaml` and `.python-version` stay in the repo, unused.
-- **Vercel:** root directory `frontend/`. Env vars: `NEXT_PUBLIC_API_BASE` (the Codespace URL) and `NEXT_PUBLIC_USE_MOCKS=false`.
-- **CORS:** `CORS_ORIGINS` = the Vercel production URL + localhost, as a Codespaces secret. The origin must match exactly; otherwise preflight returns 400 `Disallowed CORS origin`.
+- **Vercel is the sole public deploy (D-71).** Render was never deployed, and the Codespaces plan (D-58) was superseded. Both are kept only as unused files (`render.yaml`, `docs/CODESPACES.md`, `scripts/run_codespace.sh`). The click-by-click checklist is in `docs/VERCEL_FEASIBILITY.md` → "Deploy steps".
+- **Backend project:** root directory = repo root. The FastAPI preset finds the root `app.py`, which re-exports `backend.main:app`. `vercel.json` sets region `bom1` and `excludeFiles`; it installs the serve-only `requirements.txt` (FIX-08).
+  - The DB and seed are read from the bundle, read-only.
+  - `CACHE_DB_PATH=/tmp/cache.db` is the only write, and it is per instance.
+  - The seed reloads in the lifespan on every cold start.
+- **Frontend project:** root directory `frontend/`. Env vars: `NEXT_PUBLIC_API_BASE` (the backend URL) and `NEXT_PUBLIC_USE_MOCKS=false`.
+- **CORS:** `CORS_ORIGINS` on the backend project = the frontend production URL (no trailing slash). The origin must match exactly; otherwise preflight returns 400 `Disallowed CORS origin`.
+- **Backup:** `scripts/run_local.ps1` on the laptop (same code and data; with the LLM off it serves from the seed and templates).
 
 ## 10. Development workflow (two agents + cloud auditor)
 ```mermaid
@@ -215,7 +213,7 @@ flowchart LR
 ```
 OpenPSX/
 ├── AGENTS.md  CLAUDE.md  TRACKER.md  STATUS.md  BUGS.md  README.md (P9-02)
-├── .gitignore  .gitattributes  .env.example  requirements.txt (serve)  requirements-dev.txt (FIX-08)  pytest.ini  render.yaml (P8-02)
+├── .gitignore  .gitattributes  .env.example  requirements.txt (serve)  requirements-dev.txt (FIX-08)  pytest.ini  app.py + vercel.json (FIX-09)  render.yaml (unused, D-71)
 ├── .claude/commands/         start-task.md  finish-task.md  phase-audit.md
 ├── .agents/workflows/        start-task.md  finish-task.md
 ├── docs/

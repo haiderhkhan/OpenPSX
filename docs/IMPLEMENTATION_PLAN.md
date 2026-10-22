@@ -14,7 +14,7 @@
 | H-04 | Run research **R-04**; save as `docs/research/R-04-api-limits.md`; commit | P6-01 (Wed 09:00) |
 | H-05 | Create `.env` from `.env.example` (all keys) and `frontend/.env.local` from `frontend/.env.example` | after P0-02 / P1-03 |
 | H-06 | Paste the submitted proposal into `docs/research/AIEF_PROPOSAL.md`; ask Claude (chat) to reconcile `docs/PRD.md` | any time before Thu |
-| H-07 | Create Render + Vercel accounts and connect GitHub `haiderhkhan/OpenPSX` | P8-02 (Thu 09:00) |
+| H-07 | Create a Vercel account and connect GitHub `haiderhkhan/OpenPSX` (Render dropped, D-71) | P8-02 (Thu 09:00) |
 | H-08 | After each phase: open Claude Code on the web on the repo → `/phase-audit P<n>` → merge its branch if it couldn't push to `main` → mark `A-P<n>` in `TRACKER.md` | each phase end |
 | H-09 | Rehearse the demo script (`PHASES.md` §6) on the deployed URL | Thu 18:00 |
 
@@ -539,9 +539,10 @@ Track B owns these backend files from now on (R-03). Use the `.venv` at the repo
   - `warm.py <base_url>` pings `/api/health`, `/api/overview` and 3 stock pages' endpoints, and prints timings.
 - **Done when:** the seed contains 30 verdicts (any status), it loads on startup, and `warm.py` runs locally.
 
-### P8-02 · Deploy backend to GitHub Codespaces (was Render, D-58)
+### P8-02 · Deploy backend to Vercel (was Render, then Codespaces)
 - **Depends:** P8-01, H-07 · **Est:** 60 min
-- **Host changed (D-58):** Render → GitHub Codespaces with public port 8000. Runbook: `docs/CODESPACES.md`.
+- **Host changed again (D-71):** the backend is a Vercel Python project (FIX-08/09). Checklist: `docs/VERCEL_FEASIBILITY.md` → "Deploy steps". Render was never deployed, and the Codespaces text below is history.
+- **Host changed (D-58, superseded):** Render → GitHub Codespaces with public port 8000. Runbook: `docs/CODESPACES.md`.
   - Files now: `.devcontainer/devcontainer.json`, `scripts/run_codespace.sh`, `docs/CODESPACES.md`, `docs/ARCHITECTURE.md` §9, `docs/MEMORY.md`, `STATUS.md`.
   - Keys are Codespaces secrets.
   - The Render "Do" below is history. "Done when" still applies, with the Codespace start-and-wake time in place of the cold-start time.
@@ -560,10 +561,10 @@ Track B owns these backend files from now on (R-03). Use the `.venv` at the repo
 
 ### P8-03 · Deploy frontend to Vercel + CORS
 - **Depends:** P8-02, P3-04 · **Est:** 40 min
-- **Files:** `docs/MEMORY.md` (append URL), `STATUS.md` (URLs line); Render env `CORS_ORIGINS` (dashboard, not repo)
+- **Files:** `docs/MEMORY.md` (append URL), `STATUS.md` (URLs line); backend Vercel env `CORS_ORIGINS` (dashboard, not repo)
 - **Do:**
-  - Vercel project with root `frontend/` and env `NEXT_PUBLIC_API_BASE=<render url>`, `NEXT_PUBLIC_USE_MOCKS=false`.
-  - Add the Vercel URL to `CORS_ORIGINS` on Render.
+  - Vercel project with root `frontend/` and env `NEXT_PUBLIC_API_BASE=<backend vercel url>`, `NEXT_PUBLIC_USE_MOCKS=false`.
+  - Add the frontend URL to `CORS_ORIGINS` on the backend Vercel project, then redeploy the backend (D-71).
 - **Done when:** the Vercel URL loads the overview and a stock page with live data, and the browser console shows no CORS errors.
 
 ### P8-04 · Local backup launcher
@@ -588,7 +589,7 @@ Track B owns these backend files from now on (R-03). Use the `.venv` at the repo
   - `smoke.py <base_url> [--audio path.wav]` calls all 13 endpoints with valid inputs and validates the responses against `backend/schemas`.
   - Report the status and latency of each.
 - **Done when:**
-  - All pass on the Render URL; transcribe passes with a short wav recorded by Haider, or is skipped if voice was dropped.
+  - All pass on the backend Vercel URL. Transcribe passes with a short wav recorded by Haider, or is skipped if voice was dropped (voice is off for the demo: `FEATURE_VOICE=false`, B-035).
   - **Phase P8 exit criteria** hold → tell Haider to run A-P8.
 
 ---

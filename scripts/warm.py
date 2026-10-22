@@ -11,7 +11,7 @@ import time
 import urllib.error
 import urllib.request
 
-TIMEOUT_S = 90  # a sleeping Render free instance can take about a minute to wake
+TIMEOUT_S = 90  # generous for a cold serverless start (Vercel) on the first request
 STOCK_PATHS = ("/api/prices/{s}", "/api/changes/{s}", "/api/returns/{s}", "/api/quant/{s}", "/api/verdict/{s}")
 
 
@@ -30,7 +30,7 @@ def ping(url: str) -> tuple[int | str, float]:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("base_url", help="e.g. http://127.0.0.1:8000 or https://<service>.onrender.com")
+    ap.add_argument("base_url", help="e.g. http://127.0.0.1:8000 or https://<project>.vercel.app")
     ap.add_argument("--symbols", nargs=3, default=["OGDC", "LUCK", "PSO"])
     args = ap.parse_args(argv)
 

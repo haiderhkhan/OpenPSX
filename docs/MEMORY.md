@@ -171,6 +171,10 @@
     - Labels still 21 POSITIVE / 9 NEUTRAL, 0 flips. Only those 5 seed entries changed.
     - The seed now has no TEMPLATE part at all (30/30 summaries LIVE).
   - `openpsx.db` hash unchanged; pytest 375; a cold start serves ATRL CACHED 0.38. ATRL is no longer a TEMPLATE showcase: the fallback demo is the local `LLM_ENABLED=false` step only.
+- 2026-10-23 · claude-code · D-71 **Vercel is the sole public deploy; Render never deployed** (Haider). Supersedes D-11's Render and D-58's Codespaces.
+  - The backend and frontend are two Vercel projects from the same repo. The local `scripts/run_local.ps1` is the only backup.
+  - `render.yaml`, `.python-version`, `.devcontainer/`, `scripts/run_codespace.sh` and `docs/CODESPACES.md` stay in the repo, unused.
+  - Docs corrected: STATUS, ARCHITECTURE §1/§2/§6/§8/§9, IMPLEMENTATION_PLAN H-07/P8-02/03/05, PHASES, PRD, SCHEMA, TRACKER P8-02/FIX-09, plus a `render.yaml` header note. Older MEMORY entries are history and are left as written.
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.

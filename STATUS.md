@@ -7,7 +7,7 @@
 **AS_OF_DATE (last clean price date):** 2026-09-23 (D-24: STOCK + INDEX; ETFs end 2026-08-04)
 **Drop-order state:** nothing dropped · order if behind: ① ETF coverage → ② Macro LLM (template) → ③ fiscal toggle → ④ Whisper
 **Next checkpoint:** C1 — Tue 13 Oct 23:00 PKT (`docs/PHASES.md` §4)
-**Deployed URLs:** frontend _tbd_ · backend _tbd_
+**Deployed URLs:** none yet. Vercel (backend + frontend, two projects) is the sole public deploy, awaiting Haider's import; Render was never deployed (D-71). Backup: `scripts/run_local.ps1`
 
 ## Track A — claude-code
 - Phase: DATA FROZEN (2026-10-23): bugs only. Final seed written (FIX-12, D-69): 21 POSITIVE / 9 NEUTRAL, 0 flips

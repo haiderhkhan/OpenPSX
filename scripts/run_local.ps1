@@ -40,6 +40,8 @@ if (-not (Test-Path -LiteralPath $Python)) { throw "No .venv at $Root. Create it
 if (Test-Port 3000) { throw "Port 3000 is in use (a Next.js dev server?). Stop it first: next build and next dev share .next." }
 
 # 1-2. Backend on 8000 in its own window (reuse one that is already running).
+# Voice is off for the demo (B-035: no Groq key); the backend window inherits this and it beats .env.
+$env:FEATURE_VOICE = 'false'
 if (Test-Port 8000) {
     Write-Host "Backend already listening on 8000; reusing it."
 } else {

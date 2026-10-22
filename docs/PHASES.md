@@ -49,7 +49,7 @@ gantt
 | **P5 Insights UI** | B | Wed 09–15 | Quant, model, verdict, macro UI | Quant panel, model page, verdict card, macro card render (mock or live) with status badges + disclaimer |
 | **P6 Agents + verdict** | A | Wed 10–23 | LLM layer | `llm.py` sole importer of `google.genai`; validators + cache tested; 3 agents with templates; verdict maths tested; endpoints 10–11 live; app works with `LLM_ENABLED=false` |
 | **P7 Chatbot + voice** | B | Wed 15 → Thu 12 | Chat end-to-end | ≥ 25 router tests green; `/api/chat` and `/api/transcribe` live; chat panel with mic on every page |
-| **P8 Deploy** | A | Thu 09–16 | Public + backup | Seed for all KMI-30; Render + Vercel live; smoke test passes on the public URL; `run_local.ps1` works |
+| **P8 Deploy** | A | Thu 09–16 | Public + backup | Seed for all KMI-30; Vercel backend + frontend live (D-71); smoke test passes on the public URL; `run_local.ps1` works |
 | **P9 Polish + demo** | B | Thu 12–16 | Demo quality | No console errors; all states handled; README + About + architecture image; demo script (§6) run twice on the deployed URL |
 | **Gate** | A + H | Thu 16–18 | Freeze | G-01 audit has 0 open CRITICAL; tag `v1.0-demo` pushed |
 
@@ -67,7 +67,7 @@ At each checkpoint, Haider (or whichever agent is active) compares `TRACKER.md` 
 
 ## 5. Demo-ready checklist (Definition of Done for 15 Oct)
 - [ ] Vercel URL opens the overview in under 3 s after `scripts/warm.py`
-- [ ] Render `/api/health` OK; warm-up procedure written in `STATUS.md`
+- [ ] Vercel backend `/api/health` OK; warm-up procedure written in `STATUS.md` (Render never deployed, D-71)
 - [ ] All KMI-30 stock pages show the chart, changes, Quant panel and verdict (seeded or live)
 - [ ] ETF pages show the chart, changes and Quant panel (unless drop #1)
 - [ ] Model page shows walk-forward accuracy vs both baselines, plus SHAP

@@ -30,7 +30,7 @@
 | P6-06 | Macro weekly agent + /api/macro | P2-06, P6-02, P6-03 | DONE | claude-code | 2026-10-14 23:47 | reassigned from claude-code-2; /api/macro live; W42 NEUTRAL template (D-50) |
 | P6-07 | Verdict router + /api/verdict | P4-04, P6-04, P6-05, P6-06 | DONE | claude-code | 2026-10-14 23:56 | /api/verdict live; ETF/index 404; refresh 429; P6 done → A-P6 (D-51) |
 | P8-01 | Precompute seed outputs + warm script | P6-07 | DONE | claude-code | 2026-10-15 00:56 | Seed 30 verdicts all LIVE; loads at startup as CACHED (D-54) |
-| P8-02 | Deploy backend to Codespaces (was Render, D-58) | P8-01, H-07 | DOING | claude-code | 2026-10-17 19:10 | repo ready (D-58); P8-03 prep done; B-030 fixed, awaiting Codespaces URL + warm.py output |
+| P8-02 | Deploy backend to Vercel (was Render → Codespaces; Render never deployed, D-71) | P8-01, H-07 | BLOCKED | claude-code | 2026-10-23 03:23 | repo ready (FIX-08/09); awaiting Haider's Vercel import + URL |
 | P8-03 | Deploy frontend to Vercel + CORS | P8-02, P3-04 | TODO | | | |
 | P8-04 | Local backup launcher (PowerShell) | P8-01 | DONE | claude-code | 2026-10-15 01:31 | run_local.ps1 [-SkipBuild offline]; 43 s to browser; offline via seed (G-25) |
 | P8-05 | Production smoke test | P8-03, P7-02 | TODO | | | |
@@ -44,7 +44,7 @@
 | R07-SOURCES | Widen curated news sources; ENGROH EPCL headline | R07-IMPORT-1 | DONE | claude-code | 2026-10-22 | D-65; ENGROH EPCL already in DB (#95), not imported; DB CHECK updates at seed regen |
 | FIX-07 | B-036: drop MEBL row #93; news CHECK to D-65 sources in place | R07-SOURCES | DONE | claude-code | 2026-10-22 14:36 | 83 news rows; verify-manual 0 failed; no build_db (D-66) |
 | FIX-08 | Split requirements: serve-only + requirements-dev.txt; FEATURES pandas-free | FIX-06 | DONE | claude-code | 2026-10-22 14:47 | serve-only py3.12: all routes 200, no pandas loaded (D-67) |
-| FIX-09 | Vercel backend as a 2nd deployment (Render untouched): app.py + vercel.json | FIX-08 | BLOCKED | claude-code | 2026-10-22 14:50 | repo ready; Haider imports after final precompute (ships final seed) |
+| FIX-09 | Vercel backend (sole public deploy; Render never deployed, D-71): app.py + vercel.json | FIX-08 | BLOCKED | claude-code | 2026-10-22 14:50 | repo ready; Haider imports after final precompute (ships final seed) |
 | FIX-10 | scripts/migrate_news_sources.py: tested idempotent news CHECK migration + schema_version 2 (asked as FIX-06; FIX-06..09 were taken) | FIX-07 | DROPPED | claude-code | 2026-10-23 02:32 | duplicates FIX-07's applied migration; fresh build = live news schema |
 | FIX-11 | B-036 is look-ahead leakage (asked as FIX-07); verify all R-06/R-07 rows | FIX-10 | DONE | claude-code | 2026-10-23 02:38 | page-date check; 7 checked, #95 corrected, 0 removed (D-68) |
 | FIX-12 | Final seed: ONE precompute after the data freeze (closes B-031) | FIX-11 | DONE | claude-code | 2026-10-23 02:57 | 21 POS / 9 NEU, 0 flips; 25 fully LIVE; OGDC sentiment on (D-69) |

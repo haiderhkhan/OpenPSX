@@ -348,7 +348,7 @@ CREATE INDEX idx_cache_expires ON llm_cache(expires_at);
 - **Expiry:** the next `00:00 Asia/Karachi` after `created_at`. Macro expires the next Monday at 00:00 PKT (ISO-week bucket).
 - **Verdicts** are cached whole under `agent='verdict'`, keyed on symbol, `as_of_date`, `router_version` and the agents' payload hashes.
 - **`TEMPLATE` results are cached for 15 minutes only**, so a later live call can replace them.
-- **Seed:** at startup, `data/precomputed/verdicts_<AS_OF>.json` is inserted if no row exists, with expiry = next midnight. On Render, every cold start reloads it.
+- **Seed:** at startup, `data/precomputed/verdicts_<AS_OF>.json` is inserted if no row exists, with expiry = next midnight. On Vercel, every cold start (new instance, empty `/tmp/cache.db`) reloads it.
 - **`?refresh=true`** bypasses the cache, limited to 1 call per minute per symbol (otherwise `RATE_LIMITED`).
 - **Implementation (D-45, `backend/cache/cache.py`):**
   - API: `get(agent, symbol, as_of_date, prompt_version, model, payload) -> (response, stored_status) | None`; `put(..., payload, response, status)`; `load_seed(path) -> rows inserted`.
