@@ -10,12 +10,12 @@
 **Deployed URLs:** none yet. Vercel (backend + frontend, two projects) is the sole public deploy, awaiting Haider's import; Render was never deployed (D-71). Backup: `scripts/run_local.ps1`
 
 ## Track A — claude-code
-- Phase: DATA FROZEN (2026-10-23): bugs only. Final seed written (FIX-12, D-69): 21 POSITIVE / 9 NEUTRAL, 0 flips
-- Last done: FIX-07..12: B-036 removed, news CHECK, requirements split, Vercel repo side, page-date verify, final precompute
-- Next: Haider imports the repo on Vercel (FIX-09, steps in docs/VERCEL_FEASIBILITY.md) → health + CACHED verdict check → P8-03/05
-- Blockers: Haider: Vercel import + URL · GROQ key (B-035 BLOCKED) · open: B-035
-- pytest 375 passed · lint/tsc/build green (no frontend change since)
-- Updated: 2026-10-23 02:57 PKT
+- Phase: DATA FROZEN again after the FIX-13 targeted re-run (D-70): 21 POSITIVE / 9 NEUTRAL, 30/30 LIVE, 0 flips
+- Last done: FIX-13 re-run · D-71 Vercel sole deploy (docs) · FIX-14 voice off + local backup test + docs/DEMO_RUNBOOK.md
+- Next: Haider: B-037 Next.js 16.4.2 decision → Vercel import (backend, frontend, CORS; docs/VERCEL_FEASIBILITY.md) → P8-05 smoke
+- Blockers: Haider: Vercel import + URLs · B-037 (critical Next.js advisory) OK · B-035 BLOCKED (voice off for the demo)
+- pytest 375 passed · frontend build green (Next 16.4.0)
+- Updated: 2026-10-23 03:38 PKT
 
 ## Track B — antigravity (Antigravity unavailable: claude-code B-override, D-55)
 - Phase: P9: P9-01 + P9-02 second pass DONE · P9-03 local rehearsal done (2 clean runs), BLOCKED on P8-03 for the deployed rerun

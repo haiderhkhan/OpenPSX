@@ -49,6 +49,7 @@
 | FIX-11 | B-036 is look-ahead leakage (asked as FIX-07); verify all R-06/R-07 rows | FIX-10 | DONE | claude-code | 2026-10-23 02:38 | page-date check; 7 checked, #95 corrected, 0 removed (D-68) |
 | FIX-12 | Final seed: ONE precompute after the data freeze (closes B-031) | FIX-11 | DONE | claude-code | 2026-10-23 02:57 | 21 POS / 9 NEU, 0 flips; 25 fully LIVE; OGDC sentiment on (D-69) |
 | FIX-13 | Targeted seed re-run: ATRL fundamentals + GAL/NML/SNGP/SSGC summaries (freeze reopened once) | FIX-12 | DONE | claude-code | 2026-10-23 03:19 | all 5 LIVE; ATRL 0.30→0.38; 0 flips; freeze restored (D-70) |
+| FIX-14 | Demo prep: voice off, local backup test, docs/DEMO_RUNBOOK.md | FIX-13 | DONE | claude-code | 2026-10-23 03:38 | backup OK online + offline; B-037 Next advisory logged (D-72) |
 
 ## Track B — antigravity
 | ID | Task | Depends | Status | Owner | Updated | Note |

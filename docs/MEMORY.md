@@ -175,6 +175,13 @@
   - The backend and frontend are two Vercel projects from the same repo. The local `scripts/run_local.ps1` is the only backup.
   - `render.yaml`, `.python-version`, `.devcontainer/`, `scripts/run_codespace.sh` and `docs/CODESPACES.md` stay in the repo, unused.
   - Docs corrected: STATUS, ARCHITECTURE §1/§2/§6/§8/§9, IMPLEMENTATION_PLAN H-07/P8-02/03/05, PHASES, PRD, SCHEMA, TRACKER P8-02/FIX-09, plus a `render.yaml` header note. Older MEMORY entries are history and are left as written.
+- 2026-10-23 · claude-code · D-72 Demo prep (Haider):
+  - **Voice off:** no Groq key (B-035 stays BLOCKED). `FEATURE_VOICE=false` in `.env.example`, the Vercel env table, and `run_local.ps1` (an env var the backend window inherits; it beats `.env`). Demo step 4 is typed.
+  - **Local backup test (`run_local.ps1`, clean start, nothing on 8000/3000):**
+    - The first `npm run build` exited 1 after Next.js's security upgrade reminder (B-037); the launcher correctly fell back to the previous build. A clean rebuild passed, and the relaunch (`-SkipBuild`) took 7 s.
+    - Online: Overview, `/stock/OGDC|GHNI|HUBC`, `/model` and `/about` returned 200 in ≤ 0.6 s; OGDC 0.36 / GHNI 0.39 / HUBC 0.23 / ATRL 0.38 all CACHED; voice false; transcribe 403 FEATURE_OFF; the typed chat was LIVE in 20.6 s (slow Gemini).
+    - "Offline" (the backend restarted with `HTTPS_PROXY` blackholed, since cutting Wi-Fi would also cut the agent): verdicts CACHED, new chat questions TEMPLATE in 2–3 s, pages 200.
+  - **Runbook:** `docs/DEMO_RUNBOOK.md` (OGDC all four active, GHNI strongest agreement, HUBC abstention + resilience; step 6 on the local backup only; never "all four agree").
 
 ## Gotchas
 - 2026-10-12 · claude · G-01 Gemini rate limits are counted **per Google Cloud project**, not per API key. Extra keys only add quota if they come from separate projects.
