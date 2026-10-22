@@ -219,6 +219,7 @@
   - Rehearsing step 8 twice within 15 min shows the TEMPLATE outlook already at 8.2, because the LLM-off verdict is cached 15 min. Leave 15 min, or use another stock.
   - Gemini 503s were frequent tonight (2 of ~16 live calls), and FIX-02's retry saved both. One 503 took ~40 s to arrive, hence B-033's 15 s request timeout (`llm.REQUEST_TIMEOUT_MS`; a timeout is not retried).
   - Both runs: 0 console errors (after B-032), all 12 chat questions answered; cached repeats return in 0.3 s, live ones in 3–10 s.
+- 2026-10-22 · claude-code · G-32 FIX-11 (B-036) research-supplied dates must be verified against the article page. R-06 dated the Meezan GHTA Rs49bn headline 2026-09-02; the real APP report is 2026-10-09 (figures as of 2026-09-30), after AS_OF, so a wrong date can leak the future into the sentiment window. The link also pointed at an unrelated BR article. Check every curated row's page date (BR `datePublished`, Dawn `article:published_time`) against ours, not just that the URL resolves. Full R-06/R-07 check: `docs/research/R-06-R07-verification.md`; found news #95 dated 09-01 vs page 09-02 and a `Rs197bn` vs `Rs19.7bn` headline typo (left as is).
 
 ## Open questions
 - 2026-10-12 · claude · Q-01 `AS_OF_DATE` (last clean price date) → set in P2-03.
