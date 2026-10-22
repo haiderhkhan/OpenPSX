@@ -67,6 +67,7 @@ The bundle is about 41 MB of dependencies plus 10.5 MB of repo files. `.python-v
 3. Deploy, then check (the 45-minute timebox starts at step 1):
    - `curl -s https://<api>.vercel.app/api/health` → `"status":"ok"`
    - `curl -s https://<api>.vercel.app/api/verdict/HUBC` → `"summary_status":"CACHED"`. That proves the lifespan seed load ran (risk 1). A LIVE/TEMPLATE result means the seed did not load.
+   - Final seed (FIX-12, commit `e21f63a`, 2026-10-23): expect HUBC POSITIVE 0.23 and OGDC POSITIVE 0.36, both CACHED. Deploy from `main` at or after that commit.
    - `python scripts/warm.py https://<api>.vercel.app` for the cold-start timing.
 4. If it isn't serving both by the end of the timebox: stop, log it in `docs/MEMORY.md`, and use Render/Codespaces.
 
